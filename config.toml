@@ -1,0 +1,95 @@
+theme = "soho"
+baseurl = "https://example.com/"
+languageCode = "en"
+title = "Chris Havlin"
+DefaultContentLanguage = "en"
+enableInlineShortcodes = true
+summarylength = 10
+enableEmoji = true
+paginate = 5
+
+[params]
+title = "Chris Havlin"
+description = " "
+# gravatar = "soho@example.com"
+images = ["images/turt.png"]
+profilePicture = "images/turt.png"
+copyright = "Chris Havlin"
+license = "CC BY-SA 4.0"
+licenseURL = "https://creativecommons.org/licenses/by-sa/4.0"
+builtWith = true
+mainSections = ["post"]
+
+## Set custom theme color.
+# red:
+# themeColor = "#fc2803"
+# dark green:
+  themeColor = "#3b7044"
+
+  customCss = ["css/blog.css"]
+
+
+  [[params.socialIcons]]
+  icon = "fa-github"
+  title = "GitHub"
+  url = "https://github.com/chrishavlin"
+
+  [[params.socialIcons]]
+  icon = "fa-twitter"
+  title = "@s_i_r_h_c"
+  url = "https://twitter.com/s_i_r_h_c"
+  
+  [[params.socialIcons]]
+  icon = "fa-instagram"
+  title = "@chrishavlin"
+  url = "https://www.instagram.com/chrishavlin/"
+  
+  [[params.socialIcons]]
+  icon = "fa-linkedin"
+  title = "Linkedin"
+  url = "https://www.linkedin.com/in/christopherhavlin/"
+
+[taxonomies]
+  series = "series"
+  category = "categories"
+  tag = "tags"
+
+[menu]
+
+  [[menu.main]]
+  name = "About"
+  weight = 10
+  identifier = "about"
+  url = "/about/"
+
+  [[menu.main]]
+  name = "Posts"
+  weight = 100
+  identifier = "posts"
+  url = "/posts/"
+
+  [[menu.main]]
+  name = "Categories"
+  weight = 200
+  identifier = "categories"
+  url = "/categories/"
+
+  [[menu.main]]
+  name = "Tags"
+  weight = 200
+  identifier = "tags"
+  url = "/tags/"
+
+
+[markup]
+
+  [markup.highlight]
+  codeFences = true
+  guessSyntax = false
+  hl_Lines = ""
+  lineNoStart = 1
+  lineNos = false
+  lineNumbersInTable = true
+  noClasses = true
+  style = "monokai"
+  tabWidth = 4
