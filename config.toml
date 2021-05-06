@@ -1,5 +1,5 @@
 theme = "soho"
-baseurl = "https://example.com/"
+baseurl = "https://chrishavlin.github.io/"
 languageCode = "en"
 title = "Chris Havlin"
 DefaultContentLanguage = "en"
@@ -58,7 +58,7 @@ mainSections = ["post"]
 
   [[menu.main]]
   name = "About"
-  weight = 10
+  weight = 100
   identifier = "about"
   url = "/about/"
 

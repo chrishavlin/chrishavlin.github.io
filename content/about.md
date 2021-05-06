@@ -1,6 +1,6 @@
 +++
 title = "About"
-description = "About"
+description = "about"
 author = "Chris Havlin"
 +++
 
