@@ -1,1 +1,1 @@
-Personal site for Chris Havlin, chrishavlin.github.io/about 
+Personal site for Chris Havlin, [home](chrishavlin.github.io/about)
