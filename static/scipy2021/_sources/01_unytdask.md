@@ -1,4 +1,4 @@
-# daskified unyt arrays  
+# Daskified unyt Arrays  
 
 overview words 
 
