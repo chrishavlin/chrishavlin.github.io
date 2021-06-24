@@ -259,7 +259,7 @@
                 
   <div class="section" id="daskified-unyt-arrays">
 <h1>Daskified unyt Arrays<a class="headerlink" href="#daskified-unyt-arrays" title="Permalink to this headline">¶</a></h1>
-<p>notes on how yt uses unyt arrays.</p>
+<p>Notes on how yt uses unyt arrays.</p>
 <p>Part of the Daskening of yt relies on adding Dask support to unyt arrays (<a class="reference external" href="https://github.com/yt-project/unyt/pull/185">PR 185</a>). As this has potential users beyond yt users, it is worth walking through its usage.</p>
 <div class="section" id="example-usage">
 <h2>example usage<a class="headerlink" href="#example-usage" title="Permalink to this headline">¶</a></h2>
@@ -456,7 +456,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>unyt_quantity(1.00010563, &#39;m&#39;)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>unyt_quantity(0.99990974, &#39;m&#39;)
 </pre></div>
 </div>
 </div>
@@ -522,7 +522,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>unyt_quantity(1.24989267, &#39;m&#39;)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>unyt_quantity(1.24946259, &#39;m&#39;)
 </pre></div>
 </div>
 </div>
@@ -563,7 +563,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>313 ms ± 39.5 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>204 ms ± 1.9 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -576,7 +576,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>302 ms ± 24.6 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>203 ms ± 2.21 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -589,7 +589,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>113 ms ± 11.2 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>87.8 ms ± 4.67 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -602,7 +602,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>95.5 ms ± 1.28 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>85.2 ms ± 5.14 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -616,7 +616,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>447 ms ± 8.18 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>372 ms ± 14.4 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -629,7 +629,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>142 ms ± 3.78 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>101 ms ± 1.6 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -652,7 +652,7 @@
 </div>
 </div>
 </div>
-<p>since our unit conversions are simply scalar multiplications, the unit equivalent woutl be:</p>
+<p>since our unit conversions are simply scalar multiplications, the unit equivalent would be:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">plain_unyt</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cm&#39;</span><span class="p">)</span><span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
@@ -676,7 +676,34 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>280 ms ± 14.4 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>238 ms ± 3.54 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it 
+<span class="p">(</span><span class="n">plain_unyt</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cm*cm&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>412 ms ± 10.5 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre></div>
+</div>
+</div>
+</div>
+<p>and in the case of our <code class="docutils literal notranslate"><span class="pre">unyt_dask</span></code> arrays:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it 
+<span class="p">(</span><span class="n">unyt_dask</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cm*cm&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>104 ms ± 3.53 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -689,15 +716,83 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>105 ms ± 4.81 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>88.9 ms ± 6.54 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
 </div>
+<p>So we see that in operations where it’s possible, it is worth putting off unit conversions until after array reductions so that we spend less time on multiplying by constants.</p>
 </div>
 <div class="section" id="final-performance-comparison">
 <h3>final performance comparison<a class="headerlink" href="#final-performance-comparison" title="Permalink to this headline">¶</a></h3>
-<p>SHOW plot: time vs array size for each, for different number of processors</p>
+<p>Returning to the general question of unyt-dask array performance, we want to be sure that our unyt-dask arrays are preforming on-par with standard dask arrays. Towards that end, we’ve run a suite of performance tests measuring the time to execute <code class="docutils literal notranslate"><span class="pre">(x</span> <span class="pre">**</span> <span class="pre">2).mean()</span></code> vs size of the array, <code class="docutils literal notranslate"><span class="pre">x</span></code>. The full code is available at <a class="reference external" href="https://github.com/chrishavlin/scipy2021_ytDaskening/blob/main/code/test_daskunyt.py"><code class="docutils literal notranslate"><span class="pre">/code/test_daskunyt.py</span></code></a> and the following figure captures the results:</p>
+<p><img alt="" src="_images/dask_unyt_perf.png" /></p>
+<p>The y-axis is the minimum execution time of the operation, x-axis is the size of the array. The black and red curves are standard numpy and unyt arrays, respectively. The blue and green curves are dask and unyt-dask arrays for different number of workers (4 and 6, both single-threaded). The chunksize is fixed at 1e7 for all runs. Add some more description…</p>
+<p>So the unyt-dask arrays perform similarly to plain dask arrays and at larger array sizes provide a decent speedup compared to plain unyt arrays. Furthermore, the unyt-dask arrays allows computation on larger-than memory arrays. The largest array tests would require 80 Gb of memory if using a plain unyt array:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">unyt_dask_array</span><span class="o">.</span><span class="n">unyt_from_dask</span><span class="p">(</span><span class="n">da</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mf">1e10</span><span class="p">,),</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mf">1e7</span><span class="p">)),</span><span class="s1">&#39;m&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table>
+<tr>
+<td>
+<table>
+  <thead>
+    <tr><td> </td><th> Array </th><th> Chunk </th></tr>
+  </thead>
+  <tbody>
+    <tr><th> Bytes </th><td> 80.00 GB </td> <td> 80.00 MB </td></tr>
+    <tr><th> Shape </th><td> (10000000000,) </td> <td> (10000000,) </td></tr>
+    <tr><th> Count </th><td> 1000 Tasks </td><td> 1000 Chunks </td></tr>
+    <tr><th> Type </th><td> float64 </td><td> numpy.ndarray </td></tr>
+    <tr><th> Units </th><td> m </td> <td> m </td></tr>
+  </tbody>
+</table>
+</td>
+<td>
+<svg width="170" height="75" style="stroke:rgb(0,0,0);stroke-width:1" >
+
+  <!-- Horizontal lines -->
+  <line x1="0" y1="0" x2="120" y2="0" style="stroke-width:2" />
+  <line x1="0" y1="25" x2="120" y2="25" style="stroke-width:2" />
+
+  <!-- Vertical lines -->
+  <line x1="0" y1="0" x2="0" y2="25" style="stroke-width:2" />
+  <line x1="6" y1="0" x2="6" y2="25" />
+  <line x1="12" y1="0" x2="12" y2="25" />
+  <line x1="18" y1="0" x2="18" y2="25" />
+  <line x1="25" y1="0" x2="25" y2="25" />
+  <line x1="31" y1="0" x2="31" y2="25" />
+  <line x1="37" y1="0" x2="37" y2="25" />
+  <line x1="44" y1="0" x2="44" y2="25" />
+  <line x1="50" y1="0" x2="50" y2="25" />
+  <line x1="56" y1="0" x2="56" y2="25" />
+  <line x1="63" y1="0" x2="63" y2="25" />
+  <line x1="69" y1="0" x2="69" y2="25" />
+  <line x1="75" y1="0" x2="75" y2="25" />
+  <line x1="82" y1="0" x2="82" y2="25" />
+  <line x1="88" y1="0" x2="88" y2="25" />
+  <line x1="94" y1="0" x2="94" y2="25" />
+  <line x1="101" y1="0" x2="101" y2="25" />
+  <line x1="107" y1="0" x2="107" y2="25" />
+  <line x1="113" y1="0" x2="113" y2="25" />
+  <line x1="120" y1="0" x2="120" y2="25" style="stroke-width:2" />
+
+  <!-- Colored Rectangle -->
+  <polygon points="0.0,0.0 120.0,0.0 120.0,25.412616514582485 0.0,25.412616514582485" style="fill:#8B4903A0;stroke-width:0"/>
+
+  <!-- Text -->
+  <text x="60.000000" y="45.412617" font-size="1.0rem" font-weight="100" text-anchor="middle" >10000000000</text>
+  <text x="140.000000" y="12.706308" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(0,140.000000,12.706308)">1</text>
+</svg>
+</td>
+</tr>
+</table></div></div>
+</div>
+<p>While the unyt-dask arrays may be quite useful to the general SciPy community, we are experimenting with using them directly within yt where the “chunks” of the dask-arrays are decided using yt’s spatial indexing of datasets. We discuss this in the following section.</p>
 </div>
 </div>
 </div>
