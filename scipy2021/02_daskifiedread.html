@@ -159,9 +159,9 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/02_daskifiedread.md"><button type="button"
+        <a class="dropdown-buttons" href="_sources/02_daskifiedread.ipynb"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
+                data-placement="left">.ipynb</button></a>
         <!-- Download PDF via print -->
         <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
             onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
@@ -192,6 +192,23 @@
 
             <!-- Launch buttons -->
 
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/chrishavlin/scipy2021_ytDaskening/master?urlpath=tree/02_daskifiedread.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
         </div>
 
         <!-- Table of contents -->
@@ -203,13 +220,18 @@
             <nav id="bd-toc-nav">
                 <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#strategy-improving-frontends">
-   strategy: improving frontends
+  <a class="reference internal nav-link" href="#how-yt-works-and-how-dask-can-help">
+   how yt works and how Dask can help
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#examples">
-   examples
+  <a class="reference internal nav-link" href="#examples-simple-reads-and-selections">
+   Examples: simple reads and selections
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#initial-performance-tests">
+   initial performance tests
   </a>
  </li>
 </ul>
@@ -225,14 +247,411 @@
                 
   <div class="section" id="a-daskified-yt-reading-data">
 <h1>A Daskified yt : reading data<a class="headerlink" href="#a-daskified-yt-reading-data" title="Permalink to this headline">¶</a></h1>
-<p>Overview</p>
-<div class="section" id="strategy-improving-frontends">
-<h2>strategy: improving frontends<a class="headerlink" href="#strategy-improving-frontends" title="Permalink to this headline">¶</a></h2>
-<p>code reduction/simplification: describe frontend IO/indexing, how dask can simplify.</p>
+<div class="section" id="how-yt-works-and-how-dask-can-help">
+<h2>how yt works and how Dask can help<a class="headerlink" href="#how-yt-works-and-how-dask-can-help" title="Permalink to this headline">¶</a></h2>
+<p>For discrete particle datasets, yt leverages several approaches to achieve efficient lazy loading of large datasets. When a user then reads in data, for example with code like</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">yt</span><span class="o">.</span><span class="n">load_sample</span><span class="p">()</span>
+<span class="n">sp</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sphere</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">domain_center</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span>
+<span class="n">density</span> <span class="o">=</span> <span class="n">sp</span><span class="p">[(</span><span class="s2">&quot;PartType0&quot;</span><span class="p">,</span> <span class="s2">&quot;Density&quot;</span><span class="p">)]</span>
+</pre></div>
 </div>
-<div class="section" id="examples">
-<h2>examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<p>show some examples</p>
+<p>yt will:</p>
+<ol class="simple">
+<li><p>generate a spatial bitmap index for the dataset</p></li>
+<li><p>use bitmap indexing to find data_files that overlap with a selection</p></li>
+<li><p>iterate over the <code class="docutils literal notranslate"><span class="pre">data_files</span></code>, for each of <code class="docutils literal notranslate"><span class="pre">data_files</span></code>:
+a. open the file
+b. generate a mask using the selection object and a particle’s coordinates
+c. read the data, applying the mask</p></li>
+</ol>
+<p>Step 0 is a one-time step for a dataset that uses Morton Indexing, a spatial bitmap-indexing algorithm, to efficiently map a regions of a physical domain to the data whether on-disk or elsewhere (cite yt4 paper, in prep). So as the first step of a selection, yt will first find the bitmap indices that intersect a selection object in order to quickly identify only those files that contain data within the selector and avoid reading datafiles unnecessarily. To further enhance read times, yt applies data selections at read to datafiles individually so that only data satisfying the selection criteria is returned (rather than reading the whole array into memory and then applying a selection).</p>
+<p>This approach can be readily adapted to dask arrays in such a way that simplifies yt’s code, particularly yt’s frontend infrastructure. In yt, a frontend corresponds to data-specific methods for reading data. At present, implementing a new frontend requires writing an implementation of step 2 above, which requires some knowledge of yt’s internal working (the data_files, selector objects) as well as knowledge of a frontend’s native data structures (to read the raw data). With Dask, however, we can maintain the same efficiency while separating step 2 above into separate methods.</p>
+<p>In simplified pseudo-code, this looks like:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_read_particle_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">selector_obj</span><span class="p">,</span> <span class="p">):</span>  
+
+        <span class="c1"># assemble the self.data_files that intersect the selector</span>
+        <span class="n">dfi</span><span class="p">,</span> <span class="n">nfiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_identify_file_masks</span><span class="p">(</span><span class="n">dobj</span><span class="p">)</span> 
+        <span class="n">data_file_subset</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">data_files</span><span class="p">[</span><span class="n">df_i</span><span class="p">]</span> <span class="k">for</span> <span class="n">df_i</span> <span class="ow">in</span> <span class="n">dfi</span><span class="p">]</span>
+
+        <span class="c1"># get a dask array where each chunk is a data_file</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">_read_from_datafiles</span><span class="p">(</span><span class="n">data_file_subset</span><span class="p">,</span> <span class="n">fields_to_read</span><span class="p">)</span> 
+        
+        <span class="c1"># apply a selector object to each chunk of the dask array        </span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_selector_mask</span><span class="p">(</span><span class="n">fields_to_return</span><span class="p">,</span> <span class="n">selector_obj</span><span class="p">)</span> <span class="c1"># uses map_blocks function</span>
+
+        <span class="k">return</span> <span class="n">data</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">read_from_datafiles</span></code> constructs dask arrays from delayed reads (again, pseudo-code):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_read_from_datafiles</span><span class="p">(</span><span class="n">data_files</span><span class="p">,</span> <span class="n">fields_to_read</span><span class="p">):</span>
+    <span class="n">delayed_array</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">data_file</span> <span class="ow">in</span> <span class="n">data_files</span><span class="p">:</span>
+        <span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_file_ptype_counts</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="n">fields_to_read</span><span class="p">)</span>
+        <span class="n">vals</span> <span class="o">=</span> <span class="n">dask_delayed</span><span class="p">(</span><span class="n">frontend_read_particle_fields</span><span class="p">)(</span><span class="n">data_file</span><span class="p">,</span> <span class="n">field_info</span><span class="p">)</span>  <span class="c1"># this is the actual io call</span>
+        <span class="n">delayed_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dask_array</span><span class="o">.</span><span class="n">from_delayed</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">dask</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">delayed_array</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>What’s nice about the above Daskified approach is that while <code class="docutils literal notranslate"><span class="pre">_read_particle_fields</span></code> is written linearly (read in data then apply selector to data) because the data arrays here are dask arrays, the selector is applied by-chunk using <code class="docutils literal notranslate"><span class="pre">dask.array.map_blocks</span></code> so that we are <strong>still</strong> handling each chunk separately. This greatly simplifies frontend development: to write the io methods for a new frontend, one need only implement a function to read from a single <code class="docutils literal notranslate"><span class="pre">data_file</span></code> (called <code class="docutils literal notranslate"><span class="pre">frontend_read_particle_fields</span></code> above)! Additionally, we can directly return Dask arrays, allowing a user to easily analyize their data in parallel when yt does not already have an optimized option.</p>
+</div>
+<div class="section" id="examples-simple-reads-and-selections">
+<h2>Examples: simple reads and selections<a class="headerlink" href="#examples-simple-reads-and-selections" title="Permalink to this headline">¶</a></h2>
+<p>These exmaples use the scipy2021 branch from havlin’s unyt and yt forks (link it).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="kn">import</span> <span class="nn">yt</span> 
+<span class="n">ds</span> <span class="o">=</span> <span class="n">yt</span><span class="o">.</span><span class="n">load_sample</span><span class="p">(</span><span class="s2">&quot;snapshot_033&quot;</span><span class="p">)</span>
+<span class="n">ad</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">all_data</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>yt : [INFO     ] 2021-06-25 15:36:48,317 Files located at /home/chris/hdd/data/yt_data/yt_sample_sets/snapshot_033.tar.gz.untar/snapshot_033/snap_033.
+yt : [INFO     ] 2021-06-25 15:36:48,317 Default to loading snap_033.0.hdf5 for snapshot_033 dataset
+yt : [INFO     ] 2021-06-25 15:36:48,404 Parameters: current_time              = 4.343952725460923e+17 s
+yt : [INFO     ] 2021-06-25 15:36:48,405 Parameters: domain_dimensions         = [1 1 1]
+yt : [INFO     ] 2021-06-25 15:36:48,405 Parameters: domain_left_edge          = [0. 0. 0.]
+yt : [INFO     ] 2021-06-25 15:36:48,406 Parameters: domain_right_edge         = [25. 25. 25.]
+yt : [INFO     ] 2021-06-25 15:36:48,406 Parameters: cosmological_simulation   = 1
+yt : [INFO     ] 2021-06-25 15:36:48,406 Parameters: current_redshift          = -4.811891664902035e-05
+yt : [INFO     ] 2021-06-25 15:36:48,407 Parameters: omega_lambda              = 0.762
+yt : [INFO     ] 2021-06-25 15:36:48,407 Parameters: omega_matter              = 0.238
+yt : [INFO     ] 2021-06-25 15:36:48,408 Parameters: omega_radiation           = 0.0
+yt : [INFO     ] 2021-06-25 15:36:48,408 Parameters: hubble_constant           = 0.73
+yt : [INFO     ] 2021-06-25 15:36:48,498 Allocating for 4.194e+06 particles
+Loading particle index:  92%|█████████▏| 11/12 [00:00&lt;00:00, 163.65it/s]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.9 s, sys: 184 ms, total: 3.09 s
+Wall time: 3.08 s
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">field</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;PartType0&quot;</span><span class="p">,</span><span class="s2">&quot;Density&quot;</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">ad</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
+<span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 143 µs, sys: 26 µs, total: 169 µs
+Wall time: 175 µs
+</pre></div>
+</div>
+<div class="output text_html"><table>
+<tr>
+<td>
+<table>
+  <thead>
+    <tr><td> </td><th> Array </th><th> Chunk </th></tr>
+  </thead>
+  <tbody>
+    <tr><th> Bytes </th><td> 15.53 MB </td> <td> 2.10 MB </td></tr>
+    <tr><th> Shape </th><td> (1941226,) </td> <td> (262144,) </td></tr>
+    <tr><th> Count </th><td> 45 Tasks </td><td> 9 Chunks </td></tr>
+    <tr><th> Type </th><td> float64 </td><td> numpy.ndarray </td></tr>
+    <tr><th> Units </th><td> code_mass/code_length**3 </td> <td> code_mass/code_length**3 </td></tr>
+  </tbody>
+</table>
+</td>
+<td>
+<svg width="170" height="75" style="stroke:rgb(0,0,0);stroke-width:1" >
+
+  <!-- Horizontal lines -->
+  <line x1="0" y1="0" x2="120" y2="0" style="stroke-width:2" />
+  <line x1="0" y1="25" x2="120" y2="25" style="stroke-width:2" />
+
+  <!-- Vertical lines -->
+  <line x1="0" y1="0" x2="0" y2="25" style="stroke-width:2" />
+  <line x1="16" y1="0" x2="16" y2="25" />
+  <line x1="16" y1="0" x2="16" y2="25" />
+  <line x1="32" y1="0" x2="32" y2="25" />
+  <line x1="47" y1="0" x2="47" y2="25" />
+  <line x1="62" y1="0" x2="62" y2="25" />
+  <line x1="77" y1="0" x2="77" y2="25" />
+  <line x1="91" y1="0" x2="91" y2="25" />
+  <line x1="106" y1="0" x2="106" y2="25" />
+  <line x1="120" y1="0" x2="120" y2="25" style="stroke-width:2" />
+
+  <!-- Colored Rectangle -->
+  <polygon points="0.0,0.0 120.0,0.0 120.0,25.412616514582485 0.0,25.412616514582485" style="fill:#ECB172A0;stroke-width:0"/>
+
+  <!-- Text -->
+  <text x="60.000000" y="45.412617" font-size="1.0rem" font-weight="100" text-anchor="middle" >1941226</text>
+  <text x="140.000000" y="12.706308" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(0,140.000000,12.706308)">1</text>
+</svg>
+</td>
+</tr>
+</table></div></div>
+</div>
+<p>So we see we get back a unyt-dask array with 9 chunks. And those 9 chunks are nicely parallelized:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">visualize</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/02_daskifiedread_5_0.png" src="_images/02_daskifiedread_5_0.png" />
+</div>
+</div>
+<p>Comparing to a sphere selection centered at the domain center:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sp</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sphere</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">domain_center</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">quan</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span><span class="s1">&#39;code_length&#39;</span><span class="p">))</span>
+<span class="n">spData</span> <span class="o">=</span> <span class="n">sp</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
+<span class="n">spData</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table>
+<tr>
+<td>
+<table>
+  <thead>
+    <tr><td> </td><th> Array </th><th> Chunk </th></tr>
+  </thead>
+  <tbody>
+    <tr><th> Bytes </th><td> unknown </td> <td> unknown </td></tr>
+    <tr><th> Shape </th><td> (nan,) </td> <td> (nan,) </td></tr>
+    <tr><th> Count </th><td> 119 Tasks </td><td> 7 Chunks </td></tr>
+    <tr><th> Type </th><td> float64 </td><td> numpy.ndarray </td></tr>
+    <tr><th> Units </th><td> code_mass/code_length**3 </td> <td> code_mass/code_length**3 </td></tr>
+  </tbody>
+</table>
+</td>
+<td>
+
+</td>
+</tr>
+</table></div></div>
+</div>
+<p>we see we only have 7 chunks since the particle indexing has eliminated 2 of our chunks. We also see that we don’t know the final shape yet, because we are applying an array mask within our graph. Our graph in this case is still nicely parallel but has some extra complications as it applies the selector object to each chunk (this gets skipped when reading in <code class="docutils literal notranslate"><span class="pre">all_data</span></code>), which requires reading the coordinates and particle smoothing length for our field:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">spData</span><span class="o">.</span><span class="n">visualize</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/02_daskifiedread_9_0.png" src="_images/02_daskifiedread_9_0.png" />
+</div>
+</div>
+<p>Comparing the execution time between the two, the selector application requires a bit of extra work:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<span class="n">ad</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">all_data</span><span class="p">()</span> 
+<span class="n">data</span> <span class="o">=</span> <span class="n">ad</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>26.5 ms ± 5.73 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<span class="n">sp</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sphere</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">domain_center</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">quan</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span><span class="s1">&#39;code_length&#39;</span><span class="p">))</span>
+<span class="n">spData</span> <span class="o">=</span> <span class="n">sp</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">spData</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>126 ms ± 2.3 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre></div>
+</div>
+</div>
+</div>
+<p>These execution times are comparable to standard yt. After checking out <code class="docutils literal notranslate"><span class="pre">main</span></code> and re-running (restart the notebook, then run just these cells):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>  <span class="c1"># avoiding the ambiguous field deprecieation warnings for this frontend. </span>
+
+<span class="kn">import</span> <span class="nn">yt</span> 
+<span class="n">ds</span> <span class="o">=</span> <span class="n">yt</span><span class="o">.</span><span class="n">load_sample</span><span class="p">(</span><span class="s2">&quot;snapshot_033&quot;</span><span class="p">)</span>
+<span class="n">ad</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">all_data</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>yt : [INFO     ] 2021-06-25 15:53:10,462 Sample dataset found in &#39;/home/chris/hdd/data/yt_data/yt_sample_sets/snapshot_033/snap_033.0.hdf5&#39;
+yt : [INFO     ] 2021-06-25 15:53:10,580 Parameters: current_time              = 4.343952725460923e+17 s
+yt : [INFO     ] 2021-06-25 15:53:10,581 Parameters: domain_dimensions         = [1 1 1]
+yt : [INFO     ] 2021-06-25 15:53:10,581 Parameters: domain_left_edge          = [0. 0. 0.]
+yt : [INFO     ] 2021-06-25 15:53:10,582 Parameters: domain_right_edge         = [25. 25. 25.]
+yt : [INFO     ] 2021-06-25 15:53:10,583 Parameters: cosmological_simulation   = 1
+yt : [INFO     ] 2021-06-25 15:53:10,583 Parameters: current_redshift          = -4.811891664902035e-05
+yt : [INFO     ] 2021-06-25 15:53:10,583 Parameters: omega_lambda              = 0.762
+yt : [INFO     ] 2021-06-25 15:53:10,584 Parameters: omega_matter              = 0.238
+yt : [INFO     ] 2021-06-25 15:53:10,584 Parameters: omega_radiation           = 0.0
+yt : [INFO     ] 2021-06-25 15:53:10,584 Parameters: hubble_constant           = 0.73
+yt : [INFO     ] 2021-06-25 15:53:10,686 Allocating for 4.194e+06 particles
+Loading particle index:  92%|█████████▏| 11/12 [00:00&lt;00:00, 241.55it/s]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 3.74 s, sys: 31.4 ms, total: 3.78 s
+Wall time: 3.77 s
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">field</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;PartType0&quot;</span><span class="p">,</span><span class="s2">&quot;Density&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<span class="n">ad</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">all_data</span><span class="p">()</span> 
+<span class="n">data</span> <span class="o">=</span> <span class="n">ad</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>12.8 ms ± 792 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<span class="n">sp</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sphere</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">domain_center</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">quan</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span><span class="s1">&#39;code_length&#39;</span><span class="p">))</span>
+<span class="n">spData</span> <span class="o">=</span> <span class="n">sp</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>145 ms ± 3.21 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="initial-performance-tests">
+<h2>initial performance tests<a class="headerlink" href="#initial-performance-tests" title="Permalink to this headline">¶</a></h2>
+<p>So we see the Daskified all_data read is a tad slower while the selector application is a hair faster. These initial performance estimates ignore a lot of factors, and it also is important to compare to yt’s read times when using MPI. Towards that end, we’ve conducted a number of different performance tests.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dask.distributed</span> <span class="kn">import</span> <span class="n">Client</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">n_workers</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">threads_per_worker</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table style="border: 2px solid white;">
+<tr>
+<td style="vertical-align: top; border: 0px solid white">
+<h3 style="text-align: left;">Client</h3>
+<ul style="text-align: left; list-style: none; margin: 0; padding: 0;">
+  <li><b>Scheduler: </b>tcp://127.0.0.1:40239</li>
+  <li><b>Dashboard: </b><a href='http://127.0.0.1:8787/status' target='_blank'>http://127.0.0.1:8787/status</a></li>
+</ul>
+</td>
+<td style="vertical-align: top; border: 0px solid white">
+<h3 style="text-align: left;">Cluster</h3>
+<ul style="text-align: left; list-style:none; margin: 0; padding: 0;">
+  <li><b>Workers: </b>4</li>
+  <li><b>Cores: </b>4</li>
+  <li><b>Memory: </b>33.24 GB</li>
+</ul>
+</td>
+</tr>
+</table></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">yt</span> 
+<span class="n">ds</span> <span class="o">=</span> <span class="n">yt</span><span class="o">.</span><span class="n">load_sample</span><span class="p">(</span><span class="s2">&quot;snapshot_033&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>yt : [INFO     ] 2021-06-25 16:52:10,780 Files located at /home/chris/hdd/data/yt_data/yt_sample_sets/snapshot_033.tar.gz.untar/snapshot_033/snap_033.
+yt : [INFO     ] 2021-06-25 16:52:10,782 Default to loading snap_033.0.hdf5 for snapshot_033 dataset
+yt : [INFO     ] 2021-06-25 16:52:10,903 Parameters: current_time              = 4.343952725460923e+17 s
+yt : [INFO     ] 2021-06-25 16:52:10,904 Parameters: domain_dimensions         = [1 1 1]
+yt : [INFO     ] 2021-06-25 16:52:10,905 Parameters: domain_left_edge          = [0. 0. 0.]
+yt : [INFO     ] 2021-06-25 16:52:10,905 Parameters: domain_right_edge         = [25. 25. 25.]
+yt : [INFO     ] 2021-06-25 16:52:10,906 Parameters: cosmological_simulation   = 1
+yt : [INFO     ] 2021-06-25 16:52:10,906 Parameters: current_redshift          = -4.811891664902035e-05
+yt : [INFO     ] 2021-06-25 16:52:10,907 Parameters: omega_lambda              = 0.762
+yt : [INFO     ] 2021-06-25 16:52:10,908 Parameters: omega_matter              = 0.238
+yt : [INFO     ] 2021-06-25 16:52:10,909 Parameters: omega_radiation           = 0.0
+yt : [INFO     ] 2021-06-25 16:52:10,909 Parameters: hubble_constant           = 0.73
+yt : [INFO     ] 2021-06-25 16:52:11,000 Allocating for 4.194e+06 particles
+Loading particle index:  92%|█████████▏| 11/12 [00:00&lt;00:00, 145.95it/s]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">field</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;PartType0&quot;</span><span class="p">,</span><span class="s2">&quot;Density&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<span class="n">sp</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sphere</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">domain_center</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">quan</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span><span class="s1">&#39;code_length&#39;</span><span class="p">))</span>
+<span class="n">spData</span> <span class="o">=</span> <span class="n">sp</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>419 ms ± 20.6 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">./code/</span></code> contains a number of scripts that measure the read time for a sphere for the <code class="docutils literal notranslate"><span class="pre">snapshot_033</span></code> dataset for all available methods. The following image shows the read time (excluding dataset loadtime and index build):</p>
+<p><img alt="" src="_images/dask_read_times.png" /></p>
+<p>The test types are defined as follows:</p>
+<p>dask: uses default client configuration (the yt implementation overrides this to 1 processor, 1 thread)
+dask_mpi: uses the dask-mpi scheduler, code executed with <code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">-np</span> <span class="pre">4</span> <span class="pre">python</span> <span class="pre">test_dask_mpi.py</span></code>
+dask_multiproc: uses standard dask client with 4 workers, 1 thread per worker
+main_mpi: main yt branch with MPI using 4 processors
+main_serial: main yt branch, standard read</p>
+<p>50-60 tests were performed for each case. The results show that the daskified read is at least as fast as the version on main. The extra communication results in some larger outliers (black circles) but the minimum read times are on par or slightly faster in the dask test cases. The large spread on when executing on main with MPI is surprising and may be due to machine setup, but in any case the similar read times for all dask methods and the standard main read is encouraging.</p>
 </div>
 </div>
 
