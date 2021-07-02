@@ -90,12 +90,12 @@
 <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="00_motivation.html">
-   overview
+   Overview
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="01_unytdask.html">
-   Daskified unyt Arrays
+   Daskified unyt arrays
   </a>
  </li>
  <li class="toctree-l1">
@@ -233,21 +233,79 @@
                 
   <div class="section" id="a-daskified-yt-using-data">
 <h1>A Daskified yt : using data<a class="headerlink" href="#a-daskified-yt-using-data" title="Permalink to this headline">¶</a></h1>
-<p>daskified <code class="docutils literal notranslate"><span class="pre">profile</span></code> and/or <code class="docutils literal notranslate"><span class="pre">quantitites</span></code>.</p>
+<p>Much of the power of yt lies in what happens to data after it is read in. Many of the operations are designed to interface with the chunk iterator described in the previous section so that calculations can be applied to chunks separately and then aggregated without loading an entire data array into memory.</p>
 <div class="section" id="daskified-derived-quantity-calculations">
 <h2>daskified <code class="docutils literal notranslate"><span class="pre">derived_quantity</span></code> calculations<a class="headerlink" href="#daskified-derived-quantity-calculations" title="Permalink to this headline">¶</a></h2>
+<p>Some of the simpler yt operations are defined by the <a class="reference external" href="https://yt-project.org/doc/analyzing/objects.html#derived-quantities"><code class="docutils literal notranslate"><span class="pre">derived_quantities</span></code></a> class, which registers <code class="docutils literal notranslate"><span class="pre">quantities</span></code> to datasets. For example,</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">yt</span>
 <span class="n">ds</span> <span class="o">=</span> <span class="n">yt</span><span class="o">.</span><span class="n">load_sample</span><span class="p">(</span><span class="s2">&quot;snapshot_033&quot;</span><span class="p">)</span>
 <span class="n">sp</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sphere</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">domain_center</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
 <span class="n">sp</span><span class="o">.</span><span class="n">quantities</span><span class="o">.</span><span class="n">extrema</span><span class="p">([(</span><span class="s2">&quot;PartType0&quot;</span><span class="p">,</span> <span class="s2">&quot;Density&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;PartType0&quot;</span><span class="p">,</span> <span class="s2">&quot;Temperature&quot;</span><span class="p">)])</span>
 </pre></div>
 </div>
-<p>returns the max/min values for each field.</p>
+<p>returns the max/min values for each field. Other <code class="docutils literal notranslate"><span class="pre">quantities</span></code> include operations for calculating weighted averages, spatial locations of extrema values, angular momentum and <a class="reference external" href="https://yt-project.org/doc/analyzing/objects.html#derived-quantities">more</a>. All of these operations work within yt’s chunking context with <code class="docutils literal notranslate"><span class="pre">process_chunk</span></code> reduction operations applied to each chunk and then aggregated.</p>
 <div class="section" id="direct-dask-array-approach">
 <h3>direct dask-array approach<a class="headerlink" href="#direct-dask-array-approach" title="Permalink to this headline">¶</a></h3>
-<p>Brief code description: easy to write! reduces complexity and lines of code.</p>
-<p>Here we compare execution times for different <code class="docutils literal notranslate"><span class="pre">derived_quantity</span></code> operations between methods and testing conditions (the test type).</p>
-<p><img alt="" src="_images/dask_array_quantities.png" /></p>
+<p>Given that the daskified particle reader described in the previous section can return a delayed <code class="docutils literal notranslate"><span class="pre">unyt_dask</span></code> array, it is straightfowrd to reduce the code complexity of the <code class="docutils literal notranslate"><span class="pre">derived_quantity</span></code> calculations with standard dask operations. Consider finding the current class for finding the extrema of a field:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Extrema</span><span class="p">(</span><span class="n">DerivedQuantity</span><span class="p">):</span>
+    <span class="c1"># &lt;&lt;&lt;&lt; docstring deleted &gt;&gt;&gt;&gt;&gt;</span>
+
+    <span class="k">def</span> <span class="nf">count_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">non_zero</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_vals</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">non_zero</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">iter_fields</span><span class="p">(</span><span class="n">fields</span><span class="p">))</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">non_zero</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rv</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">rv</span> <span class="o">=</span> <span class="n">rv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">rv</span>
+
+    <span class="k">def</span> <span class="nf">process_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">non_zero</span><span class="p">):</span>
+        <span class="n">vals</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">_determine_fields</span><span class="p">(</span><span class="n">field</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">fd</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">non_zero</span><span class="p">:</span>
+                <span class="n">fd</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="n">fd</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">fd</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">vals</span> <span class="o">+=</span> <span class="p">[</span><span class="n">fd</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">fd</span><span class="o">.</span><span class="n">max</span><span class="p">()]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vals</span> <span class="o">+=</span> <span class="p">[</span>
+                    <span class="n">array_like_field</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">HUGE</span><span class="p">,</span> <span class="n">field</span><span class="p">),</span>
+                    <span class="n">array_like_field</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">-</span><span class="n">HUGE</span><span class="p">,</span> <span class="n">field</span><span class="p">),</span>
+                <span class="p">]</span>
+        <span class="k">return</span> <span class="n">vals</span>
+
+    <span class="k">def</span> <span class="nf">reduce_intermediate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="c1"># The values get turned into arrays here.</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_source</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">arr</span><span class="p">([</span><span class="n">mis</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">mas</span><span class="o">.</span><span class="n">max</span><span class="p">()])</span>
+            <span class="k">for</span> <span class="n">mis</span><span class="p">,</span> <span class="n">mas</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">values</span><span class="p">[::</span><span class="mi">2</span><span class="p">],</span> <span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">])</span>
+        <span class="p">]</span>
+</pre></div>
+</div>
+<p>The superclass <code class="docutils literal notranslate"><span class="pre">DervideQuantity</span></code>’s <code class="docutils literal notranslate"><span class="pre">__call__()</span></code> method will iterate over the chunks, calling <code class="docutils literal notranslate"><span class="pre">process_chunk</span></code> for each one to find each chunks min/max value. Those min/max values are then agreggated with the <code class="docutils literal notranslate"><span class="pre">reduce_intermediate</span></code> function. But when our particle IO returns a <code class="docutils literal notranslate"><span class="pre">unyt_dask</span></code> array, we do not need to explicitly loop over chunks and just call <code class="docutils literal notranslate"><span class="pre">.min()</span></code> and <code class="docutils literal notranslate"><span class="pre">.max()</span></code> on our dask arrays. Our modified class assembles a list of delayed actions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Extrema</span><span class="p">(</span><span class="n">DerivedQuantity</span><span class="p">):</span>
+
+    <span class="c1"># &lt;&lt;&lt;&lt; trimmed &gt;&gt;&gt;&gt;</span>
+    
+    <span class="k">def</span> <span class="nf">_get_delayed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">non_zero</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">non_zero</span><span class="p">:</span>
+            <span class="n">dl</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_source</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
+                <span class="n">msk</span> <span class="o">=</span> <span class="n">data</span> <span class="o">!=</span> <span class="mf">0.</span>
+                <span class="n">dl</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">data</span><span class="p">[</span><span class="n">msk</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">data</span><span class="p">[</span><span class="n">msk</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dl</span> <span class="o">=</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_source</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_source</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">dl</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">non_zero</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">non_zero</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and those delayed actions are computed in the <code class="docutils literal notranslate"><span class="pre">super().__call()__</span></code>. Other more complex calculations can be simplified as well – the weighted averages for example can be replaced with calls to Dask’s implementation of <code class="docutils literal notranslate"><span class="pre">average</span></code>.</p>
+<p>In practice however, the performance of this naive dask-array approach is not quite as good as the yt-native approach. Here we compare execution times for different <code class="docutils literal notranslate"><span class="pre">derived_quantity</span></code> operations between methods and testing conditions (the test type) as follows:</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">test_id</span></code> refers to the following configurations:</p>
 <table class="colwidths-auto table">
 <thead>
@@ -279,7 +337,8 @@
 </tr>
 </tbody>
 </table>
-<p>The <code class="docutils literal notranslate"><span class="pre">dask_</span></code> tests use the daskified code branch (link), the <code class="docutils literal notranslate"><span class="pre">main_</span></code> tests use the current <code class="docutils literal notranslate"><span class="pre">main</span></code> branch of yt.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">dask_</span></code> tests use the daskified code branch (link), the <code class="docutils literal notranslate"><span class="pre">main_</span></code> tests use the current <code class="docutils literal notranslate"><span class="pre">main</span></code> branch of yt. Operations are tested on both <code class="docutils literal notranslate"><span class="pre">all_data</span></code> and <code class="docutils literal notranslate"><span class="pre">sphere</span></code> selector objects and include: <code class="docutils literal notranslate"><span class="pre">extrema</span></code>, <code class="docutils literal notranslate"><span class="pre">total_quantity</span></code>, <code class="docutils literal notranslate"><span class="pre">weighted_average_quantity</span></code> and <code class="docutils literal notranslate"><span class="pre">center_of_mass</span></code>. The code for the tests is available in the <code class="docutils literal notranslate"><span class="pre">./code</span></code> directory of this poster’s repository (<a class="reference external" href="https://github.com/chrishavlin/scipy2021_ytDaskening">link</a>, files are <code class="docutils literal notranslate"><span class="pre">./code/test_quantities_*.py</span></code>). Grouping only by the test type, the elapsed execution time for each operation are:</p>
+<p><img alt="" src="_images/dask_array_quantities.png" /></p>
 <p>The above tests group together multiple tests over <code class="docutils literal notranslate"><span class="pre">sphere</span></code> and <code class="docutils literal notranslate"><span class="pre">all_data</span></code> selector objects:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sp</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sphere</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">domain_center</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
 <span class="n">ad</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">all_data</span><span class="p">()</span>
@@ -287,7 +346,7 @@
 </div>
 <p>Of the test operations that are currently function for both these operations, we can additionall compare execution times between the selector objects:</p>
 <p><img alt="" src="_images/dask_array_quantities_sel.png" /></p>
-<p>From the above comparisons, it is clear that the dask-array approach is generally not performing as well as the native yt approach. The main reason for this, is that the native yt methods were carefully written to optimize chunk iteration. For example, when calculating the extrema for multiple fields, each chunk is read only once during which the data for each field is aggregated and then later reduced to the final extrema values. In the dask-array approach, the task graph includes a read for each field being aggregated. The <code class="docutils literal notranslate"><span class="pre">weighted_average_quantities</span></code> and <code class="docutils literal notranslate"><span class="pre">center_of_mass</span></code> daskified calculations perform well compared to their native yt approaches for the default dask <code class="docutils literal notranslate"><span class="pre">Client</span></code>. More words here…</p>
+<p>From the above comparisons, it is clear that the dask-array approach is generally not performing as well as the native yt approach. The main reason for this, is that the native yt methods were carefully written to optimize chunk iteration. For example, when calculating the extrema for multiple fields, each chunk is read only once during which the data for each field is aggregated and then later reduced to the final extrema values. In the dask-array approach, the task graph includes a read for each field being aggregated. The <code class="docutils literal notranslate"><span class="pre">weighted_average_quantities</span></code> and <code class="docutils literal notranslate"><span class="pre">center_of_mass</span></code> daskified calculations perform well compared to their native yt approaches for the default dask <code class="docutils literal notranslate"><span class="pre">Client</span></code>. To improve our approach, we may be able to use a delayed workflow.</p>
 </div>
 <div class="section" id="dask-delayed-approach">
 <h3>dask-delayed approach<a class="headerlink" href="#dask-delayed-approach" title="Permalink to this headline">¶</a></h3>
