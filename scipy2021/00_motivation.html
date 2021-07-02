@@ -51,7 +51,7 @@
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Daskified unyt Arrays" href="01_unytdask.html" />
+    <link rel="next" title="Daskified unyt arrays" href="01_unytdask.html" />
     <link rel="prev" title="On the Daskening of yt" href="intro.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -95,7 +95,7 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="01_unytdask.html">
-   Daskified unyt Arrays
+   Daskified unyt arrays
   </a>
  </li>
  <li class="toctree-l1">
@@ -109,8 +109,13 @@
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="04_finalthoughts.html">
+   Dasken(yt)
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="99_setup.html">
-   setup
+   Repository notes
   </a>
  </li>
 </ul>
@@ -206,9 +211,13 @@
 <p>While yt already supports lazy serial and MPI-parallel computations, refactoring yt to use Dask has a number of potential benefits. For the yt user, an underlying Dask framework allows for parallel computation with minimal setup and a consistent experience across machines from laptops to HPC environments. It also allows for easier custom parallel workflows, for example by returning Dask arrays rather than MPI iterable objects (while still operating in MPI environments with dask-mpi) from which a user can use more array-like manipulations while still working in parallel. For the developer, a Dask refactor will simplify the codebase and improve the development process, particularly for implementing new parallel algorithms.</p>
 <p>In this presentation, we will show our latest efforts to leverage Dask within the yt framework, building off of previous reports on Dask-yt prototyping shown at RHytHM2020 (<a class="reference external" href="https://youtu.be/3GLbEBgpaK4">Leveraging Dask in yt</a>) and the yt-blog (<a class="reference external" href="https://yt-project.github.io/blog/posts/dask_yt_pytep/">Dask and yt: a pre-YTEP</a>). These reports described a number of separate experimental prototypes including a “Daskified” particle reader, a binned-statistic calculation using yt’s already-optimized parallel statistic methods with Dask delayed arrays and unyt arrays with Dask support. In this presentation, we will present a more fully integrated prototype directly within the yt API. We will show comparisons in use and performance between the existing chunk framework and the new Daskified versions for both single-processor serial and parallel computations.</p>
 <p>The poster is divided into a number of sections:</p>
-<p><span class="xref myst">Daskified unyt arrays</span>: demonstrating a daskified version of the arrays underlying yt
-<span class="xref myst">Daskified reads</span>: a discussion of yt IO and an implementaiton of a daskified particle reader for yt.
-<span class="xref myst">Daskified computions</span>: demonstrating some daskified reductions</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="01_unytdask.html"><span class="doc std std-doc">Daskified unyt arrays</span></a>: demonstrating a daskified version of the arrays underlying yt.</p></li>
+<li><p><a class="reference internal" href="02_daskifiedread.html"><span class="doc std std-doc">Daskified reads</span></a>: a discussion of yt IO and an implementaiton of a daskified particle reader for yt.</p></li>
+<li><p><a class="reference internal" href="03_daskifiedquantity.html"><span class="doc std std-doc">Daskified computations</span></a>: demonstrating some daskified reductions.</p></li>
+<li><p><a class="reference internal" href="04_finalthoughts.html"><span class="doc std std-doc">Dasken(yt)</span></a>: some final thoughts on further Daskening.</p></li>
+<li><p><a class="reference internal" href="99_setup.html"><span class="doc std std-doc">Repository notes</span></a>: notes on the code used in this poster.</p></li>
+</ul>
 </div>
 
     <script type="text/x-thebe-config">
@@ -237,7 +246,7 @@
         <div class='prev-next-bottom'>
             
     <a class='left-prev' id="prev-link" href="intro.html" title="previous page">On the Daskening of yt</a>
-    <a class='right-next' id="next-link" href="01_unytdask.html" title="next page">Daskified unyt Arrays</a>
+    <a class='right-next' id="next-link" href="01_unytdask.html" title="next page">Daskified unyt arrays</a>
 
         </div>
         
