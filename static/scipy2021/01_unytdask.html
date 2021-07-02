@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Daskified unyt Arrays &#8212; On the Daskening of yt</title>
+    <title>Daskified unyt arrays &#8212; On the Daskening of yt</title>
     
   <link href="_static/css/theme.css" rel="stylesheet" />
   <link href="_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
@@ -52,7 +52,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="A Daskified yt : reading data" href="02_daskifiedread.html" />
-    <link rel="prev" title="Motivation" href="00_motivation.html" />
+    <link rel="prev" title="Overview" href="00_motivation.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
     
@@ -90,12 +90,12 @@
 <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="00_motivation.html">
-   Motivation
+   Overview
   </a>
  </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   Daskified unyt Arrays
+   Daskified unyt arrays
   </a>
  </li>
  <li class="toctree-l1">
@@ -106,11 +106,6 @@
  <li class="toctree-l1">
   <a class="reference internal" href="03_daskifiedquantity.html">
    A Daskified yt : using data
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="04_testing.html">
-   Testing
   </a>
  </li>
  <li class="toctree-l1">
@@ -230,18 +225,18 @@
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#a-comparison">
-   a comparison
+  <a class="reference internal nav-link" href="#a-performance-comparison">
+   A performance comparison
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#an-aside-on-when-to-convert-units">
-     an aside on when to convert units
+     An aside on when to convert units
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#final-performance-comparison">
-     final performance comparison
+     Final performance comparison
     </a>
    </li>
   </ul>
@@ -258,11 +253,11 @@
               <div>
                 
   <div class="section" id="daskified-unyt-arrays">
-<h1>Daskified unyt Arrays<a class="headerlink" href="#daskified-unyt-arrays" title="Permalink to this headline">¶</a></h1>
-<p>Notes on how yt uses unyt arrays.</p>
-<p>Part of the Daskening of yt relies on adding Dask support to unyt arrays (<a class="reference external" href="https://github.com/yt-project/unyt/pull/185">PR 185</a>). As this has potential users beyond yt users, it is worth walking through its usage.</p>
+<h1>Daskified unyt arrays<a class="headerlink" href="#daskified-unyt-arrays" title="Permalink to this headline">¶</a></h1>
+<p>Throughout yt, data is stored using unit-aware <a class="reference external" href="https://unyt.readthedocs.io/en/stable/">unyt</a> arrays. A unyt array is a subclass of a standard numpy ndarray wrapped with operations that track units. So a part of the Daskening of yt relies on adding Dask support to unyt arrays (<a class="reference external" href="https://github.com/yt-project/unyt/pull/185">PR 185</a>). As this has potential users beyond yt users, it is worth walking through its usage. We also describe the general approach to implementing Dask support for unyt arrays.</p>
 <div class="section" id="example-usage">
 <h2>example usage<a class="headerlink" href="#example-usage" title="Permalink to this headline">¶</a></h2>
+<p>At present, the primary way to create a <code class="docutils literal notranslate"><span class="pre">unyt_dask_array</span></code> is through the <code class="docutils literal notranslate"><span class="pre">unyt_from_dask</span></code> function, which accepts a standard Dask array and a unit along with all of the optional parameters for <code class="docutils literal notranslate"><span class="pre">unyt.unyt_array</span></code>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">unyt</span> <span class="kn">import</span> <span class="n">dask_array</span> <span class="k">as</span> <span class="n">unyt_dask_array</span><span class="p">,</span> <span class="n">unyt_quantity</span><span class="p">,</span> <span class="n">unyt_array</span>
@@ -275,13 +270,7 @@
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x1</span> <span class="o">=</span> <span class="n">unyt_dask_array</span><span class="o">.</span><span class="n">unyt_from_dask</span><span class="p">(</span><span class="n">da</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mf">1e6</span><span class="p">,),</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mf">1e5</span><span class="p">)),</span> <span class="s1">&#39;m&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x1</span>
+<span class="n">x1</span>
 </pre></div>
 </div>
 </div>
@@ -333,6 +322,7 @@
 </tr>
 </table></div></div>
 </div>
+<p>So we’ve created what looks like a Dask array of 10 chunks, but with an extra units attribute. Like a <code class="docutils literal notranslate"><span class="pre">unyt_array</span></code>, we can convert units:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x1</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cm&#39;</span><span class="p">)</span>
@@ -387,6 +377,7 @@
 </tr>
 </table></div></div>
 </div>
+<p>and we can operate on multiple arrays, and any necessary unyt conversions will be applied automatically:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x2</span> <span class="o">=</span> <span class="n">unyt_dask_array</span><span class="o">.</span><span class="n">unyt_from_dask</span><span class="p">(</span><span class="mf">0.001</span> <span class="o">*</span> <span class="n">da</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mf">1e6</span><span class="p">,),</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mf">1e5</span><span class="p">)),</span> <span class="s1">&#39;km&#39;</span><span class="p">)</span>
@@ -449,6 +440,7 @@
 </tr>
 </table></div></div>
 </div>
+<p>but in both these cases, we’re still working with delayed arrays. Once we call <code class="docutils literal notranslate"><span class="pre">compute</span></code>, we’ll get back either a plain <code class="docutils literal notranslate"><span class="pre">unyt_array</span></code> or <code class="docutils literal notranslate"><span class="pre">unyt_quanity</span></code> depending on the operation:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
@@ -456,73 +448,20 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>unyt_quantity(0.99990974, &#39;m&#39;)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>unyt_quantity(0.99956126, &#39;m&#39;)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">greater</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">unyt_quantity</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="s1">&#39;cm&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x1</span><span class="o">.</span><span class="n">units</span><span class="p">))</span> <span class="c1">## &gt; operator is broken?</span>
-<span class="n">mask</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">[</span><span class="mi">50</span><span class="p">:</span><span class="mi">60</span><span class="p">]</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><table>
-<tr>
-<td>
-<table>
-  <thead>
-    <tr><td> </td><th> Array </th><th> Chunk </th></tr>
-  </thead>
-  <tbody>
-    <tr><th> Bytes </th><td> 1000.00 kB </td> <td> 100.00 kB </td></tr>
-    <tr><th> Shape </th><td> (1000000,) </td> <td> (100000,) </td></tr>
-    <tr><th> Count </th><td> 20 Tasks </td><td> 10 Chunks </td></tr>
-    <tr><th> Type </th><td> bool </td><td> numpy.ndarray </td></tr>
-  </tbody>
-</table>
-</td>
-<td>
-<svg width="170" height="75" style="stroke:rgb(0,0,0);stroke-width:1" >
-
-  <!-- Horizontal lines -->
-  <line x1="0" y1="0" x2="120" y2="0" style="stroke-width:2" />
-  <line x1="0" y1="25" x2="120" y2="25" style="stroke-width:2" />
-
-  <!-- Vertical lines -->
-  <line x1="0" y1="0" x2="0" y2="25" style="stroke-width:2" />
-  <line x1="12" y1="0" x2="12" y2="25" />
-  <line x1="24" y1="0" x2="24" y2="25" />
-  <line x1="36" y1="0" x2="36" y2="25" />
-  <line x1="48" y1="0" x2="48" y2="25" />
-  <line x1="60" y1="0" x2="60" y2="25" />
-  <line x1="72" y1="0" x2="72" y2="25" />
-  <line x1="84" y1="0" x2="84" y2="25" />
-  <line x1="96" y1="0" x2="96" y2="25" />
-  <line x1="108" y1="0" x2="108" y2="25" />
-  <line x1="120" y1="0" x2="120" y2="25" style="stroke-width:2" />
-
-  <!-- Colored Rectangle -->
-  <polygon points="0.0,0.0 120.0,0.0 120.0,25.412616514582485 0.0,25.412616514582485" style="fill:#ECB172A0;stroke-width:0"/>
-
-  <!-- Text -->
-  <text x="60.000000" y="45.412617" font-size="1.0rem" font-weight="100" text-anchor="middle" >1000000</text>
-  <text x="140.000000" y="12.706308" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(0,140.000000,12.706308)">1</text>
-</svg>
-</td>
-</tr>
-</table></div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>unyt_quantity(1.24946259, &#39;m&#39;)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>unyt_array([0.895046  , 0.9392074 , 0.98590878, 0.5823761 , 0.26222106,
+            1.74925792, 0.41219676, 0.38931168, 0.71809784, 0.44802312], &#39;m&#39;)
 </pre></div>
 </div>
 </div>
@@ -530,23 +469,18 @@
 </div>
 <div class="section" id="design">
 <h2>Design<a class="headerlink" href="#design" title="Permalink to this headline">¶</a></h2>
-<p>The approach to a daskifed unyt array is to create a new Dask Collection that has the behavior of both a dask array and a unyt array.</p>
-<p>Insert some code snippets…</p>
+<p>Designing the <code class="docutils literal notranslate"><span class="pre">unyt_dask_array</span></code> is an interesting problem. A standard Dask array is what’s called a <span class="xref myst">Dask Collection–broken link</span> and it implements a large number of array operations to allow computation over a chunked array. A <code class="docutils literal notranslate"><span class="pre">unyt_array</span></code> is a direct subclass of a <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code> with implementations of <code class="docutils literal notranslate"><span class="pre">numpy</span></code> array protocols in order to wrap operations in units and specify the correct units behavior for different operations. Given that the cross-chunk operations implemented by Dask are fairly complex, we created the <code class="docutils literal notranslate"><span class="pre">unyt_dask_array</span></code> as a subclass of a standard Dask array. All of the units-related operations are then handled using hidden <code class="docutils literal notranslate"><span class="pre">unyt_quantity</span></code> attributes and decorators and anytime the units-related operation indicates a unit conversion, those conversion factors are multiplied onto the dask array.</p>
 </div>
-<div class="section" id="a-comparison">
-<h2>a comparison<a class="headerlink" href="#a-comparison" title="Permalink to this headline">¶</a></h2>
-<p>Using unyt dask arrays comes with the enhanced performance expected from using dask arrays.</p>
+<div class="section" id="a-performance-comparison">
+<h2>A performance comparison<a class="headerlink" href="#a-performance-comparison" title="Permalink to this headline">¶</a></h2>
+<p>Using unyt dask arrays comes with the enhanced performance expected from using dask arrays, but it’s important that ensure that our extra tracking of units is not significantly undermining performance relative to normal dask arrays.</p>
+<p>We can do some initial testing by creating arrays for each of our array flavors, a plain <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>, a plain <code class="docutils literal notranslate"><span class="pre">unyt.unyt_array</span></code>, a plain <code class="docutils literal notranslate"><span class="pre">dask.array</span></code> and a <code class="docutils literal notranslate"><span class="pre">unyt_dask_array</span></code>, and comparing execution time of an operation that causes a change in units:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">array_shape</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mf">1e8</span><span class="p">),</span> <span class="p">)</span>
 <span class="n">chunk_size</span> <span class="o">=</span> <span class="mf">1e6</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plain_numpy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">array_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="n">plain_numpy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">array_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">plain_unyt</span> <span class="o">=</span> <span class="n">unyt_array</span><span class="p">(</span><span class="n">plain_numpy</span><span class="p">,</span><span class="s1">&#39;m&#39;</span><span class="p">)</span>
 <span class="n">plain_dask</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">array_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">chunks</span> <span class="o">=</span> <span class="p">(</span><span class="n">chunk_size</span><span class="p">,))</span>
 <span class="n">unyt_dask</span> <span class="o">=</span> <span class="n">unyt_dask_array</span><span class="o">.</span><span class="n">unyt_from_dask</span><span class="p">(</span><span class="n">plain_dask</span><span class="p">,</span><span class="s1">&#39;m&#39;</span><span class="p">)</span>
@@ -554,7 +488,7 @@
 </div>
 </div>
 </div>
-<p>Operations for all four arrays:</p>
+<p>And for each of our arrays, we’ll compute the time:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it 
@@ -563,7 +497,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>204 ms ± 1.9 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>215 ms ± 9.69 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -576,7 +510,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>203 ms ± 2.21 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>209 ms ± 6.58 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -589,7 +523,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>87.8 ms ± 4.67 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>79.7 ms ± 3.13 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -602,12 +536,12 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>85.2 ms ± 5.14 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>70.5 ms ± 2.07 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
 </div>
-<p>Operations with unit conversions</p>
+<p>Operations with unit conversions will incur an extra penalty:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it 
@@ -616,7 +550,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>372 ms ± 14.4 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>368 ms ± 11.2 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -629,14 +563,15 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>101 ms ± 1.6 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>101 ms ± 414 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
 </div>
+<p>but we can see that (1) better performance for <code class="docutils literal notranslate"><span class="pre">unyt_dask</span></code> arrays than plain <code class="docutils literal notranslate"><span class="pre">unyt_array</span></code> and (2) similar performance for our <code class="docutils literal notranslate"><span class="pre">unyt_dask</span></code> and plain <code class="docutils literal notranslate"><span class="pre">dask.array</span></code> arrays. We show some more complete performance testing below.</p>
 <div class="section" id="an-aside-on-when-to-convert-units">
-<h3>an aside on when to convert units<a class="headerlink" href="#an-aside-on-when-to-convert-units" title="Permalink to this headline">¶</a></h3>
-<p>note, it’s worth a reminder that when stringing together operations you can sometimes save on computation by delaying the scalar operation until after any reductions.</p>
+<h3>An aside on when to convert units<a class="headerlink" href="#an-aside-on-when-to-convert-units" title="Permalink to this headline">¶</a></h3>
+<p>As a small aside, it’s worth a reminder that when stringing together operations you can sometimes save on computation by delaying the scalar operation until after any reductions. Every unit conversion is an elementwise-multiplication of a constant and so if that multiplciation by a constant can be delayed until after a reduction, you can save on the number of multiplications. For example, the following operations are equivalent:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="p">(</span> <span class="p">(</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">plain_numpy</span> <span class="p">)</span><span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
@@ -668,6 +603,7 @@
 </div>
 </div>
 </div>
+<p>So when converting units, converting after a computation:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it 
@@ -676,20 +612,21 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>238 ms ± 3.54 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>211 ms ± 7.75 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
 </div>
+<p>will be faster than converting before the operation:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it 
-<span class="p">(</span><span class="n">plain_unyt</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cm*cm&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="p">(</span><span class="n">plain_unyt</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cm&#39;</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>412 ms ± 10.5 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>376 ms ± 8.16 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -703,7 +640,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>104 ms ± 3.53 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>104 ms ± 3.28 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -711,12 +648,12 @@
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it 
-<span class="p">(</span><span class="n">unyt_dask</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cm*cm&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+<span class="p">(</span><span class="n">unyt_dask</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cm&#39;</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>88.9 ms ± 6.54 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>108 ms ± 4.41 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -724,11 +661,10 @@
 <p>So we see that in operations where it’s possible, it is worth putting off unit conversions until after array reductions so that we spend less time on multiplying by constants.</p>
 </div>
 <div class="section" id="final-performance-comparison">
-<h3>final performance comparison<a class="headerlink" href="#final-performance-comparison" title="Permalink to this headline">¶</a></h3>
+<h3>Final performance comparison<a class="headerlink" href="#final-performance-comparison" title="Permalink to this headline">¶</a></h3>
 <p>Returning to the general question of unyt-dask array performance, we want to be sure that our unyt-dask arrays are preforming on-par with standard dask arrays. Towards that end, we’ve run a suite of performance tests measuring the time to execute <code class="docutils literal notranslate"><span class="pre">(x</span> <span class="pre">**</span> <span class="pre">2).mean()</span></code> vs size of the array, <code class="docutils literal notranslate"><span class="pre">x</span></code>. The full code is available at <a class="reference external" href="https://github.com/chrishavlin/scipy2021_ytDaskening/blob/main/code/test_daskunyt.py"><code class="docutils literal notranslate"><span class="pre">/code/test_daskunyt.py</span></code></a> and the following figure captures the results:</p>
 <p><img alt="" src="_images/dask_unyt_perf.png" /></p>
-<p>The y-axis is the minimum execution time of the operation, x-axis is the size of the array. The black and red curves are standard numpy and unyt arrays, respectively. The blue and green curves are dask and unyt-dask arrays for different number of workers (4 and 6, both single-threaded). The chunksize is fixed at 1e7 for all runs. Add some more description…</p>
-<p>So the unyt-dask arrays perform similarly to plain dask arrays and at larger array sizes provide a decent speedup compared to plain unyt arrays. Furthermore, the unyt-dask arrays allows computation on larger-than memory arrays. The largest array tests would require 80 Gb of memory if using a plain unyt array:</p>
+<p>The y-axis is the minimum execution time of the operation, x-axis is the size of the array. The black and red curves are standard numpy and unyt arrays, respectively. The blue and green curves are dask and unyt-dask arrays for different number of workers (4 and 6, both single-threaded). The chunksize is fixed at 1e7 for all runs. So we can see that at small array sizes, standard <code class="docutils literal notranslate"><span class="pre">numpy</span></code> and <code class="docutils literal notranslate"><span class="pre">unyt_array</span></code> arrays are faster (not surprising), but as array size increases, the <code class="docutils literal notranslate"><span class="pre">dask</span></code> and <code class="docutils literal notranslate"><span class="pre">unyt_dask</span></code> arrays are faster. We can also see that the unyt-dask arrays perform similarly to plain dask arrays and at larger array sizes provide a decent speedup compared to plain unyt arrays. Furthermore, the unyt-dask arrays allows computation on larger-than memory arrays. The largest array tests would require 80 Gb of memory if using a plain unyt array:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">unyt_dask_array</span><span class="o">.</span><span class="n">unyt_from_dask</span><span class="p">(</span><span class="n">da</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mf">1e10</span><span class="p">,),</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mf">1e7</span><span class="p">)),</span><span class="s1">&#39;m&#39;</span><span class="p">)</span>
@@ -822,7 +758,7 @@
         
         <div class='prev-next-bottom'>
             
-    <a class='left-prev' id="prev-link" href="00_motivation.html" title="previous page">Motivation</a>
+    <a class='left-prev' id="prev-link" href="00_motivation.html" title="previous page">Overview</a>
     <a class='right-next' id="next-link" href="02_daskifiedread.html" title="next page">A Daskified yt : reading data</a>
 
         </div>

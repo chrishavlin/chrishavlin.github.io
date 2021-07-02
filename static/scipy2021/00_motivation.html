@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Motivation &#8212; On the Daskening of yt</title>
+    <title>Overview &#8212; On the Daskening of yt</title>
     
   <link href="_static/css/theme.css" rel="stylesheet" />
   <link href="_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
@@ -90,7 +90,7 @@
 <ul class="current nav bd-sidenav">
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   Motivation
+   Overview
   </a>
  </li>
  <li class="toctree-l1">
@@ -106,11 +106,6 @@
  <li class="toctree-l1">
   <a class="reference internal" href="03_daskifiedquantity.html">
    A Daskified yt : using data
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="04_testing.html">
-   Testing
   </a>
  </li>
  <li class="toctree-l1">
@@ -197,24 +192,6 @@
         <!-- Table of contents -->
         <div class="d-none d-md-block col-md-2 bd-toc show">
             
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
-            </div>
-            <nav id="bd-toc-nav">
-                <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#prior-work-on-the-daskening-of-yt">
-   prior work on the Daskening of yt
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#this-presentation">
-   this presentation
-  </a>
- </li>
-</ul>
-
-            </nav>
         </div>
     </div>
 </div>
@@ -223,17 +200,15 @@
         
               <div>
                 
-  <div class="section" id="motivation">
-<h1>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h1>
-<p>why daskify yt?</p>
-<div class="section" id="prior-work-on-the-daskening-of-yt">
-<h2>prior work on the Daskening of yt<a class="headerlink" href="#prior-work-on-the-daskening-of-yt" title="Permalink to this headline">¶</a></h2>
-<p>describe the work presented at RHytHM, pre-YTEP.</p>
-</div>
-<div class="section" id="this-presentation">
-<h2>this presentation<a class="headerlink" href="#this-presentation" title="Permalink to this headline">¶</a></h2>
-<p>describe the general updates to the work, point to the pages in the table of contents.</p>
-</div>
+  <div class="section" id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<p>The yt package is a cross-domain tool for visualization and analysis of data. While still used primarily within the computational astrophysics community, a number of recent efforts have focused on transforming yt into a more domain agnostic tool. Part of the effort to expand the yt platform includes leveraging recent advancements from across the open source python ecosystem. This presentation focuses on advancements in using Dask within the yt framework to improve both serial and parallel workflows.</p>
+<p>While yt already supports lazy serial and MPI-parallel computations, refactoring yt to use Dask has a number of potential benefits. For the yt user, an underlying Dask framework allows for parallel computation with minimal setup and a consistent experience across machines from laptops to HPC environments. It also allows for easier custom parallel workflows, for example by returning Dask arrays rather than MPI iterable objects (while still operating in MPI environments with dask-mpi) from which a user can use more array-like manipulations while still working in parallel. For the developer, a Dask refactor will simplify the codebase and improve the development process, particularly for implementing new parallel algorithms.</p>
+<p>In this presentation, we will show our latest efforts to leverage Dask within the yt framework, building off of previous reports on Dask-yt prototyping shown at RHytHM2020 (<a class="reference external" href="https://youtu.be/3GLbEBgpaK4">Leveraging Dask in yt</a>) and the yt-blog (<a class="reference external" href="https://yt-project.github.io/blog/posts/dask_yt_pytep/">Dask and yt: a pre-YTEP</a>). These reports described a number of separate experimental prototypes including a “Daskified” particle reader, a binned-statistic calculation using yt’s already-optimized parallel statistic methods with Dask delayed arrays and unyt arrays with Dask support. In this presentation, we will present a more fully integrated prototype directly within the yt API. We will show comparisons in use and performance between the existing chunk framework and the new Daskified versions for both single-processor serial and parallel computations.</p>
+<p>The poster is divided into a number of sections:</p>
+<p><span class="xref myst">Daskified unyt arrays</span>: demonstrating a daskified version of the arrays underlying yt
+<span class="xref myst">Daskified reads</span>: a discussion of yt IO and an implementaiton of a daskified particle reader for yt.
+<span class="xref myst">Daskified computions</span>: demonstrating some daskified reductions</p>
 </div>
 
     <script type="text/x-thebe-config">

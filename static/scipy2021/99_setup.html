@@ -89,7 +89,7 @@
 <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="00_motivation.html">
-   Motivation
+   overview
   </a>
  </li>
  <li class="toctree-l1">
@@ -191,6 +191,19 @@
         <!-- Table of contents -->
         <div class="d-none d-md-block col-md-2 bd-toc show">
             
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#notes-on-this-presentation">
+   notes on this presentation
+  </a>
+ </li>
+</ul>
+
+            </nav>
         </div>
     </div>
 </div>
@@ -201,25 +214,13 @@
                 
   <div class="section" id="setup">
 <h1>setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h1>
-<p>describe the specific source code requirements: point to open PRs, branches. Will freeze some <code class="docutils literal notranslate"><span class="pre">scipy</span></code> branches in my forks of yt and unyt.</p>
-<!-- 
-## dask + yt + unyt source 
-
-To actually run the notebooks requires some specific setup. 
-
-chrishavlin/yt branches 
-chrishavlin/unyt branches (link PR) 
-
-dask[full]
-mpi4py 
-
-see requirements.txt for full
-
-## presentation source
-
-Source code for this jupyter book: 
-
-Website is built with hugo. On building the jupyter book, the contents of `_build/html` are simply copied into the `static` directory of the hugo site. -->
+<p>The dask functionality for <code class="docutils literal notranslate"><span class="pre">yt</span></code> and <code class="docutils literal notranslate"><span class="pre">unyt</span></code> shown in this poster rely on several branches that are in progress. For reproducibility, the version of the yt branch used for the demonstrating and testing used in this presentation is at <a class="reference external" href="https://github.com/chrishavlin/yt/tree/scipy2021_dask">scipy2021_dask</a>. Additionally the <code class="docutils literal notranslate"><span class="pre">dask</span></code> branch relies on the <code class="docutils literal notranslate"><span class="pre">unyt</span></code> PR <a class="reference external" href="https://github.com/yt-project/unyt/pull/185">#185</a> branch.</p>
+<p>Both branches must be installed from source to reproduce the notebooks here.</p>
+<p>The native yt tests are run using the <a class="reference external" href="https://github.com/chrishavlin/yt/tree/scipy2021_main">scipy2021_main</a> branch, a frozen copy of the yt development branch from July 1, 2021.</p>
+<div class="section" id="notes-on-this-presentation">
+<h2>notes on this presentation<a class="headerlink" href="#notes-on-this-presentation" title="Permalink to this headline">¶</a></h2>
+<p>This SciPy2021 poster was created using Jupypter book, the source repository at <a class="reference external" href="https://github.com/chrishavlin/scipy2021_ytDaskening">https://github.com/chrishavlin/scipy2021_ytDaskening</a> includes instructions for building and deploying the Jupyter book.</p>
+</div>
 </div>
 
     <script type="text/x-thebe-config">
