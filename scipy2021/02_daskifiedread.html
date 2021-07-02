@@ -52,7 +52,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="A Daskified yt : using data" href="03_daskifiedquantity.html" />
-    <link rel="prev" title="Daskified unyt Arrays" href="01_unytdask.html" />
+    <link rel="prev" title="Daskified unyt arrays" href="01_unytdask.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
     
@@ -90,12 +90,12 @@
 <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="00_motivation.html">
-   overview
+   Overview
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="01_unytdask.html">
-   Daskified unyt Arrays
+   Daskified unyt arrays
   </a>
  </li>
  <li class="toctree-l1 current active">
@@ -224,11 +224,6 @@
    Examples: simple reads and selections
   </a>
  </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#initial-performance-tests">
-   initial performance tests
-  </a>
- </li>
 </ul>
 
             </nav>
@@ -287,11 +282,11 @@ c. read the data, applying the mask</p></li>
     <span class="k">return</span> <span class="n">dask</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">delayed_array</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>What’s nice about the above Daskified approach is that while <code class="docutils literal notranslate"><span class="pre">_read_particle_fields</span></code> is written linearly (read in data then apply selector to data) because the data arrays here are dask arrays, the selector is applied by-chunk using <code class="docutils literal notranslate"><span class="pre">dask.array.map_blocks</span></code> so that we are <strong>still</strong> handling each chunk separately. This greatly simplifies frontend development: to write the io methods for a new frontend, one need only implement a function to read from a single <code class="docutils literal notranslate"><span class="pre">data_file</span></code> (called <code class="docutils literal notranslate"><span class="pre">frontend_read_particle_fields</span></code> above)! Additionally, we can directly return Dask arrays, allowing a user to easily analyize their data in parallel when yt does not already have an optimized option.</p>
+<p>What’s nice about the above Daskified approach is that while <code class="docutils literal notranslate"><span class="pre">_read_particle_fields</span></code> is written linearly (read in data then apply selector to data) but because the data arrays here are dask arrays, the selector is applied by-chunk using <code class="docutils literal notranslate"><span class="pre">dask.array.map_blocks</span></code> so that we are <strong>still</strong> handling each chunk separately. This greatly simplifies frontend development: to write the io methods for a new frontend, one need only implement a function to read from a single <code class="docutils literal notranslate"><span class="pre">data_file</span></code> (called <code class="docutils literal notranslate"><span class="pre">frontend_read_particle_fields</span></code> above)! Additionally, we can directly return Dask arrays, allowing a user to easily analyize their data in parallel when yt does not already have an optimized option.</p>
 </div>
 <div class="section" id="examples-simple-reads-and-selections">
 <h2>Examples: simple reads and selections<a class="headerlink" href="#examples-simple-reads-and-selections" title="Permalink to this headline">¶</a></h2>
-<p>These exmaples use the scipy2021 branch from havlin’s unyt and yt forks (link it).</p>
+<p>These exmaples use the scipy2021 branch (see <span class="xref myst">setup</span>) to load in a Gadget HDF5 dataset:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
@@ -384,7 +379,7 @@ Wall time: 175 µs
 </tr>
 </table></div></div>
 </div>
-<p>So we see we get back a unyt-dask array with 9 chunks. And those 9 chunks are nicely parallelized:</p>
+<p>So we see we get back a unyt-dask array with 9 chunks nearly instantaneously. And those 9 chunks are nicely parallelized:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">visualize</span><span class="p">()</span>
@@ -539,10 +534,7 @@ Wall time: 3.77 s
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="initial-performance-tests">
-<h2>initial performance tests<a class="headerlink" href="#initial-performance-tests" title="Permalink to this headline">¶</a></h2>
-<p>So we see the Daskified all_data read is a tad slower while the selector application is a hair faster. These initial performance estimates ignore a lot of factors, and it also is important to compare to yt’s read times when using MPI. Towards that end, we’ve conducted a number of different performance tests.</p>
+<p>So we see the Daskified all_data read is a tad slower while the selector application is a hair faster, but they’re well within an acceptable range. If we spin up a dask Client, our read will happen in parallel:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dask.distributed</span> <span class="kn">import</span> <span class="n">Client</span>
@@ -638,15 +630,37 @@ Loading particle index:  92%|█████████▏| 11/12 [00:00&lt;00:
 </div>
 </div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">./code/</span></code> contains a number of scripts that measure the read time for a sphere for the <code class="docutils literal notranslate"><span class="pre">snapshot_033</span></code> dataset for all available methods. The following image shows the read time (excluding dataset loadtime and index build):</p>
+<p>So we see our parallel read is a bit slower. This isn’t surprising as using multiple workers will incur some overhead communication. But in general these time differences are fairly small.</p>
+<p>In the <code class="docutils literal notranslate"><span class="pre">./code/</span></code> directory of <a class="reference external" href="https://github.com/chrishavlin/scipy2021_ytDaskening">this poster’s repository</a>, we’ve written a number of scripts to measure the read time for a single field within a sphere for the <code class="docutils literal notranslate"><span class="pre">snapshot_033</span></code> dataset for all available methods, including MPI which is easier to test from command line. The following image shows a boxplot of the read time (excluding dataset loadtime and index build) for each method:</p>
 <p><img alt="" src="_images/dask_read_times.png" /></p>
 <p>The test types are defined as follows:</p>
-<p>dask: uses default client configuration (the yt implementation overrides this to 1 processor, 1 thread)
-dask_mpi: uses the dask-mpi scheduler, code executed with <code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">-np</span> <span class="pre">4</span> <span class="pre">python</span> <span class="pre">test_dask_mpi.py</span></code>
-dask_multiproc: uses standard dask client with 4 workers, 1 thread per worker
-main_mpi: main yt branch with MPI using 4 processors
-main_serial: main yt branch, standard read</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p>test type</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dask</span></code></p></td>
+<td><p>default client configuration</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">dask_mpi</span></code></p></td>
+<td><p>uses the dask-mpi scheduler with 4 workers</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dask_multiproc</span></code></p></td>
+<td><p>uses standard dask client with 4 workers, 1 thread per worker</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">main_mpi</span></code></p></td>
+<td><p>main yt branch with MPI using 4 processors</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">main_serial</span></code></p></td>
+<td><p>main yt branch, standard read</p></td>
+</tr>
+</tbody>
+</table>
+<p>The boxplot for each test type shows the median as a horizontal green line, the inter-quartile range (IQR) from the first to third quartile as a blue box, +/- 1.5 * IQR as the horizontal black lines and outliers as black circles.</p>
 <p>50-60 tests were performed for each case. The results show that the daskified read is at least as fast as the version on main. The extra communication results in some larger outliers (black circles) but the minimum read times are on par or slightly faster in the dask test cases. The large spread on when executing on main with MPI is surprising and may be due to machine setup, but in any case the similar read times for all dask methods and the standard main read is encouraging.</p>
+<p>In the following section, we conduct similar tests for a daskified yt operation that uses the daskified particle reader.</p>
 </div>
 </div>
 
@@ -675,7 +689,7 @@ main_serial: main yt branch, standard read</p>
         
         <div class='prev-next-bottom'>
             
-    <a class='left-prev' id="prev-link" href="01_unytdask.html" title="previous page">Daskified unyt Arrays</a>
+    <a class='left-prev' id="prev-link" href="01_unytdask.html" title="previous page">Daskified unyt arrays</a>
     <a class='right-next' id="next-link" href="03_daskifiedquantity.html" title="next page">A Daskified yt : using data</a>
 
         </div>

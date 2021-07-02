@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>On the Daskening of yt &#8212; On the Daskening of yt</title>
+    <title>Dasken(yt) &#8212; On the Daskening of yt</title>
     
   <link href="_static/css/theme.css" rel="stylesheet" />
   <link href="_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
@@ -51,7 +51,8 @@
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Overview" href="00_motivation.html" />
+    <link rel="next" title="setup" href="99_setup.html" />
+    <link rel="prev" title="A Daskified yt : using data" href="03_daskifiedquantity.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
     
@@ -80,13 +81,13 @@
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
     <div class="bd-toc-item active">
         <ul class="nav bd-sidenav">
- <li class="toctree-l1 current">
-  <a class="reference internal" href="#">
+ <li class="toctree-l1">
+  <a class="reference internal" href="intro.html">
    On the Daskening of yt
   </a>
  </li>
 </ul>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="00_motivation.html">
    Overview
@@ -107,8 +108,8 @@
    A Daskified yt : using data
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="04_finalthoughts.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    <code class="docutils literal notranslate">
     <span class="pre">
      Dasken(yt)
@@ -118,7 +119,7 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="99_setup.html">
-   Repository notes
+   setup
   </a>
  </li>
 </ul>
@@ -162,7 +163,7 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/intro.md"><button type="button"
+        <a class="dropdown-buttons" href="_sources/04_finalthoughts.md"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
                 data-placement="left">.md</button></a>
         <!-- Download PDF via print -->
@@ -208,13 +209,9 @@
         
               <div>
                 
-  <div class="section" id="on-the-daskening-of-yt">
-<h1>On the Daskening of yt<a class="headerlink" href="#on-the-daskening-of-yt" title="Permalink to this headline">¶</a></h1>
-<p><strong>authors</strong>: Chris Havlin, Madicken Munk, Kacper Kowalik and Matthew Turk</p>
-<p><em>a SciPy2021 poster.</em></p>
-<p>The yt package provides a powerful suite of analysis and visualization tools for the physical sciences. In addition to expanding yt into a more domain-agnostic tool, a number of ongoing efforts seek to better leverage advancements from across the Python open source ecosystem within yt’s infrastructure. In this work, we present our efforts to incorporate Dask within the yt codebase to handle both lazy serial and parallel workflows, improving both the developer and end-user experience. We compare both user experience and performance between yt’s existing serial and MPI-parallel processing methods and their “Daskified” counterparts.</p>
-<div class="toctree-wrapper compound">
-</div>
+  <div class="section" id="dasken-yt">
+<h1><code class="docutils literal notranslate"><span class="pre">Dasken(yt)</span></code><a class="headerlink" href="#dasken-yt" title="Permalink to this headline">¶</a></h1>
+<p>In the previous sections we’ve demonstrated a number of daskified components within yt. In general these approaches show promise for reducing yt’s code complexity, expanding the distributed computing power outside of an MPI framework and introducing improvements that may be useful beyond yt (i.e., <code class="docutils literal notranslate"><span class="pre">unyt_dask</span></code> arrays). As development continues, we will be further integrating with the yt community: in addition to the existing <code class="docutils literal notranslate"><span class="pre">unyt_dask</span></code> <a class="reference external" href="https://github.com/yt-project/unyt/pull/185">PR</a>, primary development will move to yt’s <a class="reference external" href="https://github.com/yt-project/yt/tree/daskening"><code class="docutils literal notranslate"><span class="pre">daskening</span></code> development branch</a> with an accompanying YTEP, with a target release of yt 5.0 for dask support. If you’re interested in Dask development within yt, reach out on <a class="reference external" href="https://yt-project.slack.com/">slack</a> or via email (<a class="reference external" href="mailto:chavlin&#37;&#52;&#48;illinois&#46;edu">chavlin<span>&#64;</span>illinois<span>&#46;</span>edu</a>)!</p>
 </div>
 
     <script type="text/x-thebe-config">
@@ -242,7 +239,8 @@
         
         <div class='prev-next-bottom'>
             
-    <a class='right-next' id="next-link" href="00_motivation.html" title="next page">Overview</a>
+    <a class='left-prev' id="prev-link" href="03_daskifiedquantity.html" title="previous page">A Daskified yt : using data</a>
+    <a class='right-next' id="next-link" href="99_setup.html" title="next page">setup</a>
 
         </div>
         
