@@ -197,6 +197,37 @@
         <!-- Table of contents -->
         <div class="d-none d-md-block col-md-2 bd-toc show">
             
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#daskified-derived-quantity-calculations">
+   daskified
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     derived_quantity
+    </span>
+   </code>
+   calculations
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#direct-dask-array-approach">
+     direct dask-array approach
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dask-delayed-approach">
+     dask-delayed approach
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+            </nav>
         </div>
     </div>
 </div>
@@ -208,6 +239,66 @@
   <div class="section" id="a-daskified-yt-using-data">
 <h1>A Daskified yt : using data<a class="headerlink" href="#a-daskified-yt-using-data" title="Permalink to this headline">¶</a></h1>
 <p>daskified <code class="docutils literal notranslate"><span class="pre">profile</span></code> and/or <code class="docutils literal notranslate"><span class="pre">quantitites</span></code>.</p>
+<div class="section" id="daskified-derived-quantity-calculations">
+<h2>daskified <code class="docutils literal notranslate"><span class="pre">derived_quantity</span></code> calculations<a class="headerlink" href="#daskified-derived-quantity-calculations" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">yt</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">yt</span><span class="o">.</span><span class="n">load_sample</span><span class="p">(</span><span class="s2">&quot;snapshot_033&quot;</span><span class="p">)</span>
+<span class="n">sp</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sphere</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">domain_center</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
+<span class="n">sp</span><span class="o">.</span><span class="n">quantities</span><span class="o">.</span><span class="n">extrema</span><span class="p">([(</span><span class="s2">&quot;PartType0&quot;</span><span class="p">,</span> <span class="s2">&quot;Density&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;PartType0&quot;</span><span class="p">,</span> <span class="s2">&quot;Temperature&quot;</span><span class="p">)])</span>
+</pre></div>
+</div>
+<p>returns the max/min values for each field.</p>
+<div class="section" id="direct-dask-array-approach">
+<h3>direct dask-array approach<a class="headerlink" href="#direct-dask-array-approach" title="Permalink to this headline">¶</a></h3>
+<p>Brief code description: easy to write! reduces complexity and lines of code.</p>
+<p>Here we compare execution times for different <code class="docutils literal notranslate"><span class="pre">derived_quantity</span></code> operations between methods and testing conditions (the test type).</p>
+<p><img alt="" src="_images/dask_array_quantities.png" /></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">test_id</span></code> refers to the following configurations:</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">test_id</span></code></p></th>
+<th class="head"><p>test type</p></th>
+<th class="head"><p>notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dask_multiproc</span></code></p></td>
+<td><p>4 workers, 1 thread per worker</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dask_mpi</span></code></p></td>
+<td><p>4 workers</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dask</span></code></p></td>
+<td><p>no explicit client spinup (defualt <code class="docutils literal notranslate"><span class="pre">Client</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">main_serial</span></code></p></td>
+<td><p>standard yt</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">main_mpi</span></code></p></td>
+<td><p>standard yt, 4 workers</p></td>
+</tr>
+</tbody>
+</table>
+<p>The <code class="docutils literal notranslate"><span class="pre">dask_</span></code> tests use the daskified code branch (link), the <code class="docutils literal notranslate"><span class="pre">main_</span></code> tests use the current <code class="docutils literal notranslate"><span class="pre">main</span></code> branch of yt.</p>
+<p>The above tests group together multiple tests over <code class="docutils literal notranslate"><span class="pre">sphere</span></code> and <code class="docutils literal notranslate"><span class="pre">all_data</span></code> selector objects:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sp</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sphere</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">domain_center</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
+<span class="n">ad</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">all_data</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Of the test operations that are currently function for both these operations, we can additionall compare execution times between the selector objects:</p>
+<p><img alt="" src="_images/dask_array_quantities_sel.png" /></p>
+<p>From the above comparisons, it is clear that the dask-array approach is generally not performing as well as the native yt approach. The main reason for this, is that the native yt methods were carefully written to optimize chunk iteration. For example, when calculating the extrema for multiple fields, each chunk is read only once during which the data for each field is aggregated and then later reduced to the final extrema values. In the dask-array approach, the task graph includes a read for each field being aggregated. The <code class="docutils literal notranslate"><span class="pre">weighted_average_quantities</span></code> and <code class="docutils literal notranslate"><span class="pre">center_of_mass</span></code> daskified calculations perform well compared to their native yt approaches for the default dask <code class="docutils literal notranslate"><span class="pre">Client</span></code>. More words here…</p>
+</div>
+<div class="section" id="dask-delayed-approach">
+<h3>dask-delayed approach<a class="headerlink" href="#dask-delayed-approach" title="Permalink to this headline">¶</a></h3>
+<p>In previous work (<a class="reference external" href="https://hackmd.io/&#64;chavlin/BJDVGiX0P">overview</a>, <a class="reference external" href="https://github.com/data-exp-lab/yt-dask-experiments/blob/master/notebooks/yt_profiles_with_dask.ipynb">detailed notebook</a>), we compared different methods of calculating a yt profile (a binned statistic) and showed that we actually got the best performance when using a dask delayed workflow that directly uses yt’s already optimized algorithm as opposed to a <code class="docutils literal notranslate"><span class="pre">dask</span> <span class="pre">array.map_blocks</span></code> implementation. We’re currently in the process of repeating the above <code class="docutils literal notranslate"><span class="pre">derived_quantities</span></code> test with a similar delayed work flow approach for calculating derived quantities.</p>
+</div>
+</div>
 </div>
 
     <script type="text/x-thebe-config">
