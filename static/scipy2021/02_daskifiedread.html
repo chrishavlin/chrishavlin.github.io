@@ -259,7 +259,7 @@ a. open the file
 b. generate a mask using the selection object and a particle’s coordinates
 c. read the data, applying the mask</p></li>
 </ol>
-<p>Step 0 is a one-time step for a dataset that uses Morton Indexing, a spatial bitmap-indexing algorithm, to efficiently map a regions of a physical domain to the data whether on-disk or elsewhere (cite yt4 paper, in prep). So as the first step of a selection, yt will first find the bitmap indices that intersect a selection object in order to quickly identify only those files that contain data within the selector and avoid reading datafiles unnecessarily. To further enhance read times, yt applies data selections at read to datafiles individually so that only data satisfying the selection criteria is returned (rather than reading the whole array into memory and then applying a selection).</p>
+<p>Step 0 is a one-time step for a dataset that uses Morton Indexing, a spatial bitmap-indexing algorithm, to efficiently map a regions of a physical domain to the data whether on-disk or elsewhere (<a class="reference external" href="https://github.com/yt-project/yt-4.0-paper">see the yt 4.0 paper, in prep</a>). So as the first step of a selection, yt will first find the bitmap indices that intersect a selection object in order to quickly identify only those files that contain data within the selector and avoid reading datafiles unnecessarily. To further enhance read times, yt applies data selections at read to datafiles individually so that only data satisfying the selection criteria is returned (rather than reading the whole array into memory and then applying a selection).</p>
 <p>This approach can be readily adapted to dask arrays in such a way that simplifies yt’s code, particularly yt’s frontend infrastructure. In yt, a frontend corresponds to data-specific methods for reading data. At present, implementing a new frontend requires writing an implementation of step 2 above, which requires some knowledge of yt’s internal working (the data_files, selector objects) as well as knowledge of a frontend’s native data structures (to read the raw data). With Dask, however, we can maintain the same efficiency while separating step 2 above into separate methods.</p>
 <p>In simplified pseudo-code, this looks like:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_read_particle_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">selector_obj</span><span class="p">,</span> <span class="p">):</span>  
@@ -392,7 +392,7 @@ Wall time: 175 µs
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_build/jupyter_execute/02_daskifiedread_5_0.png" src="_build/jupyter_execute/02_daskifiedread_5_0.png" />
+<img alt="_images/02_daskifiedread_5_0.png" src="_images/02_daskifiedread_5_0.png" />
 </div>
 </div>
 <p>Comparing to a sphere selection centered at the domain center:</p>
@@ -435,7 +435,7 @@ Wall time: 175 µs
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_build/jupyter_execute/02_daskifiedread_9_0.png" src="_build/jupyter_execute/02_daskifiedread_9_0.png" />
+<img alt="_images/02_daskifiedread_9_0.png" src="_images/02_daskifiedread_9_0.png" />
 </div>
 </div>
 <p>Comparing the execution time between the two, the selector application requires a bit of extra work:</p>
