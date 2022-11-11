@@ -1,4 +1,4 @@
-To embeed jupyter notebook, use nbconvert to convert to markdown.
+To embed jupyter notebook, use nbconvert to convert to markdown.
 
 First run 
 ```
