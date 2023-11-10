@@ -285,3 +285,8 @@ sc.show(sigma_clip=4)
 
 As a final note, this is very similar to how I implemented the [streamline
 functionality in yt_idv](http://localhost:1313/post/yt-idv-streamlines/)! The index manipulation is pretty much identical and then the vertex positions are passed down to the GPU where OpenGL draws the lines.
+
+
+### notebook
+
+For convenience, I dropped all the above code into a notebook, [available here](https://github.com/chrishavlin/yt_scratch/blob/master/notebooks/tutorials_etc/vol_render_with_curves.ipynb). 
