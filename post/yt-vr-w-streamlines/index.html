@@ -102,16 +102,16 @@ volume<span style=color:#f92672>.</span>set_fields(
     [x_field, y_field, z_field], [False, False, False], False
 )
 volume<span style=color:#f92672>.</span>join_parallel_trees()
-</code></pre></div><p>Aaaand now let&rsquo;s actually get those streamlines!!</p><pre><code>streamlines = Streamlines(
+</code></pre></div><p>Aaaand now let&rsquo;s actually get those streamlines!!</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python>streamlines <span style=color:#f92672>=</span> Streamlines(
     ds,
     pos,
     x_field, y_field, z_field,
-    length=1.0 * Mpc,
-    get_magnitude=True,
-    volume=volume
+    length<span style=color:#f92672>=</span><span style=color:#ae81ff>1.0</span> <span style=color:#f92672>*</span> Mpc,
+    get_magnitude<span style=color:#f92672>=</span>True,
+    volume<span style=color:#f92672>=</span>volume
 )
-streamlines.integrate_through_volume()
-</code></pre><p>And create a new rendering&mldr; now we&rsquo;ll iterate through each streamline and
+streamlines<span style=color:#f92672>.</span>integrate_through_volume()
+</code></pre></div><p>And create a new rendering&mldr; now we&rsquo;ll iterate through each streamline and
 segment each one, create a line source and add it to the rendering:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python>sc <span style=color:#f92672>=</span> yt<span style=color:#f92672>.</span>create_scene(ds)
 sc<span style=color:#f92672>.</span>camera<span style=color:#f92672>.</span>zoom(<span style=color:#ae81ff>3</span>)
 
