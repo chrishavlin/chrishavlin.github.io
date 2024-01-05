@@ -1,9 +1,11 @@
 ---
 title: "A quick primer on volume rendering of geophysics data with yt"
 date: 2022-01-21T13:55:49-06:00
+tags: ["code", "seismology", "yt", "geodata"]
+categories: ["tutorials"]
 ---
 
-Over the past couple years I've worked on volume rendering of 3D geoscience data using yt in a number of ways. This post serves as quick primer on that work, with suggestions for how to get started and aspects that may be tricky! 
+Over the past couple years I've worked on volume rendering of 3D geoscience data using yt in a number of ways. This post serves as quick primer on that work, with suggestions for how to get started and aspects that may be tricky!
 
 ## Volume rendering?
 
@@ -17,7 +19,7 @@ So of the two parts of volume rendering, ray projection and aggregation along ra
 
 The right panel is our rendering and the left panel is the transfer function. The transfer function has two adjustable parameters: a transmission coefficient, `alpha`, and a color mapping. Here, we can see 2 gaussians (red and blue) centered at a narrow range of positive and negative velocity anomalies. At each step along each ray, the data is sampled, and then the transfer function is used to look up the color value and transmission coefficient for that data sample and then the color is blended with the cumulative value along the ray based on the transmission coefficient. The resulting image clearly preserves spatial relationships (the red fields are exterior to the blues) and we have a record of how the image was made (the transfer function).
 
-In yt, you have **direct** control over the transfer function used. This is both awesome and challenging. It means that you will be able to check the sensitivity of your images to different transfer functions (awesome) and share your tailor-made transfer functions with others via code snippets (awesome) but it also means you have to figure out what to use for a transfer function (challenging). 
+In yt, you have **direct** control over the transfer function used. This is both awesome and challenging. It means that you will be able to check the sensitivity of your images to different transfer functions (awesome) and share your tailor-made transfer functions with others via code snippets (awesome) but it also means you have to figure out what to use for a transfer function (challenging).
 
 ## Getting started
 
@@ -36,9 +38,9 @@ Finally, you may prefer the initial draft of this post with less narrative that 
 
 So the easiest data to work with initially are [IRIS EMC earth models](http://ds.iris.edu/ds/products/emc-earthmodels/). The main reason for this is that to use yt for volume rendering, the simplest approach is to use an already-gridded product. The following code snippets are intentionally incomplete: they are designed more to offer an overview of how to get started. For more complete examples, check out the links above.
 
-To get started working with 3d data is to read the model data from native storage (e.g., a netcdf file) into yt. At present, the easiest way to do this is with in-memory dataset created using `yt.load_uniform_grid()` ([docs link](https://yt-project.org/doc/reference/api/yt.loaders.html#yt.loaders.load_uniform_grid)). 
+To get started working with 3d data is to read the model data from native storage (e.g., a netcdf file) into yt. At present, the easiest way to do this is with in-memory dataset created using `yt.load_uniform_grid()` ([docs link](https://yt-project.org/doc/reference/api/yt.loaders.html#yt.loaders.load_uniform_grid)).
 
-How to do that exactly depends (1) on your data and (2) what you're going to do with the data. The second point relates to a current but important limitation of yt: volume rendering requires cartesian coordinates! 
+How to do that exactly depends (1) on your data and (2) what you're going to do with the data. The second point relates to a current but important limitation of yt: volume rendering requires cartesian coordinates!
 
 ### Loading the raw data
 
@@ -47,8 +49,8 @@ So even though volume rendering requires cartesian coordinates, it's worth menti
 ```python
 
 ds = yt.load_uniform_grid(data,  
-                          sizes, 
-                          1.0, 
+                          sizes,
+                          1.0,
                           geometry=("internal_geographic", dims),
                           bbox=bbox)
 ```
@@ -83,24 +85,24 @@ Overall, my approach (in pseudo-python-code) is as follows:
 lat, lon, radius = read_from_raw_data()
 x, y, z = to_cartesian(lat, lon, radius)
 ```
-once we have the raw grid points in cartesian, we 
+once we have the raw grid points in cartesian, we
 
 **2. find the bounding box** in cartesian coordinates:
 ```python
 cart_bbox = [
-             [x.min(), x.max()], 
+             [x.min(), x.max()],
              [y.min(), y.max()],
              [z.min(), z.max()],
             ]
 ```
-If your latitude-longitude-radius ranges are small enough, you might be OK with stopping here and just treating your initial grid as uniform in cartesian. But in most cases if you do that you'll get some unrealistic stretching (and it won't work **at all** for global models), so we need to move on to interpolating. 
+If your latitude-longitude-radius ranges are small enough, you might be OK with stopping here and just treating your initial grid as uniform in cartesian. But in most cases if you do that you'll get some unrealistic stretching (and it won't work **at all** for global models), so we need to move on to interpolating.
 
 **3. Create a uniform grid** to cover bounding box:
 
 ```python
-x_i = np.linspace(min_x, max_x, n_x) 
-y_i = np.linspace(min_y, max_y, n_y) 
-z_i = np.linspace(min_z, max_z, n_z) 
+x_i = np.linspace(min_x, max_x, n_x)
+y_i = np.linspace(min_y, max_y, n_y)
+z_i = np.linspace(min_z, max_z, n_z)
 ```
 
 **4. find the data values at all those points**
@@ -133,10 +135,10 @@ sizes = dvs_on_cartesian.shape
 ds = yt.load_uniform_grid(data, sizes, 1.0)
 ```
 
-And now use volume rendering! 
+And now use volume rendering!
 
 The above workflow is the basis for my work presented at [AGU2020](https://nbviewer.jupyter.org/github/chrishavlin/AGU2020/blob/main/notebooks/seismic.ipynb#Volume-Rendering)
-and [EarthCube2020](https://github.com/earthcube2020/ec20_havlin_etal), both of which rely on an initial helper package called [yt_velmodel_vis](https://github.com/chrishavlin/yt_velmodel_vis). While that package should still work, I've moved development over to a new package called ytgeotools. 
+and [EarthCube2020](https://github.com/earthcube2020/ec20_havlin_etal), both of which rely on an initial helper package called [yt_velmodel_vis](https://github.com/chrishavlin/yt_velmodel_vis). While that package should still work, I've moved development over to a new package called ytgeotools.
 
 ### geo-volume rendering in practice:
 
@@ -161,22 +163,22 @@ ds_yt_i = ds.interpolate_to_uniform_cartesian(
 )
 ```
 
-**should** be useable for any IRIS EMC netcdf file to get a yt dataset. 
+**should** be useable for any IRIS EMC netcdf file to get a yt dataset.
 
 The work is still in an early stage and installation is not yet streamlined, so you need to install two packages from source in the following order:
 
-1. https://github.com/yt-project/yt_idv 
-2. https://github.com/chrishavlin/ytgeotools 
+1. https://github.com/yt-project/yt_idv
+2. https://github.com/chrishavlin/ytgeotools
 
-To use any of the mapping functionality, you also need `cartopy` so you may want to use a conda environment to facilitate that installation. 
+To use any of the mapping functionality, you also need `cartopy` so you may want to use a conda environment to facilitate that installation.
 
 So to get started with ytgeotools, first download or clone the two packages above, make sure `conda` environment is active, then `cd` into `yt_idv` and install from source with
 
 ```
-$ python pip install . 
+$ python pip install .
 ```
 
-Repeat that for `ytgeotools`. 
+Repeat that for `ytgeotools`.
 
 Test installation: from a python shell, try:
 
@@ -206,7 +208,7 @@ ds = ds_raw.interpolate_to_uniform_cartesian(
 )
 
 # create the scene (loads full dataset into the scene for rendering)
-sc = yt.create_scene(ds, "dvs") 
+sc = yt.create_scene(ds, "dvs")
 
 # adjust camera position and orientation (so "up" is surface)
 x_c=np.mean(bbox[0])  
@@ -217,7 +219,7 @@ center_vec = center_vec / np.linalg.norm(center_vec)
 pos=sc.camera.position
 sc.camera.set_position(pos,north_vector=center_vec)
 
-# adjust camera zoom 
+# adjust camera zoom
 zoom_factor=0.7 # < 1 zooms in
 init_width=sc.camera.width
 sc.camera.width = (init_width * zoom_factor)
@@ -225,10 +227,10 @@ sc.camera.width = (init_width * zoom_factor)
 # set transfer function
 # initialize the tf object by setting the data bounds to consider
 dvs_min=-8
-dvs_max=8 
+dvs_max=8
 tf = yt.ColorTransferFunction((dvs_min,dvs_max))
 
-# set gaussians to add 
+# set gaussians to add
 TF_gaussians=[
     {'center':-.8,'width':.1,'RGBa':(1.,0.,0.,.5)},
     {'center':.5,'width':.2,'RGBa':(0.1,0.1,1.,.8)}
@@ -236,11 +238,11 @@ TF_gaussians=[
 
 for gau in TF_gaussians:
     tf.add_gaussian(gau['center'],gau['width'],gau['RGBa'])
-    
+
 source = sc.sources['source_00']
 source.set_transfer_function(tf)
 
-# adjust resolution of rendering 
+# adjust resolution of rendering
 res = sc.camera.get_resolution()  
 res_factor = 2
 new_res = (int(res[0]*res_factor),int(res[1]*res_factor))
@@ -267,8 +269,8 @@ from ytgeotools.seismology.datasets import XarrayGeoSpherical
 
 
 def refill(vals):
-    # vals will be a numpy array containing the data on the 
-    # the interpolated grid. We can modify/mask it any way 
+    # vals will be a numpy array containing the data on the
+    # the interpolated grid. We can modify/mask it any way
     # we want here and return it.
     vals[np.isnan(vals)] = 0.0
     vals[vals > 0] = 0.0
@@ -305,6 +307,6 @@ The EarthCube/AGU notebooks have some helper functions to streamline this, so ch
 
 Recent work in yt_idv added the ability to add arbitrary curves, so ytgeotools will soon have some extra functionality to make it easier to add georeferenced data to the interactive plots as well.
 
-## summary 
+## summary
 
-This post was meant as gentle introduction to volume rendering in yt. I hope you found it useful! If you're interested in helping to develop `ytgeotools`, contributions via github pull request are welcome! 
+This post was meant as gentle introduction to volume rendering in yt. I hope you found it useful! If you're interested in helping to develop `ytgeotools`, contributions via github pull request are welcome!

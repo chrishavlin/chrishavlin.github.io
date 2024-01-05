@@ -2,15 +2,17 @@
 title: "So you want to plot a global geoTIFF in web mercator..."
 date: 2022-11-10T17:13:08-06:00
 draft: false
+tags: ["code", "geodata"]
+categories: ["tutorials"]
 ---
 
 Need to go from epsg:4326 to web mercator and you're a bit of a GIS n00b like me? Read on!
 
-This week I found myself in the following situation: I had a geoTIFF of a NASA data product and I needed to get that geoTIFF into a web-ready format. The main trickiness here was that the geoTIFF was a global image in a standard epsg:4326 cooredinate reference systems and most web-app mapping tools work in a web mercator projection (epsg:3857). And while I remembered that web mercator isn't great near the poles, I didn't realize just **how** bad it was... 
+This week I found myself in the following situation: I had a geoTIFF of a NASA data product and I needed to get that geoTIFF into a web-ready format. The main trickiness here was that the geoTIFF was a global image in a standard epsg:4326 cooredinate reference systems and most web-app mapping tools work in a web mercator projection (epsg:3857). And while I remembered that web mercator isn't great near the poles, I didn't realize just **how** bad it was...
 
 In this post, I'll walk through the problem of re-projection, first showing you what not to do (and why it's bad) before showing you a nice way to re-project a geoTIFF and save off a bitmap image.
 
-For other mapping-related work, I've used the `rasterio` python package and found it generally a great tool, and so that's what I'll be using here. 
+For other mapping-related work, I've used the `rasterio` python package and found it generally a great tool, and so that's what I'll be using here.
 
 
 ### Packages
@@ -26,7 +28,7 @@ This the code here requires the following:
 all of which are available via pip or conda.
 
 
-### Data 
+### Data
 
 For this notebook, we'll use some sample data from [NaturalEarthData](https://www.naturalearthdata.com). Importantly, this is a **global** raster, covering longitude from -180 to 180 degrees and latitudes from -90 to 90 degrees. The exact dataset can be downloaded from:
 
@@ -41,13 +43,13 @@ Let's start by loading the .tif file and plotting what we have:
 
 ```python
 import rasterio as rio
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 
 fpath = "GRAY_HR_SR_OB_DR/GRAY_HR_SR_OB_DR.tif"
 
-src = rio.open(fpath) 
+src = rio.open(fpath)
 im = src.read(1)
-    
+
 ```
 
 
@@ -56,7 +58,7 @@ plt.imshow(im, cmap="plasma")
 ```
 
 ![png](/images/to_web_mercator_1_files/to_web_mercator_1_2_1.png)
-    
+
 
 
 We can check the coordinate reference system to see that we are indeed in epsg:4326:
@@ -154,7 +156,7 @@ dst_array = np.empty((height, width))
 
 _  = reproject(
     source=src.read(1),
-    destination=dst_array, 
+    destination=dst_array,
     src_transform=src.transform,
     src_crs=src.crs,
     dst_transform=transform,
@@ -170,9 +172,9 @@ great! now we're ready to plot!
 plt.imshow(dst_array, cmap="plasma")
 ```
 
-    
+
 ![png](/images/to_web_mercator_1_files/to_web_mercator_1_18_1.png)
-    
+
 
 
 well. hmm. that's... something? At least the continents are there?
@@ -180,7 +182,7 @@ well. hmm. that's... something? At least the continents are there?
 
 ## web mercator limits
 
-Well, all you GIS non-n00bs are probably laughing by now, because you know. But it took me a while to realize what was happening. 
+Well, all you GIS non-n00bs are probably laughing by now, because you know. But it took me a while to realize what was happening.
 
 The issue actually comes straight from the definition of web mercator! You can check [this NGA PDF documentation](https://web.archive.org/web/20141009142830/http://earth-info.nga.mil/GandG/wgs84/web_mercator/(U)%20NGA_SIG_0011_1.0.0_WEBMERC.pdf) for a real deep dive, but in slightly simplified form (with no offsets),  the x-axis (or the "easting" direction) is calculated with:
 
@@ -188,7 +190,7 @@ The issue actually comes straight from the definition of web mercator! You can c
 E = a * lon_radians
 ```
 
-where `a` is the semi-major axis of the reference ellipse used (the earth's mean radius!) and `lon_radians` is the longitude in radians. 
+where `a` is the semi-major axis of the reference ellipse used (the earth's mean radius!) and `lon_radians` is the longitude in radians.
 
 For the y-axis, the "northing" direction, we have:
 
@@ -196,7 +198,7 @@ For the y-axis, the "northing" direction, we have:
 N = a * ln(tan(pi/4 + lat_radians/2))
 ```
 
-where `lat_radians` is the latitude in radians. 
+where `lat_radians` is the latitude in radians.
 
 And that tangent there is where we're running into trouble with our reprojection, because as latitude approahces +/-90, we'll be hitting that discontinuity, which is what's causing our map to stretch out like crazy. Let's use `pyproj` to actually show the northing direction as you approach the poles:
 
@@ -216,13 +218,13 @@ plt.ylabel("northing axis")
 ```
 
 
-    
+
 ![png](/images/to_web_mercator_1_files/to_web_mercator_1_20_1.png)
-    
 
-yikes! 
 
-So that's why, when you look up info on web-mercator, it gives the map bounds as +/-85 degrees latitude or so ([wikipedia says google uses +/-85.051129 degrees](https://en.wikipedia.org/wiki/Web_Mercator_projectionhttps://en.wikipedia.org/wiki/Web_Mercator_projection)). 
+yikes!
+
+So that's why, when you look up info on web-mercator, it gives the map bounds as +/-85 degrees latitude or so ([wikipedia says google uses +/-85.051129 degrees](https://en.wikipedia.org/wiki/Web_Mercator_projectionhttps://en.wikipedia.org/wiki/Web_Mercator_projection)).
 
 If we just plot from +/-85, we see that the variation is nicely defined:
 
@@ -236,21 +238,21 @@ plt.xlabel("latitude")
 plt.ylabel("northing axis")
 ```
 
-    
+
 ![png](/images/to_web_mercator_1_files/to_web_mercator_1_22_1.png)
-    
 
 
-There's still some nonlinearity that causes the poles to stretch but as most web-mapping applications are concerned more with human habitation, the distortion at the poles is not such a big deal. 
+
+There's still some nonlinearity that causes the poles to stretch but as most web-mapping applications are concerned more with human habitation, the distortion at the poles is not such a big deal.
 
 
-## re-projecting the rigth way 
+## re-projecting the rigth way
 
-**OK!** So back to the problem at hand! 
+**OK!** So back to the problem at hand!
 
-The thing to realize is that **`rasterio` does not enforce the +/-85 degree range** and we need to account for that! Note that I'm not saying `rasterio` should account for it, there's a good argument to requiring users to clip their own data in ways that are appropriate for their use case. But it does require you to remember the limits here! 
+The thing to realize is that **`rasterio` does not enforce the +/-85 degree range** and we need to account for that! Note that I'm not saying `rasterio` should account for it, there's a good argument to requiring users to clip their own data in ways that are appropriate for their use case. But it does require you to remember the limits here!
 
-The solution is to of course clip our geoTIFF to avoid the problematic poles. We can do this by building a `rasterio` `Window` to use in the transformation. 
+The solution is to of course clip our geoTIFF to avoid the problematic poles. We can do this by building a `rasterio` `Window` to use in the transformation.
 
 First, let's initialize a window using a `BoundingBox`:
 
@@ -305,7 +307,7 @@ transform, width, height = calculate_default_transform(
 
 
 
-and we get something much closer to square (as you should for a web-mercator global projection). 
+and we get something much closer to square (as you should for a web-mercator global projection).
 
 So now let's finish up our transform. Not that we are suppling the window transform as the `src_transform` here:
 
@@ -315,7 +317,7 @@ dst_array = np.empty((height, width))
 
 _  = reproject(
     source=src.read(1),
-    destination=dst_array, 
+    destination=dst_array,
     src_transform=window_tform, # important! no longer src.transform,
     src_crs=src.crs,
     dst_transform=transform,
@@ -336,16 +338,16 @@ plt.imshow(dst_array, cmap="plasma")
 
 
 
-    
+
 ![png](/images/to_web_mercator_1_files/to_web_mercator_1_34_1.png)
-    
+
 
 
 that's **much** better, isn't it??
 
 ## Exporting as a PNG
 
-So now, we have our data projected into web-mercator and stored in that `dst_array`, from where you could do any number of things. One likely use case is that you want to save off a bitmap of this to use as a base layer in a web app... So let's do that! 
+So now, we have our data projected into web-mercator and stored in that `dst_array`, from where you could do any number of things. One likely use case is that you want to save off a bitmap of this to use as a base layer in a web app... So let's do that!
 
 Let's start by applying a colormap to our re-projected data array. First we need to scale between 0,1 then apply a matplobli colormap and cast the result as integers between 0 and 255:
 
@@ -375,13 +377,13 @@ img.save('rescaled.png')
 img
 ```
 
-    
+
 ![png](/images/to_web_mercator_1_files/to_web_mercator_1_38_0.png)
-    
 
 
 
-And a small image like that is easy to encode and send over the web as needed! And it's already in web mercator, ready for use as a global base layer. 
+
+And a small image like that is easy to encode and send over the web as needed! And it's already in web mercator, ready for use as a global base layer.
 
 ## summary
 

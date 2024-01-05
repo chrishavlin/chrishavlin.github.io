@@ -1,6 +1,8 @@
 ---
 title: "Speeding up some K-means computation with dask"
 date: 2021-05-06T11:47:10-05:00
+tags: ["code", "dask", "geodata"]
+categories: ["tutorials"]
 ---
 
 I recently dusted off a manuscript that's been in the works for quite some time now related to seismic observations in the Western United States. Part of this work includes some K-means clustering analysis that I wasn't quite happy with and so I started re-working it a bit. In doing so, I decided to use the `TimeSeriesKMeans` method from the [tslearn](https://tslearn.readthedocs.io/en/stable/) package to classify a set of 1D profiles and ended up leveraging [dask.delayed](https://docs.dask.org/en/latest/delayed.html) to speed things up a bit. It turned out to be very simple but could be useful to others out there looking to speed up their kmeans analysis. So here's a quick write-up!
@@ -10,9 +12,9 @@ I recently dusted off a manuscript that's been in the works for quite some time 
 I won't be going into much detail here on the data here, but in a few short words, I'm using a seismic tomography model that measures perturbations in seismic shear wave velocity in the Western US. This is a 3D model, and I was interested in classifying depth variations in velocity perturbation (as opposed to classifying scalar values at a single depth).
 
 Just 3 of these profiles look like this (x-axis is velocity perturbation, y-axis is depth below the earth's surface):
-    
+
 ![png](/images/DasKmeans_files/DasKmeans_3_1.png)
-    
+
 
 Ok, but we have a lot more than 3... our data array, `dvsN`:
 
@@ -34,7 +36,7 @@ model = TimeSeriesKMeans(n_clusters=3, metric="euclidean", max_iter=10)
 model.fit(dvsN)
 ```
 
-I actually found this method while reading this great [writeup on Dynamic Time Warping](https://towardsdatascience.com/how-to-apply-k-means-clustering-to-time-series-data-28d04a8f7da3), but I'm just using a standard `euclidean` metric here (as it's faster and actually seems to work better for my data). In any case, 
+I actually found this method while reading this great [writeup on Dynamic Time Warping](https://towardsdatascience.com/how-to-apply-k-means-clustering-to-time-series-data-28d04a8f7da3), but I'm just using a standard `euclidean` metric here (as it's faster and actually seems to work better for my data). In any case,
 we can pull out each cluster's center profiles along with the curves belonging to each category as follows:
 
 
@@ -43,18 +45,18 @@ clrs = ['k', 'b', 'r']
 for iclust in range(3):
     members = dvsN[model.labels_==iclust,:].T
     plt.plot(members, depth, color=clrs[iclust], alpha=0.01)    
-    
+
 for iclust in range(3):
     members = dvsN[model.labels_==iclust,:].T        
     plt.plot(model.cluster_centers_[iclust,:], depth, marker='.', color=clrs[iclust])
     plt.plot(model.cluster_centers_[iclust,:], depth, marker='.', color='g', linewidth=0)
-    
+
 plt.gca().invert_yaxis()
 plt.gca().set_xlim([-8, 8])
 ```
 
 ![png](/images/DasKmeans_files/DasKmeans_6_1.png)
-    
+
 And we see our data splits into a slow (negative, black), neutral (close to 0, red) and fast (blue) categories. But there is obviously quite a lot of scatter in each category, so let's re-calculate with more clusters:
 
 ```python
@@ -63,7 +65,7 @@ model = TimeSeriesKMeans(n_clusters=10, metric="euclidean", max_iter=10)
 model.fit(dvsN)
 ```
 
-And plot again (now using a non-sequential categorical colormap): 
+And plot again (now using a non-sequential categorical colormap):
 
 ```python
 from matplotlib.cm import get_cmap
@@ -76,11 +78,11 @@ for iclust in range(model.n_clusters):
     rgba = cmap(iclust / (model.n_clusters-1))
     rgb_curves = rgba[0:3] + (0.01, )
     plt.plot(members, depth, color=rgb_curves)        
-    
+
 for iclust in range(model.n_clusters):    
     rgba = cmap(iclust / (model.n_clusters-1))    
     plt.plot(model.cluster_centers_[iclust,:], depth, marker='.', color=rgba)
-    
+
 plt.gca().invert_yaxis()  
 plt.gca().set_xlim([-8, 8])
 ```
@@ -96,11 +98,11 @@ At the higher cluster number, we get much more variation that reflects more loca
 
 ![png](/images/DasKmeans_files/DasKmeans_11_0.png)
 
-## how many clusters? 
+## how many clusters?
 
-There's lots of interesting features in the above maps, relating to geologic history and current tectonic setting but I won't get into that here. Instead, the **the question is how many clusters should we use?** The answer is... it depends. From our two examples above, we see our coarse map returns broad variations (reflecting general tectonic setting) while our finer map incorporates local tectonic setting. So the "correct" number may depend on the feature you're interested in. 
+There's lots of interesting features in the above maps, relating to geologic history and current tectonic setting but I won't get into that here. Instead, the **the question is how many clusters should we use?** The answer is... it depends. From our two examples above, we see our coarse map returns broad variations (reflecting general tectonic setting) while our finer map incorporates local tectonic setting. So the "correct" number may depend on the feature you're interested in.
 
-More mathematically, we can also consider the "intertia" parameter of our Kmeans calculation. The inertia is the sum-of-squares distance within each cluster ([see here for more](https://scikit-learn.org/stable/modules/clustering.html#k-means)). As the number of clusters increases, the inertia value lowers (if you have too many, every data point will be its own cluster). So one approach is to re-calculate our fit for a range of clusters and investigate how the inertia value changes. 
+More mathematically, we can also consider the "intertia" parameter of our Kmeans calculation. The inertia is the sum-of-squares distance within each cluster ([see here for more](https://scikit-learn.org/stable/modules/clustering.html#k-means)). As the number of clusters increases, the inertia value lowers (if you have too many, every data point will be its own cluster). So one approach is to re-calculate our fit for a range of clusters and investigate how the inertia value changes.
 
 So to do this, let's first wrap our `TimeSeriesKMeans` call into a function for convenience:
 
@@ -121,7 +123,7 @@ for n_clust in n_clusts:
     models.append(fit_a_model(n_clust, dvsN))
 ```
 
-This takes a bit of time, 3min 13s to be exact. And while the `TimeSeriesKMeans` docs indicate that you can parallelize the call with the `n_jobs` parameter, I didn't have any luck getting it to work. But given all my [recent work with dask](https://yt-project.github.io/blog/posts/dask_yt_pytep/), I figured it'd be pretty easy to created a delayed workflow. 
+This takes a bit of time, 3min 13s to be exact. And while the `TimeSeriesKMeans` docs indicate that you can parallelize the call with the `n_jobs` parameter, I didn't have any luck getting it to work. But given all my [recent work with dask](https://yt-project.github.io/blog/posts/dask_yt_pytep/), I figured it'd be pretty easy to created a delayed workflow.
 
 ## a `dask.delayed` workflow for `TimeSeriesKMeans`
 
@@ -163,7 +165,7 @@ plt.plot(nclust, inert,'k',marker='.')
 plt.xlabel('number of clusters')
 plt.ylabel('model inertia')
 ```
-    
+
 ![png](/images/DasKmeans_files/DasKmeans_20_1.png)
-  
-The inflection point in an inertia curve (the "elbow" criteria) is typically taken as a reasonable value. In this case, somewhere between 10-15 clusters. Of course, as said before, it depends a bit on the level of detail we're interested in, but it's unlikely that we would want to use more than 10-15 in our analysis. 
+
+The inflection point in an inertia curve (the "elbow" criteria) is typically taken as a reasonable value. In this case, somewhere between 10-15 clusters. Of course, as said before, it depends a bit on the level of detail we're interested in, but it's unlikely that we would want to use more than 10-15 in our analysis.
