@@ -1,11 +1,13 @@
 ---
 title: "Order of operations and performance with numpy and Dask"
 date: 2021-05-20T10:52:25-04:00
+tags: ["code"]
+categories: ["tutorials"]
 ---
 
-The past couple days I've been attending the 2021 Dask Summit and have seen a bunch of interesting and useful talks. One session, the "Hacking Dask" tutorial, took a deep dive into various features of the Dask API, some of which I haven't yet spent much time working with. The section on how Dask optimizes a task graph before execution got me thinking about how to optimize some of my own problems in different ways and then in his talk today, Krishan Bhasin dropped this very helpful reminder: "Dask does exactly what you ask it to." This note of caution is a reminder to think through your problem before you even start using Dask to see if there are ways to optimize. 
+The past couple days I've been attending the 2021 Dask Summit and have seen a bunch of interesting and useful talks. One session, the "Hacking Dask" tutorial, took a deep dive into various features of the Dask API, some of which I haven't yet spent much time working with. The section on how Dask optimizes a task graph before execution got me thinking about how to optimize some of my own problems in different ways and then in his talk today, Krishan Bhasin dropped this very helpful reminder: "Dask does exactly what you ask it to." This note of caution is a reminder to think through your problem before you even start using Dask to see if there are ways to optimize.
 
-So given all this, I realized that in one my projects, I end up multiplying arrays by constants fairly frequently. And in the case where the ultimate result is a reduced array, then I might be doing some extra work. 
+So given all this, I realized that in one my projects, I end up multiplying arrays by constants fairly frequently. And in the case where the ultimate result is a reduced array, then I might be doing some extra work.
 
 Consider the following simple calculation where we multiple an array of some length by a constant and then take the mean:
 
@@ -13,19 +15,19 @@ Consider the following simple calculation where we multiple an array of some len
 mean(array * constant)
 ```
 
-If our `array` has a length `N`, this will first exceute an element-wise multiplication of `constant` onto each element in `array`, so that is `N` multiplications before finding the mean of the result. But if we think about the reduction operation here (taking the `mean`), we can write this instead as 
+If our `array` has a length `N`, this will first exceute an element-wise multiplication of `constant` onto each element in `array`, so that is `N` multiplications before finding the mean of the result. But if we think about the reduction operation here (taking the `mean`), we can write this instead as
 
 ```
-constant * mean(array) 
+constant * mean(array)
 ```
 
 These two calculations are mathematically identical, but in the second case, `mean(array)` returns a single value, so that the multiplication of the constant adds only a single operation instant of N operations.
 
-So how big of a difference does this make? 
+So how big of a difference does this make?
 
 ## numpy baseline
 
-So what we'll do is run through a range of array sizes and compare the time it takes to take the mean first, `constant * mean(array)` to the time it takes to take the mean second, `mean(array*constants)`. 
+So what we'll do is run through a range of array sizes and compare the time it takes to take the mean first, `constant * mean(array)` to the time it takes to take the mean second, `mean(array*constants)`.
 
 Let's check it out first with vanilla numpy.
 
@@ -53,22 +55,22 @@ results_np = {'mean_first':np.array([]),
 
 for sz_mag in logsize:
     a = np.random.random((10**sz_mag, ))
-    
+
     start_time = timeit.default_timer()
     result = a.mean() * 5
     # code you want to evaluate
     elapsed = timeit.default_timer() - start_time
     results_np['mean_first']=np.append(results_np['mean_first'], elapsed)
-    
-    
+
+
     start_time = timeit.default_timer()
     result = (a* 5).mean()     
     elapsed = timeit.default_timer() - start_time
     results_np['mean_second']=np.append(results_np['mean_second'], elapsed)
-        
+
     del a
-    
-    
+
+
 ```
 
 and a couple of helpful functions to plot results that will get re-used:
@@ -77,7 +79,7 @@ and a couple of helpful functions to plot results that will get re-used:
 ```python
 def plot_results(results, xlabl = "array size", title=None):
     f = plt.figure(figsize=(12,5))
-    
+
     ax1 = plt.subplot(1,2,1)
     plt.plot(szs, results['mean_first'], label='mean first', marker='.')
     plt.plot(szs, results['mean_second'],label='mean second', marker='.')
@@ -90,14 +92,14 @@ def plot_results(results, xlabl = "array size", title=None):
     plt.loglog(szs, results['mean_second'],label='mean second', marker='.')
     plt.xlabel(xlabl)
     ax2.tick_params(axis='both', labelsize=12)
-    
+
     if title:
         f.suptitle(title, fontsize=14)
     return f
 
 def plot_ratio(results,title=None):
     f = plt.figure()
-    plt.semilogx(szs, 
+    plt.semilogx(szs,
              results['mean_second']/results['mean_first'],
              color='k',
              marker='.')
@@ -130,7 +132,7 @@ f = plot_ratio(results_np, title="numpy")
 
 ## Dask
 
-Now, things get a little more interesting with Dask. 
+Now, things get a little more interesting with Dask.
 
 Let's say we have a random array with 10 chunks:
 
@@ -141,7 +143,7 @@ a = da.random.random((100_000, ), chunks=10_000)
 a
 ```
 
-We can actually visualize the difference in the two operations by looking at the Dask task graph. 
+We can actually visualize the difference in the two operations by looking at the Dask task graph.
 
 Here's the case where we take the mean after multiplying:
 
@@ -177,7 +179,7 @@ mean_first.visualize()
 
 and we can see that the `mul` operation has been removed from the individual chunk step out to the top, final task.
 
-Ok, so let's actually compute our different graphs and check out the difference in speed. 
+Ok, so let's actually compute our different graphs and check out the difference in speed.
 
 We'll actually drop our test in a function so that we can run multiple tests varying the chunksize:
 
@@ -196,7 +198,7 @@ def run_dask_test(logsize, chunksize=10_000):
         elapsed = timeit.default_timer() - start_time
         results_dask['mean_first']=np.append(results_dask['mean_first'], elapsed)
 
-        result = (a* 5).mean() 
+        result = (a* 5).mean()
         start_time = timeit.default_timer()
         result_computed = result.compute()
         elapsed = timeit.default_timer() - start_time
@@ -219,7 +221,7 @@ f = plot_results(results_dask, title="dask, chunk size = 1e4")
 ![png](/images/op_order_performance_files/op_order_performance_20_0.png)
 
 
-At first glance, it appears that Dask is magic! Our two approaches now have virtually the same execution time! But wait... let's think for a minute here. The difference in number of operations is coming from our element-wise multiplication. In this case, though, the element-wise multiplication is applied to each **chunk** of the array, which then runs through the `mean` aggregation and reduction. So then the number of operations before we start the reduction step actually depends on the size of our chunks, not the total size of the array! 
+At first glance, it appears that Dask is magic! Our two approaches now have virtually the same execution time! But wait... let's think for a minute here. The difference in number of operations is coming from our element-wise multiplication. In this case, though, the element-wise multiplication is applied to each **chunk** of the array, which then runs through the `mean` aggregation and reduction. So then the number of operations before we start the reduction step actually depends on the size of our chunks, not the total size of the array!
 
 So let's increase our chunk size a few times and see what happens:
 
@@ -283,7 +285,7 @@ def run_dask_test_vary_chunks(logsize, array_size=10_000_000):
         elapsed = timeit.default_timer() - start_time
         results_dask['mean_first']=np.append(results_dask['mean_first'], elapsed)
 
-        result = (a* 5).mean() 
+        result = (a* 5).mean()
         start_time = timeit.default_timer()
         result_computed = result.compute()
         elapsed = timeit.default_timer() - start_time
@@ -345,7 +347,7 @@ In terms of absolute difference, we see an order of 1 second:
 
 ```python
 f = plt.figure()
-plt.semilogx(szs, 
+plt.semilogx(szs,
          results_dask_vary_chunks['mean_second'] - results_dask_vary_chunks['mean_first'],
          color='k',
          marker='.')
@@ -360,4 +362,4 @@ f.suptitle("dask, array size 1e10",fontsize=14)
 ![png](/images/op_order_performance_files/op_order_performance_37_1.png)
 
 
-So overall, a difference of about 1 second is maybe not that big of a deal, but if your task graph has a bunch of operations that could be moved to after-reduction steps, re-arranging the order of operations could save you some computation time! 
+So overall, a difference of about 1 second is maybe not that big of a deal, but if your task graph has a bunch of operations that could be moved to after-reduction steps, re-arranging the order of operations could save you some computation time!

@@ -1,6 +1,8 @@
 ---
 title: "SciPy 2021"
 date: 2021-07-12T10:10:47-05:00
+tags: ["code"]
+categories: ["news"]
 ---
 
 SciPy2021 is live! This year I'm involved in a couple presentations, check them out below!

@@ -2,13 +2,15 @@
 title: "Autogeneration of magicgui-pydantic widgets"
 date: 2022-04-05T13:45:56-04:00
 draft: false
+tags: ["code", "napari", "pydantic"]
+categories: ["tutorials"]
 ---
 
-This post describes a simple way of generating a magicgui widget from a pydantic model. 
+This post describes a simple way of generating a magicgui widget from a pydantic model.
 
 ## Background
 
-For a little while now I've been working on a new [yt-napari plugin](https://github.com/data-exp-lab/yt-napari) which will create an interface for yt within napari ([background](https://ischool.illinois.edu/news-events/news/2021/11/ischool-researchers-receive-funding-napari-plugin-project)). The initial phases of the project (1) built out a reader plugin that lets you load a json file specifying the information needed to load data from a yt dataset like fields and selections and (2) added some helper functions for adding yt layers to an active napari viewer from the notebook, taking care of properly aligning multiple layers in napari's image coordinates. Lately, though I've been working on the final main piece for the initial release: a dockable widget for loading data. 
+For a little while now I've been working on a new [yt-napari plugin](https://github.com/data-exp-lab/yt-napari) which will create an interface for yt within napari ([background](https://ischool.illinois.edu/news-events/news/2021/11/ischool-researchers-receive-funding-napari-plugin-project)). The initial phases of the project (1) built out a reader plugin that lets you load a json file specifying the information needed to load data from a yt dataset like fields and selections and (2) added some helper functions for adding yt layers to an active napari viewer from the notebook, taking care of properly aligning multiple layers in napari's image coordinates. Lately, though I've been working on the final main piece for the initial release: a dockable widget for loading data.
 
 [Napari](https://napari.org) provides some great ways of building out widgets, including the related [magicgui](https://napari.org/magicgui/) package that helps to streamline widget creation. After playing around with building out simple widgets for data loading that allow the user to supply filenames, fields and other parameters, I turned to working out how to use the pydantic model that I already had for the reader plugin to generate a GUI plugin. In pseudo-code, my question was if I have some nested pydantic models:
 
@@ -19,19 +21,19 @@ import pydantic
 class Field(pydantic.BaseModel):
     field_type: str
     field_name: str
-    
+
 class DataModel(pydantic.BaseModel):
     file: str
     field: Field
-    ... etc ... 
-    
+    ... etc ...
+
 ```
 
 and I already have methods for ingesting a `DataModel` instance and returning a yt dataset, how do I create a magicgui widget that lets me set all those fields and return the yt dataset? It turns out that there actually is some work in progress to allow direct generation of widgets from pydantic models ([link](https://github.com/napari/magicgui/pull/318)), but since my pydantic models are fairly straightforward it's actually not too bad to automate this myself until the magicgui devs formally implement it.
 
 ## requirements
 
-The tutorial here relies on [magicgui](https://github.com/napari/magicgui) and [pydantic](https://pydantic-docs.helpmanual.io/) installed. So go do that! 
+The tutorial here relies on [magicgui](https://github.com/napari/magicgui) and [pydantic](https://pydantic-docs.helpmanual.io/) installed. So go do that!
 
 ## magicgui intro
 
@@ -57,7 +59,7 @@ print(container.x)
 
 And to pop up a gui window, we do:
 
-```python 
+```python
 container.show(run=True)
 ```
 
@@ -76,16 +78,16 @@ and a function that looks at the value of x and updates the display:
 ```python
 def calculate_result():
     result = c.x.value * 2
-    c.result.value = f"{result}" 
+    c.result.value = f"{result}"
 ```
 
-we can trigger that function with 
+we can trigger that function with
 
-```python 
+```python
 container.x.changed.connect(calculate_result)
 ```
 
-so now when we do 
+so now when we do
 
 ```
 container.show(run=True)
@@ -97,7 +99,7 @@ and change the value of `x`, we'll get:
 
 Putting all the above snippets together:
 
-```python 
+```python
 from magicgui import widgets
 
 container = widgets.Container()
@@ -106,9 +108,9 @@ container.append(widgets.Label(name="result"))
 
 def calculate_result():
     result = container.x.value * 2
-    container.result.value = f"{result}" 
-    
-    
+    container.result.value = f"{result}"
+
+
 container.x.changed.connect(calculate_result)  
 container.show(run=True)  
 ```
@@ -124,7 +126,7 @@ get_widget_class(annotation = str)
 
 ## pydantic & magicgui
 
-Given the above behavior of magicgui, the approach I arrived at is to start with a magicgui `Container`, and then walk through the pydantic model fields, adding a new `Container` when encountering a nested pydantic object or otherwise using `get_widget_class` to add widgets to the container when the field. For a simple initial pydantic model without nested models, we can just iterate over the `.__fields__` attribute of the pydantic model: 
+Given the above behavior of magicgui, the approach I arrived at is to start with a magicgui `Container`, and then walk through the pydantic model fields, adding a new `Container` when encountering a nested pydantic object or otherwise using `get_widget_class` to add widgets to the container when the field. For a simple initial pydantic model without nested models, we can just iterate over the `.__fields__` attribute of the pydantic model:
 
 ```python
 import pydantic
@@ -134,16 +136,16 @@ from magicgui.type_map import get_widget_class
 class SimpleModel(pydantic.BaseModel):
     field_1: str
     field_2: float
-    
+
 container = widgets.Container()
 
 for field, field_info in SimpleModel.__fields__.items():
     new_widget_class, _ = get_widget_class(annotation = field_info.type_)
     container.append(new_widget_class(name=field))
-    
+
 container.show(run=True)       
 ```
- 
+
 ![png](/images/magicguipydantic/widgets_03.png)
 
 For a more complex traversal, we'll want to use a recursive function.
@@ -168,26 +170,26 @@ def add_pydantic_to_container(py_model, container):
         container.append(new_widget)
 ```      
 
-The above function takes in a pydantic model class and a magicgui container and recursively walks through the pydantic model, adding to the container as it goes. It's very similar to the simple example, but when it encounters a pydantic field that is itself a model, it adds a container and then calls itself with the new container and that pydantic field. It also respects the default values of the pydantic fields! And now we can use the above function to map out more complex pydantic models: 
+The above function takes in a pydantic model class and a magicgui container and recursively walks through the pydantic model, adding to the container as it goes. It's very similar to the simple example, but when it encounters a pydantic field that is itself a model, it adds a container and then calls itself with the new container and that pydantic field. It also respects the default values of the pydantic fields! And now we can use the above function to map out more complex pydantic models:
 
-```python 
+```python
 class ComplexModel(pydantic.BaseModel):
     simple: SimpleModel
     complex_field: int
     field_with_default: float = 10.0
-    
+
 container = widgets.Container()   
 
 add_pydantic_to_container(ComplexModel, container)
 
-container.show(run=True) 
+container.show(run=True)
 ```    
 
 ![png](/images/magicguipydantic/widgets_04.png)
 
-And because we were assigning the widget names with the pydantic field names, we can add callbacks easily! For example: 
+And because we were assigning the widget names with the pydantic field names, we can add callbacks easily! For example:
 
-```python 
+```python
 
 container = widgets.Container()   
 add_pydantic_to_container(ComplexModel, container)
@@ -196,48 +198,48 @@ container.append(widgets.Label(name="result"))
 def calculate_result():
     result = container.simple.field_2.value * 2
     result = result * container.field_with_default.value
-    container.result.value = f"{result}" 
-    
-    
+    container.result.value = f"{result}"
+
+
 container.simple.field_2.changed.connect(calculate_result)  
 container.show(run=True)
 ```
 
 ![png](/images/magicguipydantic/widgets_05.png)
 
-## completing the round-trip 
+## completing the round-trip
 
-So what I **really** off to do was generate a widget that could instantiate a pydantic class, and at this point we're half-way there. To complete the trip, all we need to do is take our `container` and traverse it again, pulling out the values that are set so that we can instantiate the pydantic class that was used to generate the widget! 
+So what I **really** off to do was generate a widget that could instantiate a pydantic class, and at this point we're half-way there. To complete the trip, all we need to do is take our `container` and traverse it again, pulling out the values that are set so that we can instantiate the pydantic class that was used to generate the widget!
 
-Going back to the simple case, let's add a callback to generate the class 
+Going back to the simple case, let's add a callback to generate the class
 
 ```python
 
 class SimpleModel(pydantic.BaseModel):
     field_1: str
     field_2: float
-    
+
 container = widgets.Container()
 
 for field, field_info in SimpleModel.__fields__.items():
     new_widget_class, _ = get_widget_class(annotation = field_info.type_)
     container.append(new_widget_class(name=field))
-    
+
 # add a button and a place to display a json from the pydantic model
 container.append(widgets.PushButton(name="build", label="Build json"))
 container.append(widgets.Label(name="json_display", value=""))    
 
 def display_json():
-    
+
     # build a dict for args to instantiate
     pydantic_kwargs = {}
     for field in SimpleModel.__fields__.keys():
         field_widget = getattr(container, field)
         pydantic_kwargs[field] = field_widget.value
-        
+
     # instantiate the model!
     pydantic_model = SimpleModel.parse_obj(pydantic_kwargs)
-    
+
     # pull out a json from the model, update the magicgui display
     json_for_display = pydantic_model.json(indent=4)    
     container.json_display.value = json_for_display
@@ -250,7 +252,7 @@ container.show(run=True)
 
 And to generalize this to a more complex case, we again can traverse the pydantic object and look for fields that are also pydantic objects. But in this case, we simply add a new dictionary to the `pydantic_kwargs` dictionary for each new level :
 
-```python 
+```python
 def get_pydantic_kwargs(container, pydantic_model, pydantic_kwargs):
     # given a container that was instantiated from a pydantic model, get the arguments
     # needed to instantiate that pydantic model from the container.
@@ -284,13 +286,13 @@ container.append(widgets.PushButton(name="build", label="Build json"))
 container.append(widgets.Label(name="json_display", value=""))    
 
 def display_json():
-    
+
     # build a dict for args to instantiate
     pydantic_kwargs = {}
     get_pydantic_kwargs(container, ComplexModel, pydantic_kwargs)
     # instantiate the model!
     pydantic_model = ComplexModel.parse_obj(pydantic_kwargs)
-    
+
     # pull out a json from the model, update the magicgui display
     json_for_display = pydantic_model.json(indent=4)    
     container.json_display.value = json_for_display

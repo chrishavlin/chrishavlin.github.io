@@ -2,18 +2,20 @@
 title: "Plotting Dask Futures"
 date: 2021-06-15T17:35:25-05:00
 draft: false
+tags: ["code", "dask"]
+categories: ["demo", "tutorials"]
 ---
 
-In working on some yt-dask refactoring a question came up as to whether or not we could return data from distributed dask workflows as it completes and do something with it. For example, if we're building a profile plot (a souped up histogram of sorts), can we update our bin statistics as data chunks get read in? I've mostly been concentrating on reading in particle data into delayed `dask.array` objects using `dask.delayed` and `dask.compute`, but after a bit of digging it turns out it's pretty easy to add callbacks to dask tasks submitted to a client. 
+In working on some yt-dask refactoring a question came up as to whether or not we could return data from distributed dask workflows as it completes and do something with it. For example, if we're building a profile plot (a souped up histogram of sorts), can we update our bin statistics as data chunks get read in? I've mostly been concentrating on reading in particle data into delayed `dask.array` objects using `dask.delayed` and `dask.compute`, but after a bit of digging it turns out it's pretty easy to add callbacks to dask tasks submitted to a client.
 
-When you spin up a dask client, 
+When you spin up a dask client,
 
-```python 
+```python
 from dask.distributed import Client
 client = Client()
 ```
 
-and submit some task to call a function, `func_handle`, with an argument, `func_arg`: 
+and submit some task to call a function, `func_handle`, with an argument, `func_arg`:
 
 ```python
 do_a_thing = client.submit(func_handle, func_arg)
@@ -26,16 +28,16 @@ First, let's import everything, set our `matplotlib` backend to `notebook` (so t
 
 ```python
 from dask.distributed import Client, as_completed
-import numpy as np 
+import numpy as np
 import matplotlib.pyplot as plt
-import time 
+import time
 
 %matplotlib notebook
 
 client = Client()
 ```
 
-So now let's define the function that we'll submit to our client: 
+So now let's define the function that we'll submit to our client:
 
 ```python
 x = np.linspace(0, 1, 100)
@@ -58,6 +60,6 @@ for future in as_completed(futures):
     f.canvas.draw()
 ```
 
-And here's a video of what it looks like: 
+And here's a video of what it looks like:
 
 {{< youtube 1ry3bBBO398 >}}
