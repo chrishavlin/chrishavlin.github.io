@@ -8,6 +8,11 @@ categories: ["tutorials"]
 
 This post describes a simple way of generating a magicgui widget from a pydantic model.
 
+## NOTE (2024-02-09)!!!
+
+This post is already fairly out of date. It probably will still work with pydantic version < 2.0. But magicgui now has some nicer ways to handle this! See [this post on image.sc](https://forum.image.sc/t/building-a-napari-widget-from-a-pydantic-model/90257).
+
+
 ## Background
 
 For a little while now I've been working on a new [yt-napari plugin](https://github.com/data-exp-lab/yt-napari) which will create an interface for yt within napari ([background](https://ischool.illinois.edu/news-events/news/2021/11/ischool-researchers-receive-funding-napari-plugin-project)). The initial phases of the project (1) built out a reader plugin that lets you load a json file specifying the information needed to load data from a yt dataset like fields and selections and (2) added some helper functions for adding yt layers to an active napari viewer from the notebook, taking care of properly aligning multiple layers in napari's image coordinates. Lately, though I've been working on the final main piece for the initial release: a dockable widget for loading data.
