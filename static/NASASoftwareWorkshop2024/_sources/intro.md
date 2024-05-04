@@ -2,8 +2,8 @@
 
 ## Authors
 
-* Chris Havlin: University of Illinois Urbana-Champaign, School of Information Sciences,
-* Matt Turk: University of Illinois Urbana-Champaign, School of Information Sciences, 
+* Chris Havlin: University of Illinois Urbana-Champaign, School of Information Sciences
+* Matt Turk: University of Illinois Urbana-Champaign, School of Information Sciences
 
 ## Abstract
 
