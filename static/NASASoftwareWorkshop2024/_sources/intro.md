@@ -2,8 +2,8 @@
 
 ## Authors
 
-* Chris Havlin: University of Illinois Urbana-Champaign, School of Information Sciences,
-* Matt Turk: University of Illinois Urbana-Champaign, School of Information Sciences, 
+* Chris Havlin: University of Illinois Urbana-Champaign, School of Information Sciences
+* Matt Turk: University of Illinois Urbana-Champaign, School of Information Sciences
 
 ## Abstract
 
@@ -22,3 +22,14 @@ with xarray using yt. In this presentation, we describe some of the improvements
 including 3D volume rendering with embedded interpolation and use of yt analysis
 methods with remotely hosted data using xarray as a data backend.
 
+## A quick note on this presentation 
+
+A collection of scripts and notebooks reproducing all the figures in this description
+along with the source code for generating PDF or html renderings of this JupyterBook
+is available at the following repository: 
+
+https://github.com/data-exp-lab/yt_xarray_NASA_SMD_2024 
+
+Additionally, a html rendering of this JupyterBook is available at 
+
+https://chrishavlin.github.io/NASASoftwareWorkshop2024

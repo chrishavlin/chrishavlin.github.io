@@ -14,8 +14,18 @@ Havlin, C. (2023), *3d progressive loading of yt dataset in napari*, Available a
 
 Moore, J., Basurto-Lozada, D., Besson, S., Bogovic, J., Bragantini, J., Brown, E.M., Burel, J.M., Casas Moreno, X., de Medeiros, G., Diel, E.E. and Gault, D., (2023). *OME-Zarr: a cloud-optimized bioimaging file format with international community support.* Histochemistry and Cell Biology, 160(3), pp.223-251. https://doi.org/10.1007/s00418-023-02209-1
 
-
 Signell, R. (2020). *Cloud-Performant NetCDF4/HDF5 with Zarr, Fsspec, and Intake.* Available at https://medium.com/pangeo/cloud-performant-netcdf4-hdf5-with-zarr-fsspec-and-intake-3d3a3e7cb935 (Accessed 3 May 2024).
 
 Schmandt, B. and E. Humphreys. (2010). “Complex subduction and small-scale convection revealed by body-wave tomography of the western United States mantle.” Earth and Planetary Science Letters, 297, 435-445, https://doi.org/10.1016/j.epsl.2010.06.047. Avaialable at https://doi.org/10.17611/DP/9991760 (Accessed 1 May 2024)
 
+## Package References
+
+xarray: https://docs.xarray.dev
+
+yt : https://yt-project.org/
+
+yt_xarray : https://yt-xarray.readthedocs.io 
+
+Zarr: https://zarr.dev/
+
+Dask: https://www.dask.org/

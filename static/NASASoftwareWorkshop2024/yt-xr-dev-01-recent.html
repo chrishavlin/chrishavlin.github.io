@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Introducing yt_xarray &#8212; yt-xarray, Facilitating Software Reuse Between Space and Earth Sciences</title>
+    <title>Overview of yt_xarray &#8212; yt-xarray, Facilitating Software Reuse Between Space and Earth Sciences</title>
   
   
   
@@ -172,12 +172,11 @@
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="intro-to-yt-xr-and-yt-xr.html">Introduction</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Introducing <code class="docutils literal notranslate"><span class="pre">yt_xarray</span></code></a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Overview of <code class="docutils literal notranslate"><span class="pre">yt_xarray</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="yt-xr-dev-02-transformations.html">Embedded Transformations within yt_xarray</a></li>
 <li class="toctree-l1"><a class="reference internal" href="yt-xr-dev-03-cloud-native.html">Utilizing Cloud Native data formats with yt_xarray</a></li>
 <li class="toctree-l1"><a class="reference internal" href="summary.html">Summary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="technical-info.html">Supplemental Materials</a></li>
 </ul>
 
     </div>
@@ -363,7 +362,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Introducing yt_xarray</h1>
+    <h1>Overview of yt_xarray</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -385,9 +384,9 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="introducing-yt-xarray">
-<h1>Introducing <code class="docutils literal notranslate"><span class="pre">yt_xarray</span></code><a class="headerlink" href="#introducing-yt-xarray" title="Link to this heading">#</a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">yt_xarray</span></code> is a package built to facilitate data transfer between <code class="docutils literal notranslate"><span class="pre">xarray</span></code> and <code class="docutils literal notranslate"><span class="pre">yt</span></code>. Its primary implementation is through an <code class="docutils literal notranslate"><span class="pre">xarray</span></code> accessor object, accessible off of any
+  <section class="tex2jax_ignore mathjax_ignore" id="overview-of-yt-xarray">
+<h1>Overview of <code class="docutils literal notranslate"><span class="pre">yt_xarray</span></code><a class="headerlink" href="#overview-of-yt-xarray" title="Link to this heading">#</a></h1>
+<p><a class="reference external" href="https://yt-xarray.readthedocs.io"><code class="docutils literal notranslate"><span class="pre">yt_xarray</span></code></a> is a package built to facilitate data transfer between <code class="docutils literal notranslate"><span class="pre">xarray</span></code> and <code class="docutils literal notranslate"><span class="pre">yt</span></code>. Its primary implementation is through an <code class="docutils literal notranslate"><span class="pre">xarray</span></code> accessor object, accessible off of any
 <code class="docutils literal notranslate"><span class="pre">xarray</span></code> dataset object. Given an <code class="docutils literal notranslate"><span class="pre">xarray</span></code> dataset, <code class="docutils literal notranslate"><span class="pre">ds</span></code>, the primary method <code class="docutils literal notranslate"><span class="pre">ds.yt.load_grid</span></code>
 will load a field or subset of fields from the <code class="docutils literal notranslate"><span class="pre">xarray</span></code> dataset within a wrapping <code class="docutils literal notranslate"><span class="pre">yt</span></code> dataset:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">yt_xarray</span> 
@@ -398,7 +397,7 @@ will load a field or subset of fields from the <code class="docutils literal not
 <span class="n">yt_ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">yt</span><span class="o">.</span><span class="n">load_grid</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">([</span><span class="s1">&#39;list&#39;</span><span class="p">,</span><span class="s1">&#39;of&#39;</span><span class="p">,</span><span class="s1">&#39;fields&#39;</span><span class="p">]))</span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">yt</span></code> dataset, <code class="docutils literal notranslate"><span class="pre">yt_ds</span></code>, is a full-fledged <code class="docutils literal notranslate"><span class="pre">yt</span></code> dataset that can be used with <code class="docutils literal notranslate"><span class="pre">yt</span></code> but containing references to the original <code class="docutils literal notranslate"><span class="pre">xarray</span></code> dataset. This means that data required by <code class="docutils literal notranslate"><span class="pre">yt</span></code> is read in from the original <code class="docutils literal notranslate"><span class="pre">xarray</span></code> dataset on demand, without copying data by default.</p>
+<p><code class="docutils literal notranslate"><span class="pre">yt_xarray</span></code> is designed to minimize and delay copying of data where possible. As such, references to the original <code class="docutils literal notranslate"><span class="pre">xarray</span></code> dataset are maintained within the wrapping <code class="docutils literal notranslate"><span class="pre">yt</span></code> dataset and data is only read on-demand. For gridded datasets, <code class="docutils literal notranslate"><span class="pre">yt</span></code> processes grids independently, resulting in a delayed, on-demand read of index ranges in the underlying <code class="docutils literal notranslate"><span class="pre">xarray</span></code> dataset. When that <code class="docutils literal notranslate"><span class="pre">xarray</span></code> dataset is chunked with <code class="docutils literal notranslate"><span class="pre">Dask</span></code> or <code class="docutils literal notranslate"><span class="pre">Zarr</span></code>, the chunks will be contained within <code class="docutils literal notranslate"><span class="pre">yt</span></code> grids and only read on demand.</p>
 <section id="recent-improvements">
 <h2>Recent Improvements<a class="headerlink" href="#recent-improvements" title="Link to this heading">#</a></h2>
 <p>A number of recent updates to both <code class="docutils literal notranslate"><span class="pre">yt_xarray</span></code> and <code class="docutils literal notranslate"><span class="pre">yt</span></code> have simplified using <code class="docutils literal notranslate"><span class="pre">yt</span></code> with <code class="docutils literal notranslate"><span class="pre">xarray</span></code> datasets.</p>

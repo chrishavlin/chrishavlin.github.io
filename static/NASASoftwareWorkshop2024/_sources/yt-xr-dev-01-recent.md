@@ -1,6 +1,6 @@
-# Introducing `yt_xarray`
+# Overview of `yt_xarray`
 
-`yt_xarray` is a package built to facilitate data transfer between `xarray` and `yt`. Its primary implementation is through an `xarray` accessor object, accessible off of any 
+[`yt_xarray`](https://yt-xarray.readthedocs.io) is a package built to facilitate data transfer between `xarray` and `yt`. Its primary implementation is through an `xarray` accessor object, accessible off of any 
 `xarray` dataset object. Given an `xarray` dataset, `ds`, the primary method `ds.yt.load_grid` 
 will load a field or subset of fields from the `xarray` dataset within a wrapping `yt` dataset:
 
@@ -13,7 +13,9 @@ ds = yt_xarray.open_dataset("path/to/your/dataset.nc") # or xarray.open_dataset
 yt_ds = ds.yt.load_grid(fields=(['list','of','fields']))
 ```
 
-The `yt` dataset, `yt_ds`, is a full-fledged `yt` dataset that can be used with `yt` but containing references to the original `xarray` dataset. This means that data required by `yt` is read in from the original `xarray` dataset on demand, without copying data by default.
+`yt_xarray` is designed to minimize and delay copying of data where possible. As such, references to the original `xarray` dataset are maintained within the wrapping `yt` dataset and data is only read on-demand. For gridded datasets, `yt` processes grids independently, resulting in a delayed, on-demand read of index ranges in the underlying `xarray` dataset. When that `xarray` dataset is chunked with `Dask` or `Zarr`, the chunks will be contained within `yt` grids and only read on demand. 
+
+
 
 ## Recent Improvements
  
