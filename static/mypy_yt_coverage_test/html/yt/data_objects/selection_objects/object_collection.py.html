@@ -1,0 +1,91 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="../../../../mypy-html.css">
+</head>
+<body>
+<h2>yt.data_objects.selection_objects.object_collection</h2>
+<table>
+<caption>yt/data_objects/selection_objects/object_collection.py</caption>
+<tbody><tr>
+<td class="table-lines"><pre><span id="L1" class="lineno"><a class="lineno" href="#L1">1</a></span>
+<span id="L2" class="lineno"><a class="lineno" href="#L2">2</a></span>
+<span id="L3" class="lineno"><a class="lineno" href="#L3">3</a></span>
+<span id="L4" class="lineno"><a class="lineno" href="#L4">4</a></span>
+<span id="L5" class="lineno"><a class="lineno" href="#L5">5</a></span>
+<span id="L6" class="lineno"><a class="lineno" href="#L6">6</a></span>
+<span id="L7" class="lineno"><a class="lineno" href="#L7">7</a></span>
+<span id="L8" class="lineno"><a class="lineno" href="#L8">8</a></span>
+<span id="L9" class="lineno"><a class="lineno" href="#L9">9</a></span>
+<span id="L10" class="lineno"><a class="lineno" href="#L10">10</a></span>
+<span id="L11" class="lineno"><a class="lineno" href="#L11">11</a></span>
+<span id="L12" class="lineno"><a class="lineno" href="#L12">12</a></span>
+<span id="L13" class="lineno"><a class="lineno" href="#L13">13</a></span>
+<span id="L14" class="lineno"><a class="lineno" href="#L14">14</a></span>
+<span id="L15" class="lineno"><a class="lineno" href="#L15">15</a></span>
+<span id="L16" class="lineno"><a class="lineno" href="#L16">16</a></span>
+<span id="L17" class="lineno"><a class="lineno" href="#L17">17</a></span>
+<span id="L18" class="lineno"><a class="lineno" href="#L18">18</a></span>
+<span id="L19" class="lineno"><a class="lineno" href="#L19">19</a></span>
+<span id="L20" class="lineno"><a class="lineno" href="#L20">20</a></span>
+<span id="L21" class="lineno"><a class="lineno" href="#L21">21</a></span>
+<span id="L22" class="lineno"><a class="lineno" href="#L22">22</a></span>
+<span id="L23" class="lineno"><a class="lineno" href="#L23">23</a></span>
+<span id="L24" class="lineno"><a class="lineno" href="#L24">24</a></span>
+<span id="L25" class="lineno"><a class="lineno" href="#L25">25</a></span>
+<span id="L26" class="lineno"><a class="lineno" href="#L26">26</a></span>
+<span id="L27" class="lineno"><a class="lineno" href="#L27">27</a></span>
+<span id="L28" class="lineno"><a class="lineno" href="#L28">28</a></span>
+<span id="L29" class="lineno"><a class="lineno" href="#L29">29</a></span>
+<span id="L30" class="lineno"><a class="lineno" href="#L30">30</a></span>
+<span id="L31" class="lineno"><a class="lineno" href="#L31">31</a></span>
+</pre></td>
+<td class="table-code"><pre><span class="line-precise" title="No Anys on this line!">import numpy as np</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">from yt.data_objects.selection_objects.data_selection_objects import (</span>
+<span class="line-empty" title="No Anys on this line!">    YTSelectionContainer,</span>
+<span class="line-empty" title="No Anys on this line!">    YTSelectionContainer3D,</span>
+<span class="line-empty" title="No Anys on this line!">)</span>
+<span class="line-precise" title="No Anys on this line!">from yt.data_objects.static_output import Dataset</span>
+<span class="line-precise" title="No Anys on this line!">from yt.funcs import validate_center, validate_object, validate_sequence</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">class YTDataCollection(YTSelectionContainer3D):</span>
+<span class="line-empty" title="No Anys on this line!">    """</span>
+<span class="line-empty" title="No Anys on this line!">    By selecting an arbitrary *object_list*, we can act on those grids.</span>
+<span class="line-empty" title="No Anys on this line!">    Child cells are not returned.</span>
+<span class="line-empty" title="No Anys on this line!">    """</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">    _type_name = "data_collection"</span>
+<span class="line-precise" title="No Anys on this line!">    _con_args = ("_obj_list",)</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def __init__(</span>
+<span class="line-any" title="No Anys on this line!">        self, obj_list, ds=None, field_parameters=None, data_source=None, center=None</span>
+<span class="line-empty" title="No Anys on this line!">    ):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">        validate_sequence(obj_list)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)
+Explicit (x1)">        validate_object(ds, Dataset)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)
+Omitted Generics (x18)">        validate_object(field_parameters, dict)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x8)">        validate_object(data_source, YTSelectionContainer)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        if center is not None:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">            validate_center(center)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x10)">        YTSelectionContainer3D.__init__(self, center, ds, field_parameters, data_source)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x9)
+Explicit (x6)
+Omitted Generics (x8)">        self._obj_ids = np.array([o.id - o._id_offset for o in obj_list], dtype="int64")</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        self._obj_list = obj_list</span>
+</pre></td>
+</tr></tbody>
+</table>
+</body>
+</html>

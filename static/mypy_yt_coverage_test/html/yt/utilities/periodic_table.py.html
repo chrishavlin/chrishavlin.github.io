@@ -1,0 +1,373 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="../../../mypy-html.css">
+</head>
+<body>
+<h2>yt.utilities.periodic_table</h2>
+<table>
+<caption>yt/utilities/periodic_table.py</caption>
+<tbody><tr>
+<td class="table-lines"><pre><span id="L1" class="lineno"><a class="lineno" href="#L1">1</a></span>
+<span id="L2" class="lineno"><a class="lineno" href="#L2">2</a></span>
+<span id="L3" class="lineno"><a class="lineno" href="#L3">3</a></span>
+<span id="L4" class="lineno"><a class="lineno" href="#L4">4</a></span>
+<span id="L5" class="lineno"><a class="lineno" href="#L5">5</a></span>
+<span id="L6" class="lineno"><a class="lineno" href="#L6">6</a></span>
+<span id="L7" class="lineno"><a class="lineno" href="#L7">7</a></span>
+<span id="L8" class="lineno"><a class="lineno" href="#L8">8</a></span>
+<span id="L9" class="lineno"><a class="lineno" href="#L9">9</a></span>
+<span id="L10" class="lineno"><a class="lineno" href="#L10">10</a></span>
+<span id="L11" class="lineno"><a class="lineno" href="#L11">11</a></span>
+<span id="L12" class="lineno"><a class="lineno" href="#L12">12</a></span>
+<span id="L13" class="lineno"><a class="lineno" href="#L13">13</a></span>
+<span id="L14" class="lineno"><a class="lineno" href="#L14">14</a></span>
+<span id="L15" class="lineno"><a class="lineno" href="#L15">15</a></span>
+<span id="L16" class="lineno"><a class="lineno" href="#L16">16</a></span>
+<span id="L17" class="lineno"><a class="lineno" href="#L17">17</a></span>
+<span id="L18" class="lineno"><a class="lineno" href="#L18">18</a></span>
+<span id="L19" class="lineno"><a class="lineno" href="#L19">19</a></span>
+<span id="L20" class="lineno"><a class="lineno" href="#L20">20</a></span>
+<span id="L21" class="lineno"><a class="lineno" href="#L21">21</a></span>
+<span id="L22" class="lineno"><a class="lineno" href="#L22">22</a></span>
+<span id="L23" class="lineno"><a class="lineno" href="#L23">23</a></span>
+<span id="L24" class="lineno"><a class="lineno" href="#L24">24</a></span>
+<span id="L25" class="lineno"><a class="lineno" href="#L25">25</a></span>
+<span id="L26" class="lineno"><a class="lineno" href="#L26">26</a></span>
+<span id="L27" class="lineno"><a class="lineno" href="#L27">27</a></span>
+<span id="L28" class="lineno"><a class="lineno" href="#L28">28</a></span>
+<span id="L29" class="lineno"><a class="lineno" href="#L29">29</a></span>
+<span id="L30" class="lineno"><a class="lineno" href="#L30">30</a></span>
+<span id="L31" class="lineno"><a class="lineno" href="#L31">31</a></span>
+<span id="L32" class="lineno"><a class="lineno" href="#L32">32</a></span>
+<span id="L33" class="lineno"><a class="lineno" href="#L33">33</a></span>
+<span id="L34" class="lineno"><a class="lineno" href="#L34">34</a></span>
+<span id="L35" class="lineno"><a class="lineno" href="#L35">35</a></span>
+<span id="L36" class="lineno"><a class="lineno" href="#L36">36</a></span>
+<span id="L37" class="lineno"><a class="lineno" href="#L37">37</a></span>
+<span id="L38" class="lineno"><a class="lineno" href="#L38">38</a></span>
+<span id="L39" class="lineno"><a class="lineno" href="#L39">39</a></span>
+<span id="L40" class="lineno"><a class="lineno" href="#L40">40</a></span>
+<span id="L41" class="lineno"><a class="lineno" href="#L41">41</a></span>
+<span id="L42" class="lineno"><a class="lineno" href="#L42">42</a></span>
+<span id="L43" class="lineno"><a class="lineno" href="#L43">43</a></span>
+<span id="L44" class="lineno"><a class="lineno" href="#L44">44</a></span>
+<span id="L45" class="lineno"><a class="lineno" href="#L45">45</a></span>
+<span id="L46" class="lineno"><a class="lineno" href="#L46">46</a></span>
+<span id="L47" class="lineno"><a class="lineno" href="#L47">47</a></span>
+<span id="L48" class="lineno"><a class="lineno" href="#L48">48</a></span>
+<span id="L49" class="lineno"><a class="lineno" href="#L49">49</a></span>
+<span id="L50" class="lineno"><a class="lineno" href="#L50">50</a></span>
+<span id="L51" class="lineno"><a class="lineno" href="#L51">51</a></span>
+<span id="L52" class="lineno"><a class="lineno" href="#L52">52</a></span>
+<span id="L53" class="lineno"><a class="lineno" href="#L53">53</a></span>
+<span id="L54" class="lineno"><a class="lineno" href="#L54">54</a></span>
+<span id="L55" class="lineno"><a class="lineno" href="#L55">55</a></span>
+<span id="L56" class="lineno"><a class="lineno" href="#L56">56</a></span>
+<span id="L57" class="lineno"><a class="lineno" href="#L57">57</a></span>
+<span id="L58" class="lineno"><a class="lineno" href="#L58">58</a></span>
+<span id="L59" class="lineno"><a class="lineno" href="#L59">59</a></span>
+<span id="L60" class="lineno"><a class="lineno" href="#L60">60</a></span>
+<span id="L61" class="lineno"><a class="lineno" href="#L61">61</a></span>
+<span id="L62" class="lineno"><a class="lineno" href="#L62">62</a></span>
+<span id="L63" class="lineno"><a class="lineno" href="#L63">63</a></span>
+<span id="L64" class="lineno"><a class="lineno" href="#L64">64</a></span>
+<span id="L65" class="lineno"><a class="lineno" href="#L65">65</a></span>
+<span id="L66" class="lineno"><a class="lineno" href="#L66">66</a></span>
+<span id="L67" class="lineno"><a class="lineno" href="#L67">67</a></span>
+<span id="L68" class="lineno"><a class="lineno" href="#L68">68</a></span>
+<span id="L69" class="lineno"><a class="lineno" href="#L69">69</a></span>
+<span id="L70" class="lineno"><a class="lineno" href="#L70">70</a></span>
+<span id="L71" class="lineno"><a class="lineno" href="#L71">71</a></span>
+<span id="L72" class="lineno"><a class="lineno" href="#L72">72</a></span>
+<span id="L73" class="lineno"><a class="lineno" href="#L73">73</a></span>
+<span id="L74" class="lineno"><a class="lineno" href="#L74">74</a></span>
+<span id="L75" class="lineno"><a class="lineno" href="#L75">75</a></span>
+<span id="L76" class="lineno"><a class="lineno" href="#L76">76</a></span>
+<span id="L77" class="lineno"><a class="lineno" href="#L77">77</a></span>
+<span id="L78" class="lineno"><a class="lineno" href="#L78">78</a></span>
+<span id="L79" class="lineno"><a class="lineno" href="#L79">79</a></span>
+<span id="L80" class="lineno"><a class="lineno" href="#L80">80</a></span>
+<span id="L81" class="lineno"><a class="lineno" href="#L81">81</a></span>
+<span id="L82" class="lineno"><a class="lineno" href="#L82">82</a></span>
+<span id="L83" class="lineno"><a class="lineno" href="#L83">83</a></span>
+<span id="L84" class="lineno"><a class="lineno" href="#L84">84</a></span>
+<span id="L85" class="lineno"><a class="lineno" href="#L85">85</a></span>
+<span id="L86" class="lineno"><a class="lineno" href="#L86">86</a></span>
+<span id="L87" class="lineno"><a class="lineno" href="#L87">87</a></span>
+<span id="L88" class="lineno"><a class="lineno" href="#L88">88</a></span>
+<span id="L89" class="lineno"><a class="lineno" href="#L89">89</a></span>
+<span id="L90" class="lineno"><a class="lineno" href="#L90">90</a></span>
+<span id="L91" class="lineno"><a class="lineno" href="#L91">91</a></span>
+<span id="L92" class="lineno"><a class="lineno" href="#L92">92</a></span>
+<span id="L93" class="lineno"><a class="lineno" href="#L93">93</a></span>
+<span id="L94" class="lineno"><a class="lineno" href="#L94">94</a></span>
+<span id="L95" class="lineno"><a class="lineno" href="#L95">95</a></span>
+<span id="L96" class="lineno"><a class="lineno" href="#L96">96</a></span>
+<span id="L97" class="lineno"><a class="lineno" href="#L97">97</a></span>
+<span id="L98" class="lineno"><a class="lineno" href="#L98">98</a></span>
+<span id="L99" class="lineno"><a class="lineno" href="#L99">99</a></span>
+<span id="L100" class="lineno"><a class="lineno" href="#L100">100</a></span>
+<span id="L101" class="lineno"><a class="lineno" href="#L101">101</a></span>
+<span id="L102" class="lineno"><a class="lineno" href="#L102">102</a></span>
+<span id="L103" class="lineno"><a class="lineno" href="#L103">103</a></span>
+<span id="L104" class="lineno"><a class="lineno" href="#L104">104</a></span>
+<span id="L105" class="lineno"><a class="lineno" href="#L105">105</a></span>
+<span id="L106" class="lineno"><a class="lineno" href="#L106">106</a></span>
+<span id="L107" class="lineno"><a class="lineno" href="#L107">107</a></span>
+<span id="L108" class="lineno"><a class="lineno" href="#L108">108</a></span>
+<span id="L109" class="lineno"><a class="lineno" href="#L109">109</a></span>
+<span id="L110" class="lineno"><a class="lineno" href="#L110">110</a></span>
+<span id="L111" class="lineno"><a class="lineno" href="#L111">111</a></span>
+<span id="L112" class="lineno"><a class="lineno" href="#L112">112</a></span>
+<span id="L113" class="lineno"><a class="lineno" href="#L113">113</a></span>
+<span id="L114" class="lineno"><a class="lineno" href="#L114">114</a></span>
+<span id="L115" class="lineno"><a class="lineno" href="#L115">115</a></span>
+<span id="L116" class="lineno"><a class="lineno" href="#L116">116</a></span>
+<span id="L117" class="lineno"><a class="lineno" href="#L117">117</a></span>
+<span id="L118" class="lineno"><a class="lineno" href="#L118">118</a></span>
+<span id="L119" class="lineno"><a class="lineno" href="#L119">119</a></span>
+<span id="L120" class="lineno"><a class="lineno" href="#L120">120</a></span>
+<span id="L121" class="lineno"><a class="lineno" href="#L121">121</a></span>
+<span id="L122" class="lineno"><a class="lineno" href="#L122">122</a></span>
+<span id="L123" class="lineno"><a class="lineno" href="#L123">123</a></span>
+<span id="L124" class="lineno"><a class="lineno" href="#L124">124</a></span>
+<span id="L125" class="lineno"><a class="lineno" href="#L125">125</a></span>
+<span id="L126" class="lineno"><a class="lineno" href="#L126">126</a></span>
+<span id="L127" class="lineno"><a class="lineno" href="#L127">127</a></span>
+<span id="L128" class="lineno"><a class="lineno" href="#L128">128</a></span>
+<span id="L129" class="lineno"><a class="lineno" href="#L129">129</a></span>
+<span id="L130" class="lineno"><a class="lineno" href="#L130">130</a></span>
+<span id="L131" class="lineno"><a class="lineno" href="#L131">131</a></span>
+<span id="L132" class="lineno"><a class="lineno" href="#L132">132</a></span>
+<span id="L133" class="lineno"><a class="lineno" href="#L133">133</a></span>
+<span id="L134" class="lineno"><a class="lineno" href="#L134">134</a></span>
+<span id="L135" class="lineno"><a class="lineno" href="#L135">135</a></span>
+<span id="L136" class="lineno"><a class="lineno" href="#L136">136</a></span>
+<span id="L137" class="lineno"><a class="lineno" href="#L137">137</a></span>
+<span id="L138" class="lineno"><a class="lineno" href="#L138">138</a></span>
+<span id="L139" class="lineno"><a class="lineno" href="#L139">139</a></span>
+<span id="L140" class="lineno"><a class="lineno" href="#L140">140</a></span>
+<span id="L141" class="lineno"><a class="lineno" href="#L141">141</a></span>
+<span id="L142" class="lineno"><a class="lineno" href="#L142">142</a></span>
+<span id="L143" class="lineno"><a class="lineno" href="#L143">143</a></span>
+<span id="L144" class="lineno"><a class="lineno" href="#L144">144</a></span>
+<span id="L145" class="lineno"><a class="lineno" href="#L145">145</a></span>
+<span id="L146" class="lineno"><a class="lineno" href="#L146">146</a></span>
+<span id="L147" class="lineno"><a class="lineno" href="#L147">147</a></span>
+<span id="L148" class="lineno"><a class="lineno" href="#L148">148</a></span>
+<span id="L149" class="lineno"><a class="lineno" href="#L149">149</a></span>
+<span id="L150" class="lineno"><a class="lineno" href="#L150">150</a></span>
+<span id="L151" class="lineno"><a class="lineno" href="#L151">151</a></span>
+<span id="L152" class="lineno"><a class="lineno" href="#L152">152</a></span>
+<span id="L153" class="lineno"><a class="lineno" href="#L153">153</a></span>
+<span id="L154" class="lineno"><a class="lineno" href="#L154">154</a></span>
+<span id="L155" class="lineno"><a class="lineno" href="#L155">155</a></span>
+<span id="L156" class="lineno"><a class="lineno" href="#L156">156</a></span>
+<span id="L157" class="lineno"><a class="lineno" href="#L157">157</a></span>
+<span id="L158" class="lineno"><a class="lineno" href="#L158">158</a></span>
+<span id="L159" class="lineno"><a class="lineno" href="#L159">159</a></span>
+<span id="L160" class="lineno"><a class="lineno" href="#L160">160</a></span>
+<span id="L161" class="lineno"><a class="lineno" href="#L161">161</a></span>
+<span id="L162" class="lineno"><a class="lineno" href="#L162">162</a></span>
+<span id="L163" class="lineno"><a class="lineno" href="#L163">163</a></span>
+<span id="L164" class="lineno"><a class="lineno" href="#L164">164</a></span>
+<span id="L165" class="lineno"><a class="lineno" href="#L165">165</a></span>
+<span id="L166" class="lineno"><a class="lineno" href="#L166">166</a></span>
+</pre></td>
+<td class="table-code"><pre><span class="line-precise" title="No Anys on this line!">import numbers</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">import numpy as np</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">_elements = (</span>
+<span class="line-precise" title="No Anys on this line!">    (1, 1.0079400000, "Hydrogen", "H"),</span>
+<span class="line-precise" title="No Anys on this line!">    (2, 4.0026020000, "Helium", "He"),</span>
+<span class="line-precise" title="No Anys on this line!">    (3, 6.9410000000, "Lithium", "Li"),</span>
+<span class="line-precise" title="No Anys on this line!">    (4, 9.0121820000, "Beryllium", "Be"),</span>
+<span class="line-precise" title="No Anys on this line!">    (5, 10.8110000000, "Boron", "B"),</span>
+<span class="line-precise" title="No Anys on this line!">    (6, 12.0107000000, "Carbon", "C"),</span>
+<span class="line-precise" title="No Anys on this line!">    (7, 14.0067000000, "Nitrogen", "N"),</span>
+<span class="line-precise" title="No Anys on this line!">    (8, 15.9994000000, "Oxygen", "O"),</span>
+<span class="line-precise" title="No Anys on this line!">    (9, 18.9994000000, "Fluorine", "F"),</span>
+<span class="line-precise" title="No Anys on this line!">    (10, 20.1797000000, "Neon", "Ne"),</span>
+<span class="line-precise" title="No Anys on this line!">    (11, 22.9897692800, "Sodium", "Na"),</span>
+<span class="line-precise" title="No Anys on this line!">    (12, 24.3050000000, "Magnesium", "Mg"),</span>
+<span class="line-precise" title="No Anys on this line!">    (13, 26.9815386000, "Aluminium", "Al"),</span>
+<span class="line-precise" title="No Anys on this line!">    (14, 28.0855000000, "Silicon", "Si"),</span>
+<span class="line-precise" title="No Anys on this line!">    (15, 30.9737620000, "Phosphorus", "P"),</span>
+<span class="line-precise" title="No Anys on this line!">    (16, 32.0650000000, "Sulphur", "S"),</span>
+<span class="line-precise" title="No Anys on this line!">    (17, 35.4530000000, "Chlorine", "Cl"),</span>
+<span class="line-precise" title="No Anys on this line!">    (18, 39.9480000000, "Argon", "Ar"),</span>
+<span class="line-precise" title="No Anys on this line!">    (19, 39.0983000000, "Potassium", "K"),</span>
+<span class="line-precise" title="No Anys on this line!">    (20, 40.0780000000, "Calcium", "Ca"),</span>
+<span class="line-precise" title="No Anys on this line!">    (21, 44.9559120000, "Scandium", "Sc"),</span>
+<span class="line-precise" title="No Anys on this line!">    (22, 47.8670000000, "Titanium", "Ti"),</span>
+<span class="line-precise" title="No Anys on this line!">    (23, 50.9415000000, "Vanadium", "V"),</span>
+<span class="line-precise" title="No Anys on this line!">    (24, 51.9961000000, "Chromium", "Cr"),</span>
+<span class="line-precise" title="No Anys on this line!">    (25, 54.9380450000, "Manganese", "Mn"),</span>
+<span class="line-precise" title="No Anys on this line!">    (26, 55.8450000000, "Iron", "Fe"),</span>
+<span class="line-precise" title="No Anys on this line!">    (27, 58.9331950000, "Cobalt", "Co"),</span>
+<span class="line-precise" title="No Anys on this line!">    (28, 58.6934000000, "Nickel", "Ni"),</span>
+<span class="line-precise" title="No Anys on this line!">    (29, 63.5460000000, "Copper", "Cu"),</span>
+<span class="line-precise" title="No Anys on this line!">    (30, 65.3800000000, "Zinc", "Zn"),</span>
+<span class="line-precise" title="No Anys on this line!">    (31, 69.7230000000, "Gallium", "Ga"),</span>
+<span class="line-precise" title="No Anys on this line!">    (32, 72.6400000000, "Germanium", "Ge"),</span>
+<span class="line-precise" title="No Anys on this line!">    (33, 74.9216000000, "Arsenic", "As"),</span>
+<span class="line-precise" title="No Anys on this line!">    (34, 78.9600000000, "Selenium", "Se"),</span>
+<span class="line-precise" title="No Anys on this line!">    (35, 79.9040000000, "Bromine", "Br"),</span>
+<span class="line-precise" title="No Anys on this line!">    (36, 83.7980000000, "Krypton", "Kr"),</span>
+<span class="line-precise" title="No Anys on this line!">    (37, 85.4678000000, "Rubidium", "Rb"),</span>
+<span class="line-precise" title="No Anys on this line!">    (38, 87.6200000000, "Strontium", "Sr"),</span>
+<span class="line-precise" title="No Anys on this line!">    (39, 88.9058500000, "Yttrium", "Y"),</span>
+<span class="line-precise" title="No Anys on this line!">    (40, 91.2240000000, "Zirkonium", "Zr"),</span>
+<span class="line-precise" title="No Anys on this line!">    (41, 92.9063800000, "Niobium", "Nb"),</span>
+<span class="line-precise" title="No Anys on this line!">    (42, 95.9600000000, "Molybdaenum", "Mo"),</span>
+<span class="line-precise" title="No Anys on this line!">    (43, 98.0000000000, "Technetium", "Tc"),</span>
+<span class="line-precise" title="No Anys on this line!">    (44, 101.0700000000, "Ruthenium", "Ru"),</span>
+<span class="line-precise" title="No Anys on this line!">    (45, 102.9055000000, "Rhodium", "Rh"),</span>
+<span class="line-precise" title="No Anys on this line!">    (46, 106.4200000000, "Palladium", "Pd"),</span>
+<span class="line-precise" title="No Anys on this line!">    (47, 107.8682000000, "Silver", "Ag"),</span>
+<span class="line-precise" title="No Anys on this line!">    (48, 112.4110000000, "Cadmium", "Cd"),</span>
+<span class="line-precise" title="No Anys on this line!">    (49, 114.8180000000, "Indium", "In"),</span>
+<span class="line-precise" title="No Anys on this line!">    (50, 118.7100000000, "Tin", "Sn"),</span>
+<span class="line-precise" title="No Anys on this line!">    (51, 121.7600000000, "Antimony", "Sb"),</span>
+<span class="line-precise" title="No Anys on this line!">    (52, 127.6000000000, "Tellurium", "Te"),</span>
+<span class="line-precise" title="No Anys on this line!">    (53, 126.9044700000, "Iodine", "I"),</span>
+<span class="line-precise" title="No Anys on this line!">    (54, 131.2930000000, "Xenon", "Xe"),</span>
+<span class="line-precise" title="No Anys on this line!">    (55, 132.9054519000, "Cesium", "Cs"),</span>
+<span class="line-precise" title="No Anys on this line!">    (56, 137.3270000000, "Barium", "Ba"),</span>
+<span class="line-precise" title="No Anys on this line!">    (57, 138.9054700000, "Lanthanum", "La"),</span>
+<span class="line-precise" title="No Anys on this line!">    (58, 140.1160000000, "Cerium", "Ce"),</span>
+<span class="line-precise" title="No Anys on this line!">    (59, 140.9076500000, "Praseodymium", "Pr"),</span>
+<span class="line-precise" title="No Anys on this line!">    (60, 144.2420000000, "Neodymium", "Nd"),</span>
+<span class="line-precise" title="No Anys on this line!">    (61, 145.0000000000, "Promethium", "Pm"),</span>
+<span class="line-precise" title="No Anys on this line!">    (62, 150.3600000000, "Samarium", "Sm"),</span>
+<span class="line-precise" title="No Anys on this line!">    (63, 151.9640000000, "Europium", "Eu"),</span>
+<span class="line-precise" title="No Anys on this line!">    (64, 157.2500000000, "Gadolinium", "Gd"),</span>
+<span class="line-precise" title="No Anys on this line!">    (65, 158.9253500000, "Terbium", "Tb"),</span>
+<span class="line-precise" title="No Anys on this line!">    (66, 162.5001000000, "Dysprosium", "Dy"),</span>
+<span class="line-precise" title="No Anys on this line!">    (67, 164.9303200000, "Holmium", "Ho"),</span>
+<span class="line-precise" title="No Anys on this line!">    (68, 167.2590000000, "Erbium", "Er"),</span>
+<span class="line-precise" title="No Anys on this line!">    (69, 168.9342100000, "Thulium", "Tm"),</span>
+<span class="line-precise" title="No Anys on this line!">    (70, 173.0540000000, "Ytterbium", "Yb"),</span>
+<span class="line-precise" title="No Anys on this line!">    (71, 174.9668000000, "Lutetium", "Lu"),</span>
+<span class="line-precise" title="No Anys on this line!">    (72, 178.4900000000, "Hafnium", "Hf"),</span>
+<span class="line-precise" title="No Anys on this line!">    (73, 180.9478800000, "Tantalum", "Ta"),</span>
+<span class="line-precise" title="No Anys on this line!">    (74, 183.8400000000, "Tungsten", "W"),</span>
+<span class="line-precise" title="No Anys on this line!">    (75, 186.2070000000, "Rhenium", "Re"),</span>
+<span class="line-precise" title="No Anys on this line!">    (76, 190.2300000000, "Osmium", "Os"),</span>
+<span class="line-precise" title="No Anys on this line!">    (77, 192.2170000000, "Iridium", "Ir"),</span>
+<span class="line-precise" title="No Anys on this line!">    (78, 192.0840000000, "Platinum", "Pt"),</span>
+<span class="line-precise" title="No Anys on this line!">    (79, 196.9665690000, "Gold", "Au"),</span>
+<span class="line-precise" title="No Anys on this line!">    (80, 200.5900000000, "Hydrargyrum", "Hg"),</span>
+<span class="line-precise" title="No Anys on this line!">    (81, 204.3833000000, "Thallium", "Tl"),</span>
+<span class="line-precise" title="No Anys on this line!">    (82, 207.2000000000, "Lead", "Pb"),</span>
+<span class="line-precise" title="No Anys on this line!">    (83, 208.9804010000, "Bismuth", "Bi"),</span>
+<span class="line-precise" title="No Anys on this line!">    (84, 210.0000000000, "Polonium", "Po"),</span>
+<span class="line-precise" title="No Anys on this line!">    (85, 210.0000000000, "Astatine", "At"),</span>
+<span class="line-precise" title="No Anys on this line!">    (86, 220.0000000000, "Radon", "Rn"),</span>
+<span class="line-precise" title="No Anys on this line!">    (87, 223.0000000000, "Francium", "Fr"),</span>
+<span class="line-precise" title="No Anys on this line!">    (88, 226.0000000000, "Radium", "Ra"),</span>
+<span class="line-precise" title="No Anys on this line!">    (89, 227.0000000000, "Actinium", "Ac"),</span>
+<span class="line-precise" title="No Anys on this line!">    (90, 232.0380600000, "Thorium", "Th"),</span>
+<span class="line-precise" title="No Anys on this line!">    (91, 231.0358800000, "Protactinium", "Pa"),</span>
+<span class="line-precise" title="No Anys on this line!">    (92, 238.0289100000, "Uranium", "U"),</span>
+<span class="line-precise" title="No Anys on this line!">    (93, 237.0000000000, "Neptunium", "Np"),</span>
+<span class="line-precise" title="No Anys on this line!">    (94, 244.0000000000, "Plutonium", "Pu"),</span>
+<span class="line-precise" title="No Anys on this line!">    (95, 243.0000000000, "Americium", "Am"),</span>
+<span class="line-precise" title="No Anys on this line!">    (96, 247.0000000000, "Curium", "Cm"),</span>
+<span class="line-precise" title="No Anys on this line!">    (97, 247.0000000000, "Berkelium", "Bk"),</span>
+<span class="line-precise" title="No Anys on this line!">    (98, 251.0000000000, "Californium", "Cf"),</span>
+<span class="line-precise" title="No Anys on this line!">    (99, 252.0000000000, "Einsteinium", "Es"),</span>
+<span class="line-precise" title="No Anys on this line!">    (100, 257.0000000000, "Fermium", "Fm"),</span>
+<span class="line-precise" title="No Anys on this line!">    (101, 258.0000000000, "Mendelevium", "Md"),</span>
+<span class="line-precise" title="No Anys on this line!">    (102, 259.0000000000, "Nobelium", "No"),</span>
+<span class="line-precise" title="No Anys on this line!">    (103, 262.0000000000, "Lawrencium", "Lr"),</span>
+<span class="line-precise" title="No Anys on this line!">    (104, 261.0000000000, "Rutherfordium", "Rf"),</span>
+<span class="line-precise" title="No Anys on this line!">    (105, 262.0000000000, "Dubnium", "Db"),</span>
+<span class="line-precise" title="No Anys on this line!">    (106, 266.0000000000, "Seaborgium", "Sg"),</span>
+<span class="line-precise" title="No Anys on this line!">    (107, 264.0000000000, "Bohrium", "Bh"),</span>
+<span class="line-precise" title="No Anys on this line!">    (108, 277.0000000000, "Hassium", "Hs"),</span>
+<span class="line-precise" title="No Anys on this line!">    (109, 268.0000000000, "Meitnerium", "Mt"),</span>
+<span class="line-precise" title="No Anys on this line!">    (110, 271.0000000000, "Ununnilium", "Ds"),</span>
+<span class="line-precise" title="No Anys on this line!">    (111, 272.0000000000, "Unununium", "Rg"),</span>
+<span class="line-precise" title="No Anys on this line!">    (112, 285.0000000000, "Ununbium", "Uub"),</span>
+<span class="line-precise" title="No Anys on this line!">    (113, 284.0000000000, "Ununtrium", "Uut"),</span>
+<span class="line-precise" title="No Anys on this line!">    (114, 289.0000000000, "Ununquadium", "Uuq"),</span>
+<span class="line-precise" title="No Anys on this line!">    (115, 288.0000000000, "Ununpentium", "Uup"),</span>
+<span class="line-precise" title="No Anys on this line!">    (116, 292.0000000000, "Ununhexium", "Uuh"),</span>
+<span class="line-precise" title="No Anys on this line!">    (118, 294.0000000000, "Ununoctium", "Uuo"),</span>
+<span class="line-empty" title="No Anys on this line!">    # Now some special cases that are *not* elements</span>
+<span class="line-precise" title="No Anys on this line!">    (-1, 2.014102, "Deuterium", "D"),</span>
+<span class="line-precise" title="No Anys on this line!">    (-1, 0.00054858, "Electron", "El"),</span>
+<span class="line-empty" title="No Anys on this line!">)</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">class Element:</span>
+<span class="line-any" title="No Anys on this line!">    def __init__(self, num, weight, name, symbol):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        self.num = num</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        self.weight = weight</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        self.name = name</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        self.symbol = symbol</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def __repr__(self):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x8)">        return f"Element: {self.symbol} ({self.name})"</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">class PeriodicTable:</span>
+<span class="line-any" title="No Anys on this line!">    def __init__(self):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        self.elements_by_number = {}</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        self.elements_by_name = {}</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        self.elements_by_symbol = {}</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">        for num, weight, name, symbol in _elements:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x10)">            e = Element(num, weight, name, symbol)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">            self.elements_by_number[num] = e</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">            self.elements_by_name[name] = e</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">            self.elements_by_symbol[symbol] = e</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def __getitem__(self, key):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)
+Omitted Generics (x1)
+Explicit (x2)">        if isinstance(key, (np.number, numbers.Number)):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">            d = self.elements_by_number</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        elif isinstance(key, str):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">            if len(key) &lt;= 2:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">                d = self.elements_by_symbol</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">            elif len(key) == 3 and key[0] == "U":</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">                d = self.elements_by_symbol</span>
+<span class="line-empty" title="No Anys on this line!">            else:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">                d = self.elements_by_name</span>
+<span class="line-empty" title="No Anys on this line!">        else:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">            raise KeyError(key)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">        return d[key]</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">periodic_table = PeriodicTable()</span>
+</pre></td>
+</tr></tbody>
+</table>
+</body>
+</html>

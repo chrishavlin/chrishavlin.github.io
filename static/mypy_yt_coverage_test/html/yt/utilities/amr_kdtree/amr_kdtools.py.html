@@ -1,0 +1,142 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="../../../../mypy-html.css">
+</head>
+<body>
+<h2>yt.utilities.amr_kdtree.amr_kdtools</h2>
+<table>
+<caption>yt/utilities/amr_kdtree/amr_kdtools.py</caption>
+<tbody><tr>
+<td class="table-lines"><pre><span id="L1" class="lineno"><a class="lineno" href="#L1">1</a></span>
+<span id="L2" class="lineno"><a class="lineno" href="#L2">2</a></span>
+<span id="L3" class="lineno"><a class="lineno" href="#L3">3</a></span>
+<span id="L4" class="lineno"><a class="lineno" href="#L4">4</a></span>
+<span id="L5" class="lineno"><a class="lineno" href="#L5">5</a></span>
+<span id="L6" class="lineno"><a class="lineno" href="#L6">6</a></span>
+<span id="L7" class="lineno"><a class="lineno" href="#L7">7</a></span>
+<span id="L8" class="lineno"><a class="lineno" href="#L8">8</a></span>
+<span id="L9" class="lineno"><a class="lineno" href="#L9">9</a></span>
+<span id="L10" class="lineno"><a class="lineno" href="#L10">10</a></span>
+<span id="L11" class="lineno"><a class="lineno" href="#L11">11</a></span>
+<span id="L12" class="lineno"><a class="lineno" href="#L12">12</a></span>
+<span id="L13" class="lineno"><a class="lineno" href="#L13">13</a></span>
+<span id="L14" class="lineno"><a class="lineno" href="#L14">14</a></span>
+<span id="L15" class="lineno"><a class="lineno" href="#L15">15</a></span>
+<span id="L16" class="lineno"><a class="lineno" href="#L16">16</a></span>
+<span id="L17" class="lineno"><a class="lineno" href="#L17">17</a></span>
+<span id="L18" class="lineno"><a class="lineno" href="#L18">18</a></span>
+<span id="L19" class="lineno"><a class="lineno" href="#L19">19</a></span>
+<span id="L20" class="lineno"><a class="lineno" href="#L20">20</a></span>
+<span id="L21" class="lineno"><a class="lineno" href="#L21">21</a></span>
+<span id="L22" class="lineno"><a class="lineno" href="#L22">22</a></span>
+<span id="L23" class="lineno"><a class="lineno" href="#L23">23</a></span>
+<span id="L24" class="lineno"><a class="lineno" href="#L24">24</a></span>
+<span id="L25" class="lineno"><a class="lineno" href="#L25">25</a></span>
+<span id="L26" class="lineno"><a class="lineno" href="#L26">26</a></span>
+<span id="L27" class="lineno"><a class="lineno" href="#L27">27</a></span>
+<span id="L28" class="lineno"><a class="lineno" href="#L28">28</a></span>
+<span id="L29" class="lineno"><a class="lineno" href="#L29">29</a></span>
+<span id="L30" class="lineno"><a class="lineno" href="#L30">30</a></span>
+<span id="L31" class="lineno"><a class="lineno" href="#L31">31</a></span>
+<span id="L32" class="lineno"><a class="lineno" href="#L32">32</a></span>
+<span id="L33" class="lineno"><a class="lineno" href="#L33">33</a></span>
+<span id="L34" class="lineno"><a class="lineno" href="#L34">34</a></span>
+<span id="L35" class="lineno"><a class="lineno" href="#L35">35</a></span>
+<span id="L36" class="lineno"><a class="lineno" href="#L36">36</a></span>
+<span id="L37" class="lineno"><a class="lineno" href="#L37">37</a></span>
+<span id="L38" class="lineno"><a class="lineno" href="#L38">38</a></span>
+<span id="L39" class="lineno"><a class="lineno" href="#L39">39</a></span>
+<span id="L40" class="lineno"><a class="lineno" href="#L40">40</a></span>
+<span id="L41" class="lineno"><a class="lineno" href="#L41">41</a></span>
+<span id="L42" class="lineno"><a class="lineno" href="#L42">42</a></span>
+<span id="L43" class="lineno"><a class="lineno" href="#L43">43</a></span>
+<span id="L44" class="lineno"><a class="lineno" href="#L44">44</a></span>
+<span id="L45" class="lineno"><a class="lineno" href="#L45">45</a></span>
+<span id="L46" class="lineno"><a class="lineno" href="#L46">46</a></span>
+<span id="L47" class="lineno"><a class="lineno" href="#L47">47</a></span>
+<span id="L48" class="lineno"><a class="lineno" href="#L48">48</a></span>
+<span id="L49" class="lineno"><a class="lineno" href="#L49">49</a></span>
+<span id="L50" class="lineno"><a class="lineno" href="#L50">50</a></span>
+</pre></td>
+<td class="table-code"><pre><span class="line-precise" title="No Anys on this line!">import numpy as np</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">from yt.funcs import mylog</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">def receive_and_reduce(comm, incoming_rank, image, add_to_front, *, use_opacity=True):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">    mylog.debug("Receiving image from %04i", incoming_rank)</span>
+<span class="line-empty" title="No Anys on this line!">    # mylog.debug( '%04i receiving image from %04i'%(self.comm.rank,back.owner))</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x8)">    arr2 = comm.recv_array(incoming_rank, incoming_rank).reshape(</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x9)">        (image.shape[0], image.shape[1], image.shape[2])</span>
+<span class="line-empty" title="No Anys on this line!">    )</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">    if not use_opacity:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">        np.add(image, arr2, image)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        return image</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">    if add_to_front:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        front = arr2</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        back = image</span>
+<span class="line-empty" title="No Anys on this line!">    else:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        front = image</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        back = arr2</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">    if image.shape[2] == 3:</span>
+<span class="line-empty" title="No Anys on this line!">        # Assume Projection Camera, Add</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">        np.add(image, front, image)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        return image</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">    ta = 1.0 - front[:, :, 3]</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">    np.maximum(ta, 0.0, ta)</span>
+<span class="line-empty" title="No Anys on this line!">    # This now does the following calculation, but in a memory</span>
+<span class="line-empty" title="No Anys on this line!">    # conservative fashion</span>
+<span class="line-empty" title="No Anys on this line!">    # image[:,:,i  ] = front[:,:,i] + ta*back[:,:,i]</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">    image = back.copy()</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">    for i in range(4):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x8)">        np.multiply(image[:, :, i], ta, image[:, :, i])</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">    np.add(image, front, image)</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">    return image</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">def send_to_parent(comm, outgoing_rank, image):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">    mylog.debug("Sending image to %04i", outgoing_rank)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x7)">    comm.send_array(image, outgoing_rank, tag=comm.rank)</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">def scatter_image(comm, root, image):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">    mylog.debug("Scattering from %04i", root)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x6)">    image = comm.mpi_bcast(image, root=root)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">    return image</span>
+</pre></td>
+</tr></tbody>
+</table>
+</body>
+</html>
