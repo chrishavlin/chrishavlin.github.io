@@ -1,0 +1,373 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="../../../../mypy-html.css">
+</head>
+<body>
+<h2>yt.frontends.enzo_e.fields</h2>
+<table>
+<caption>yt/frontends/enzo_e/fields.py</caption>
+<tbody><tr>
+<td class="table-lines"><pre><span id="L1" class="lineno"><a class="lineno" href="#L1">1</a></span>
+<span id="L2" class="lineno"><a class="lineno" href="#L2">2</a></span>
+<span id="L3" class="lineno"><a class="lineno" href="#L3">3</a></span>
+<span id="L4" class="lineno"><a class="lineno" href="#L4">4</a></span>
+<span id="L5" class="lineno"><a class="lineno" href="#L5">5</a></span>
+<span id="L6" class="lineno"><a class="lineno" href="#L6">6</a></span>
+<span id="L7" class="lineno"><a class="lineno" href="#L7">7</a></span>
+<span id="L8" class="lineno"><a class="lineno" href="#L8">8</a></span>
+<span id="L9" class="lineno"><a class="lineno" href="#L9">9</a></span>
+<span id="L10" class="lineno"><a class="lineno" href="#L10">10</a></span>
+<span id="L11" class="lineno"><a class="lineno" href="#L11">11</a></span>
+<span id="L12" class="lineno"><a class="lineno" href="#L12">12</a></span>
+<span id="L13" class="lineno"><a class="lineno" href="#L13">13</a></span>
+<span id="L14" class="lineno"><a class="lineno" href="#L14">14</a></span>
+<span id="L15" class="lineno"><a class="lineno" href="#L15">15</a></span>
+<span id="L16" class="lineno"><a class="lineno" href="#L16">16</a></span>
+<span id="L17" class="lineno"><a class="lineno" href="#L17">17</a></span>
+<span id="L18" class="lineno"><a class="lineno" href="#L18">18</a></span>
+<span id="L19" class="lineno"><a class="lineno" href="#L19">19</a></span>
+<span id="L20" class="lineno"><a class="lineno" href="#L20">20</a></span>
+<span id="L21" class="lineno"><a class="lineno" href="#L21">21</a></span>
+<span id="L22" class="lineno"><a class="lineno" href="#L22">22</a></span>
+<span id="L23" class="lineno"><a class="lineno" href="#L23">23</a></span>
+<span id="L24" class="lineno"><a class="lineno" href="#L24">24</a></span>
+<span id="L25" class="lineno"><a class="lineno" href="#L25">25</a></span>
+<span id="L26" class="lineno"><a class="lineno" href="#L26">26</a></span>
+<span id="L27" class="lineno"><a class="lineno" href="#L27">27</a></span>
+<span id="L28" class="lineno"><a class="lineno" href="#L28">28</a></span>
+<span id="L29" class="lineno"><a class="lineno" href="#L29">29</a></span>
+<span id="L30" class="lineno"><a class="lineno" href="#L30">30</a></span>
+<span id="L31" class="lineno"><a class="lineno" href="#L31">31</a></span>
+<span id="L32" class="lineno"><a class="lineno" href="#L32">32</a></span>
+<span id="L33" class="lineno"><a class="lineno" href="#L33">33</a></span>
+<span id="L34" class="lineno"><a class="lineno" href="#L34">34</a></span>
+<span id="L35" class="lineno"><a class="lineno" href="#L35">35</a></span>
+<span id="L36" class="lineno"><a class="lineno" href="#L36">36</a></span>
+<span id="L37" class="lineno"><a class="lineno" href="#L37">37</a></span>
+<span id="L38" class="lineno"><a class="lineno" href="#L38">38</a></span>
+<span id="L39" class="lineno"><a class="lineno" href="#L39">39</a></span>
+<span id="L40" class="lineno"><a class="lineno" href="#L40">40</a></span>
+<span id="L41" class="lineno"><a class="lineno" href="#L41">41</a></span>
+<span id="L42" class="lineno"><a class="lineno" href="#L42">42</a></span>
+<span id="L43" class="lineno"><a class="lineno" href="#L43">43</a></span>
+<span id="L44" class="lineno"><a class="lineno" href="#L44">44</a></span>
+<span id="L45" class="lineno"><a class="lineno" href="#L45">45</a></span>
+<span id="L46" class="lineno"><a class="lineno" href="#L46">46</a></span>
+<span id="L47" class="lineno"><a class="lineno" href="#L47">47</a></span>
+<span id="L48" class="lineno"><a class="lineno" href="#L48">48</a></span>
+<span id="L49" class="lineno"><a class="lineno" href="#L49">49</a></span>
+<span id="L50" class="lineno"><a class="lineno" href="#L50">50</a></span>
+<span id="L51" class="lineno"><a class="lineno" href="#L51">51</a></span>
+<span id="L52" class="lineno"><a class="lineno" href="#L52">52</a></span>
+<span id="L53" class="lineno"><a class="lineno" href="#L53">53</a></span>
+<span id="L54" class="lineno"><a class="lineno" href="#L54">54</a></span>
+<span id="L55" class="lineno"><a class="lineno" href="#L55">55</a></span>
+<span id="L56" class="lineno"><a class="lineno" href="#L56">56</a></span>
+<span id="L57" class="lineno"><a class="lineno" href="#L57">57</a></span>
+<span id="L58" class="lineno"><a class="lineno" href="#L58">58</a></span>
+<span id="L59" class="lineno"><a class="lineno" href="#L59">59</a></span>
+<span id="L60" class="lineno"><a class="lineno" href="#L60">60</a></span>
+<span id="L61" class="lineno"><a class="lineno" href="#L61">61</a></span>
+<span id="L62" class="lineno"><a class="lineno" href="#L62">62</a></span>
+<span id="L63" class="lineno"><a class="lineno" href="#L63">63</a></span>
+<span id="L64" class="lineno"><a class="lineno" href="#L64">64</a></span>
+<span id="L65" class="lineno"><a class="lineno" href="#L65">65</a></span>
+<span id="L66" class="lineno"><a class="lineno" href="#L66">66</a></span>
+<span id="L67" class="lineno"><a class="lineno" href="#L67">67</a></span>
+<span id="L68" class="lineno"><a class="lineno" href="#L68">68</a></span>
+<span id="L69" class="lineno"><a class="lineno" href="#L69">69</a></span>
+<span id="L70" class="lineno"><a class="lineno" href="#L70">70</a></span>
+<span id="L71" class="lineno"><a class="lineno" href="#L71">71</a></span>
+<span id="L72" class="lineno"><a class="lineno" href="#L72">72</a></span>
+<span id="L73" class="lineno"><a class="lineno" href="#L73">73</a></span>
+<span id="L74" class="lineno"><a class="lineno" href="#L74">74</a></span>
+<span id="L75" class="lineno"><a class="lineno" href="#L75">75</a></span>
+<span id="L76" class="lineno"><a class="lineno" href="#L76">76</a></span>
+<span id="L77" class="lineno"><a class="lineno" href="#L77">77</a></span>
+<span id="L78" class="lineno"><a class="lineno" href="#L78">78</a></span>
+<span id="L79" class="lineno"><a class="lineno" href="#L79">79</a></span>
+<span id="L80" class="lineno"><a class="lineno" href="#L80">80</a></span>
+<span id="L81" class="lineno"><a class="lineno" href="#L81">81</a></span>
+<span id="L82" class="lineno"><a class="lineno" href="#L82">82</a></span>
+<span id="L83" class="lineno"><a class="lineno" href="#L83">83</a></span>
+<span id="L84" class="lineno"><a class="lineno" href="#L84">84</a></span>
+<span id="L85" class="lineno"><a class="lineno" href="#L85">85</a></span>
+<span id="L86" class="lineno"><a class="lineno" href="#L86">86</a></span>
+<span id="L87" class="lineno"><a class="lineno" href="#L87">87</a></span>
+<span id="L88" class="lineno"><a class="lineno" href="#L88">88</a></span>
+<span id="L89" class="lineno"><a class="lineno" href="#L89">89</a></span>
+<span id="L90" class="lineno"><a class="lineno" href="#L90">90</a></span>
+<span id="L91" class="lineno"><a class="lineno" href="#L91">91</a></span>
+<span id="L92" class="lineno"><a class="lineno" href="#L92">92</a></span>
+<span id="L93" class="lineno"><a class="lineno" href="#L93">93</a></span>
+<span id="L94" class="lineno"><a class="lineno" href="#L94">94</a></span>
+<span id="L95" class="lineno"><a class="lineno" href="#L95">95</a></span>
+<span id="L96" class="lineno"><a class="lineno" href="#L96">96</a></span>
+<span id="L97" class="lineno"><a class="lineno" href="#L97">97</a></span>
+<span id="L98" class="lineno"><a class="lineno" href="#L98">98</a></span>
+<span id="L99" class="lineno"><a class="lineno" href="#L99">99</a></span>
+<span id="L100" class="lineno"><a class="lineno" href="#L100">100</a></span>
+<span id="L101" class="lineno"><a class="lineno" href="#L101">101</a></span>
+<span id="L102" class="lineno"><a class="lineno" href="#L102">102</a></span>
+<span id="L103" class="lineno"><a class="lineno" href="#L103">103</a></span>
+<span id="L104" class="lineno"><a class="lineno" href="#L104">104</a></span>
+<span id="L105" class="lineno"><a class="lineno" href="#L105">105</a></span>
+<span id="L106" class="lineno"><a class="lineno" href="#L106">106</a></span>
+<span id="L107" class="lineno"><a class="lineno" href="#L107">107</a></span>
+<span id="L108" class="lineno"><a class="lineno" href="#L108">108</a></span>
+<span id="L109" class="lineno"><a class="lineno" href="#L109">109</a></span>
+<span id="L110" class="lineno"><a class="lineno" href="#L110">110</a></span>
+<span id="L111" class="lineno"><a class="lineno" href="#L111">111</a></span>
+<span id="L112" class="lineno"><a class="lineno" href="#L112">112</a></span>
+<span id="L113" class="lineno"><a class="lineno" href="#L113">113</a></span>
+<span id="L114" class="lineno"><a class="lineno" href="#L114">114</a></span>
+<span id="L115" class="lineno"><a class="lineno" href="#L115">115</a></span>
+<span id="L116" class="lineno"><a class="lineno" href="#L116">116</a></span>
+<span id="L117" class="lineno"><a class="lineno" href="#L117">117</a></span>
+<span id="L118" class="lineno"><a class="lineno" href="#L118">118</a></span>
+<span id="L119" class="lineno"><a class="lineno" href="#L119">119</a></span>
+<span id="L120" class="lineno"><a class="lineno" href="#L120">120</a></span>
+<span id="L121" class="lineno"><a class="lineno" href="#L121">121</a></span>
+<span id="L122" class="lineno"><a class="lineno" href="#L122">122</a></span>
+<span id="L123" class="lineno"><a class="lineno" href="#L123">123</a></span>
+<span id="L124" class="lineno"><a class="lineno" href="#L124">124</a></span>
+<span id="L125" class="lineno"><a class="lineno" href="#L125">125</a></span>
+<span id="L126" class="lineno"><a class="lineno" href="#L126">126</a></span>
+<span id="L127" class="lineno"><a class="lineno" href="#L127">127</a></span>
+<span id="L128" class="lineno"><a class="lineno" href="#L128">128</a></span>
+<span id="L129" class="lineno"><a class="lineno" href="#L129">129</a></span>
+<span id="L130" class="lineno"><a class="lineno" href="#L130">130</a></span>
+<span id="L131" class="lineno"><a class="lineno" href="#L131">131</a></span>
+<span id="L132" class="lineno"><a class="lineno" href="#L132">132</a></span>
+<span id="L133" class="lineno"><a class="lineno" href="#L133">133</a></span>
+<span id="L134" class="lineno"><a class="lineno" href="#L134">134</a></span>
+<span id="L135" class="lineno"><a class="lineno" href="#L135">135</a></span>
+<span id="L136" class="lineno"><a class="lineno" href="#L136">136</a></span>
+<span id="L137" class="lineno"><a class="lineno" href="#L137">137</a></span>
+<span id="L138" class="lineno"><a class="lineno" href="#L138">138</a></span>
+<span id="L139" class="lineno"><a class="lineno" href="#L139">139</a></span>
+<span id="L140" class="lineno"><a class="lineno" href="#L140">140</a></span>
+<span id="L141" class="lineno"><a class="lineno" href="#L141">141</a></span>
+<span id="L142" class="lineno"><a class="lineno" href="#L142">142</a></span>
+<span id="L143" class="lineno"><a class="lineno" href="#L143">143</a></span>
+<span id="L144" class="lineno"><a class="lineno" href="#L144">144</a></span>
+<span id="L145" class="lineno"><a class="lineno" href="#L145">145</a></span>
+<span id="L146" class="lineno"><a class="lineno" href="#L146">146</a></span>
+<span id="L147" class="lineno"><a class="lineno" href="#L147">147</a></span>
+<span id="L148" class="lineno"><a class="lineno" href="#L148">148</a></span>
+<span id="L149" class="lineno"><a class="lineno" href="#L149">149</a></span>
+<span id="L150" class="lineno"><a class="lineno" href="#L150">150</a></span>
+<span id="L151" class="lineno"><a class="lineno" href="#L151">151</a></span>
+<span id="L152" class="lineno"><a class="lineno" href="#L152">152</a></span>
+<span id="L153" class="lineno"><a class="lineno" href="#L153">153</a></span>
+<span id="L154" class="lineno"><a class="lineno" href="#L154">154</a></span>
+<span id="L155" class="lineno"><a class="lineno" href="#L155">155</a></span>
+</pre></td>
+<td class="table-code"><pre><span class="line-precise" title="No Anys on this line!">import numpy as np</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">from yt._typing import KnownFieldsT</span>
+<span class="line-precise" title="No Anys on this line!">from yt.fields.field_info_container import FieldInfoContainer</span>
+<span class="line-precise" title="No Anys on this line!">from yt.fields.particle_fields import add_union_field</span>
+<span class="line-precise" title="No Anys on this line!">from yt.frontends.enzo_e.misc import (</span>
+<span class="line-empty" title="No Anys on this line!">    get_listed_subparam,</span>
+<span class="line-empty" title="No Anys on this line!">    get_particle_mass_correction,</span>
+<span class="line-empty" title="No Anys on this line!">    nested_dict_get,</span>
+<span class="line-empty" title="No Anys on this line!">)</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">rho_units = "code_mass / code_length**3"</span>
+<span class="line-precise" title="No Anys on this line!">vel_units = "code_velocity"</span>
+<span class="line-precise" title="No Anys on this line!">acc_units = "code_velocity / code_time"</span>
+<span class="line-precise" title="No Anys on this line!">energy_units = "code_velocity**2"</span>
+<span class="line-precise" title="No Anys on this line!">b_units = "code_magnetic"</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">NODAL_FLAGS = {</span>
+<span class="line-precise" title="No Anys on this line!">    "bfieldi_x": [1, 0, 0],</span>
+<span class="line-precise" title="No Anys on this line!">    "bfieldi_y": [0, 1, 0],</span>
+<span class="line-precise" title="No Anys on this line!">    "bfieldi_z": [0, 0, 1],</span>
+<span class="line-empty" title="No Anys on this line!">}</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">class EnzoEFieldInfo(FieldInfoContainer):</span>
+<span class="line-precise" title="No Anys on this line!">    known_other_fields: KnownFieldsT = (</span>
+<span class="line-precise" title="No Anys on this line!">        ("velocity_x", (vel_units, ["velocity_x"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("velocity_y", (vel_units, ["velocity_y"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("velocity_z", (vel_units, ["velocity_z"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("acceleration_x", (acc_units, ["acceleration_x"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("acceleration_y", (acc_units, ["acceleration_y"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("acceleration_z", (acc_units, ["acceleration_z"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("density", (rho_units, ["density"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("density_total", (rho_units, ["total_density"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("total_energy", (energy_units, ["specific_total_energy"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("internal_energy", (energy_units, ["specific_thermal_energy"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("bfield_x", (b_units, [], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("bfield_y", (b_units, [], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("bfield_z", (b_units, [], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("bfieldi_x", (b_units, [], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("bfieldi_y", (b_units, [], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("bfieldi_z", (b_units, [], None)),</span>
+<span class="line-empty" title="No Anys on this line!">    )</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">    known_particle_fields: KnownFieldsT = (</span>
+<span class="line-precise" title="No Anys on this line!">        ("x", ("code_length", ["particle_position_x"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("y", ("code_length", ["particle_position_y"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("z", ("code_length", ["particle_position_z"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("vx", (vel_units, ["particle_velocity_x"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("vy", (vel_units, ["particle_velocity_y"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("vz", (vel_units, ["particle_velocity_z"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("ax", (acc_units, ["particle_acceleration_x"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("ay", (acc_units, ["particle_acceleration_y"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("az", (acc_units, ["particle_acceleration_z"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("mass", ("code_mass", ["particle_mass"], None)),</span>
+<span class="line-empty" title="No Anys on this line!">    )</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def __init__(self, ds, field_list, slice_info=None):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">        super().__init__(ds, field_list, slice_info=slice_info)</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!">        # setup nodal flag information</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">        for field, arr in NODAL_FLAGS.items():</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">            if ("enzoe", field) in self:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">                finfo = self["enzoe", field]</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)
+Explicit (x6)
+Omitted Generics (x8)">                finfo.nodal_flag = np.array(arr)</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def setup_fluid_fields(self):</span>
+<span class="line-precise" title="No Anys on this line!">        from yt.fields.magnetic_field import setup_magnetic_field_aliases</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        self.setup_energy_field()</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x12)">        setup_magnetic_field_aliases(self, "enzoe", [f"bfield_{ax}" for ax in "xyz"])</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def setup_energy_field(self):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">        unit_system = self.ds.unit_system</span>
+<span class="line-empty" title="No Anys on this line!">        # check if we have a field for internal energy</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        has_ie_field = ("enzoe", "internal_energy") in self.field_list</span>
+<span class="line-empty" title="No Anys on this line!">        # check if we need to account for magnetic energy</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x9)">        vlct_params = get_listed_subparam(self.ds.parameters, "Method", "mhd_vlct", {})</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">        has_magnetic = "no_bfield" != vlct_params.get("mhd_choice", "no_bfield")</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!">        # define the ("gas", "specific_thermal_energy") field</span>
+<span class="line-empty" title="No Anys on this line!">        # - this is already done for us if the simulation used the dual-energy</span>
+<span class="line-empty" title="No Anys on this line!">        #   formalism AND ("enzoe", "internal_energy") was saved to disk</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">        if not (self.ds.parameters["uses_dual_energy"] and has_ie_field):</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">            def _tot_minus_kin(field, data):</span>
+<span class="line-empty" title="No Anys on this line!">                return (</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">                    data["enzoe", "total_energy"]</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">                    - 0.5 * data["gas", "velocity_magnitude"] ** 2.0</span>
+<span class="line-empty" title="No Anys on this line!">                )</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">            if not has_magnetic:</span>
+<span class="line-empty" title="No Anys on this line!">                # thermal energy = total energy - kinetic energy</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">                self.add_field(</span>
+<span class="line-any" title="No Anys on this line!">                    ("gas", "specific_thermal_energy"),</span>
+<span class="line-any" title="No Anys on this line!">                    sampling_type="cell",</span>
+<span class="line-precise" title="Any Types on this line: 
+Unannotated (x3)">                    function=_tot_minus_kin,</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">                    units=unit_system["specific_energy"],</span>
+<span class="line-empty" title="No Anys on this line!">                )</span>
+<span class="line-empty" title="No Anys on this line!">            else:</span>
+<span class="line-empty" title="No Anys on this line!">                # thermal energy = total energy - kinetic energy - magnetic energy</span>
+<span class="line-any" title="No Anys on this line!">                def _sub_b(field, data):</span>
+<span class="line-empty" title="No Anys on this line!">                    return (</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x7)">                        _tot_minus_kin(field, data)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">                        - data["gas", "magnetic_energy_density"]</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">                        / data["gas", "density"]</span>
+<span class="line-empty" title="No Anys on this line!">                    )</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">                self.add_field(</span>
+<span class="line-any" title="No Anys on this line!">                    ("gas", "specific_thermal_energy"),</span>
+<span class="line-any" title="No Anys on this line!">                    sampling_type="cell",</span>
+<span class="line-precise" title="Any Types on this line: 
+Unannotated (x3)">                    function=_sub_b,</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">                    units=unit_system["specific_energy"],</span>
+<span class="line-empty" title="No Anys on this line!">                )</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def setup_particle_fields(self, ptype, ftype="gas", num_neighbors=64):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">        super().setup_particle_fields(ptype, ftype=ftype, num_neighbors=num_neighbors)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">        self.setup_particle_mass_field(ptype)</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def setup_particle_mass_field(self, ptype):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        fname = "particle_mass"</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">        if ptype in self.ds.particle_unions:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x8)">            add_union_field(self, ptype, fname, "code_mass")</span>
+<span class="line-empty" title="No Anys on this line!">            return</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">        pdict = self.ds.parameters.get("Particle", None)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        if pdict is None:</span>
+<span class="line-empty" title="No Anys on this line!">            return</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x8)">        constants = nested_dict_get(pdict, (ptype, "constants"), default=())</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        if not constants:</span>
+<span class="line-empty" title="No Anys on this line!">            return</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!">        # constants should be a tuple consisting of multiple tuples of (name, type, value).</span>
+<span class="line-empty" title="No Anys on this line!">        # When there is only one entry, the enclosing tuple gets stripped, so we put it back.</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)
+Omitted Generics (x2)">        if not isinstance(constants[0], tuple):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">            constants = (constants,)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">        names = [c[0] for c in constants]</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        if "mass" not in names:</span>
+<span class="line-empty" title="No Anys on this line!">            return</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x10)">        val = constants[names.index("mass")][2] * self.ds.mass_unit</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">        if not self.ds.index.io._particle_mass_is_mass:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x7)">            val = val * get_particle_mass_correction(self.ds)</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">        def _pmass(field, data):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">            return val * data[ptype, "particle_ones"]</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        self.add_field(</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">            (ptype, fname),</span>
+<span class="line-precise" title="Any Types on this line: 
+Unannotated (x3)">            function=_pmass,</span>
+<span class="line-any" title="No Anys on this line!">            units="code_mass",</span>
+<span class="line-any" title="No Anys on this line!">            sampling_type="particle",</span>
+<span class="line-empty" title="No Anys on this line!">        )</span>
+</pre></td>
+</tr></tbody>
+</table>
+</body>
+</html>

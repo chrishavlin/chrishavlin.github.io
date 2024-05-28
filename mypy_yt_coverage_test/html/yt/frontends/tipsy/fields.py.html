@@ -1,0 +1,96 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="../../../../mypy-html.css">
+</head>
+<body>
+<h2>yt.frontends.tipsy.fields</h2>
+<table>
+<caption>yt/frontends/tipsy/fields.py</caption>
+<tbody><tr>
+<td class="table-lines"><pre><span id="L1" class="lineno"><a class="lineno" href="#L1">1</a></span>
+<span id="L2" class="lineno"><a class="lineno" href="#L2">2</a></span>
+<span id="L3" class="lineno"><a class="lineno" href="#L3">3</a></span>
+<span id="L4" class="lineno"><a class="lineno" href="#L4">4</a></span>
+<span id="L5" class="lineno"><a class="lineno" href="#L5">5</a></span>
+<span id="L6" class="lineno"><a class="lineno" href="#L6">6</a></span>
+<span id="L7" class="lineno"><a class="lineno" href="#L7">7</a></span>
+<span id="L8" class="lineno"><a class="lineno" href="#L8">8</a></span>
+<span id="L9" class="lineno"><a class="lineno" href="#L9">9</a></span>
+<span id="L10" class="lineno"><a class="lineno" href="#L10">10</a></span>
+<span id="L11" class="lineno"><a class="lineno" href="#L11">11</a></span>
+<span id="L12" class="lineno"><a class="lineno" href="#L12">12</a></span>
+<span id="L13" class="lineno"><a class="lineno" href="#L13">13</a></span>
+<span id="L14" class="lineno"><a class="lineno" href="#L14">14</a></span>
+<span id="L15" class="lineno"><a class="lineno" href="#L15">15</a></span>
+<span id="L16" class="lineno"><a class="lineno" href="#L16">16</a></span>
+<span id="L17" class="lineno"><a class="lineno" href="#L17">17</a></span>
+<span id="L18" class="lineno"><a class="lineno" href="#L18">18</a></span>
+<span id="L19" class="lineno"><a class="lineno" href="#L19">19</a></span>
+<span id="L20" class="lineno"><a class="lineno" href="#L20">20</a></span>
+<span id="L21" class="lineno"><a class="lineno" href="#L21">21</a></span>
+<span id="L22" class="lineno"><a class="lineno" href="#L22">22</a></span>
+<span id="L23" class="lineno"><a class="lineno" href="#L23">23</a></span>
+<span id="L24" class="lineno"><a class="lineno" href="#L24">24</a></span>
+<span id="L25" class="lineno"><a class="lineno" href="#L25">25</a></span>
+<span id="L26" class="lineno"><a class="lineno" href="#L26">26</a></span>
+<span id="L27" class="lineno"><a class="lineno" href="#L27">27</a></span>
+<span id="L28" class="lineno"><a class="lineno" href="#L28">28</a></span>
+<span id="L29" class="lineno"><a class="lineno" href="#L29">29</a></span>
+<span id="L30" class="lineno"><a class="lineno" href="#L30">30</a></span>
+<span id="L31" class="lineno"><a class="lineno" href="#L31">31</a></span>
+<span id="L32" class="lineno"><a class="lineno" href="#L32">32</a></span>
+<span id="L33" class="lineno"><a class="lineno" href="#L33">33</a></span>
+<span id="L34" class="lineno"><a class="lineno" href="#L34">34</a></span>
+<span id="L35" class="lineno"><a class="lineno" href="#L35">35</a></span>
+<span id="L36" class="lineno"><a class="lineno" href="#L36">36</a></span>
+<span id="L37" class="lineno"><a class="lineno" href="#L37">37</a></span>
+</pre></td>
+<td class="table-code"><pre><span class="line-precise" title="No Anys on this line!">from yt.frontends.sph.fields import SPHFieldInfo</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">class TipsyFieldInfo(SPHFieldInfo):</span>
+<span class="line-precise" title="Any Types on this line: 
+Unannotated (x2)">    known_particle_fields = SPHFieldInfo.known_particle_fields + (</span>
+<span class="line-precise" title="No Anys on this line!">        ("smoothing_length", ("code_length", [], None)),</span>
+<span class="line-empty" title="No Anys on this line!">    )</span>
+<span class="line-precise" title="No Anys on this line!">    aux_particle_fields = {</span>
+<span class="line-precise" title="No Anys on this line!">        "uDotFB": ("uDotFB", ("code_mass * code_velocity**2", [""], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        "uDotAV": ("uDotAV", ("code_mass * code_velocity**2", [""], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        "uDotPdV": ("uDotPdV", ("code_mass * code_velocity**2", [""], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        "uDotHydro": ("uDotHydro", ("code_mass * code_velocity**2", [""], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        "uDotDiff": ("uDotDiff", ("code_mass * code_velocity**2", [""], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        "uDot": ("uDot", ("code_mass * code_velocity**2", [""], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        "coolontime": ("coolontime", ("code_time", [""], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        "timeform": ("timeform", ("code_time", [""], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        "massform": ("massform", ("code_mass", [""], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        "HI": ("HI", ("dimensionless", ["H_fraction"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        "HII": ("HII", ("dimensionless", ["H_p1_fraction"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        "HeI": ("HeI", ("dimensionless", ["He_fraction"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        "HeII": ("HeII", ("dimensionless", ["He_p2_fraction"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        "OxMassFrac": ("OxMassFrac", ("dimensionless", ["O_fraction"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        "FeMassFrac": ("FeMassFrac", ("dimensionless", ["Fe_fraction"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        "c": ("c", ("code_velocity", [""], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        "acc": ("acc", ("code_velocity / code_time", [""], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        "accg": ("accg", ("code_velocity / code_time", [""], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        "smoothlength": ("smoothlength", ("code_length", ["smoothing_length"], None)),</span>
+<span class="line-empty" title="No Anys on this line!">    }</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def __init__(self, ds, field_list, slice_info=None):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        for field in field_list:</span>
+<span class="line-empty" title="No Anys on this line!">            if (</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x6)">                field[1] in self.aux_particle_fields.keys()</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">                and self.aux_particle_fields[field[1]] not in self.known_particle_fields</span>
+<span class="line-empty" title="No Anys on this line!">            ):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">                self.known_particle_fields += (self.aux_particle_fields[field[1]],)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">        super().__init__(ds, field_list, slice_info)</span>
+</pre></td>
+</tr></tbody>
+</table>
+</body>
+</html>

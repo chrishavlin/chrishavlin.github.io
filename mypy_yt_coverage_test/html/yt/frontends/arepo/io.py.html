@@ -1,0 +1,96 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="../../../../mypy-html.css">
+</head>
+<body>
+<h2>yt.frontends.arepo.io</h2>
+<table>
+<caption>yt/frontends/arepo/io.py</caption>
+<tbody><tr>
+<td class="table-lines"><pre><span id="L1" class="lineno"><a class="lineno" href="#L1">1</a></span>
+<span id="L2" class="lineno"><a class="lineno" href="#L2">2</a></span>
+<span id="L3" class="lineno"><a class="lineno" href="#L3">3</a></span>
+<span id="L4" class="lineno"><a class="lineno" href="#L4">4</a></span>
+<span id="L5" class="lineno"><a class="lineno" href="#L5">5</a></span>
+<span id="L6" class="lineno"><a class="lineno" href="#L6">6</a></span>
+<span id="L7" class="lineno"><a class="lineno" href="#L7">7</a></span>
+<span id="L8" class="lineno"><a class="lineno" href="#L8">8</a></span>
+<span id="L9" class="lineno"><a class="lineno" href="#L9">9</a></span>
+<span id="L10" class="lineno"><a class="lineno" href="#L10">10</a></span>
+<span id="L11" class="lineno"><a class="lineno" href="#L11">11</a></span>
+<span id="L12" class="lineno"><a class="lineno" href="#L12">12</a></span>
+<span id="L13" class="lineno"><a class="lineno" href="#L13">13</a></span>
+<span id="L14" class="lineno"><a class="lineno" href="#L14">14</a></span>
+<span id="L15" class="lineno"><a class="lineno" href="#L15">15</a></span>
+<span id="L16" class="lineno"><a class="lineno" href="#L16">16</a></span>
+<span id="L17" class="lineno"><a class="lineno" href="#L17">17</a></span>
+<span id="L18" class="lineno"><a class="lineno" href="#L18">18</a></span>
+<span id="L19" class="lineno"><a class="lineno" href="#L19">19</a></span>
+<span id="L20" class="lineno"><a class="lineno" href="#L20">20</a></span>
+<span id="L21" class="lineno"><a class="lineno" href="#L21">21</a></span>
+<span id="L22" class="lineno"><a class="lineno" href="#L22">22</a></span>
+<span id="L23" class="lineno"><a class="lineno" href="#L23">23</a></span>
+<span id="L24" class="lineno"><a class="lineno" href="#L24">24</a></span>
+<span id="L25" class="lineno"><a class="lineno" href="#L25">25</a></span>
+<span id="L26" class="lineno"><a class="lineno" href="#L26">26</a></span>
+<span id="L27" class="lineno"><a class="lineno" href="#L27">27</a></span>
+<span id="L28" class="lineno"><a class="lineno" href="#L28">28</a></span>
+<span id="L29" class="lineno"><a class="lineno" href="#L29">29</a></span>
+<span id="L30" class="lineno"><a class="lineno" href="#L30">30</a></span>
+<span id="L31" class="lineno"><a class="lineno" href="#L31">31</a></span>
+<span id="L32" class="lineno"><a class="lineno" href="#L32">32</a></span>
+</pre></td>
+<td class="table-code"><pre><span class="line-precise" title="No Anys on this line!">import numpy as np</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">from yt.frontends.gadget.api import IOHandlerGadgetHDF5</span>
+<span class="line-precise" title="No Anys on this line!">from yt.utilities.on_demand_imports import _h5py as h5py</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">class IOHandlerArepoHDF5(IOHandlerGadgetHDF5):</span>
+<span class="line-precise" title="No Anys on this line!">    _dataset_type = "arepo_hdf5"</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def _generate_smoothing_length(self, index):</span>
+<span class="line-empty" title="No Anys on this line!">        # This is handled below in _get_smoothing_length</span>
+<span class="line-empty" title="No Anys on this line!">        return</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def _get_smoothing_length(self, data_file, position_dtype, position_shape):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">        ptype = self.ds._sph_ptypes[0]</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">        ind = int(ptype[-1])</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x6)">        si, ei = data_file.start, data_file.end</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">        with h5py.File(data_file.filename, mode="r") as f:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x9)">            pcount = f["/Header"].attrs["NumPart_ThisFile"][ind].astype("int64")</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x8)
+Omitted Generics (x8)
+Explicit (x13)">            pcount = np.clip(pcount - si, 0, ei - si)</span>
+<span class="line-empty" title="No Anys on this line!">            # Arepo cells do not have "smoothing lengths" by definition, so</span>
+<span class="line-empty" title="No Anys on this line!">            # we compute one here by finding the radius of the sphere</span>
+<span class="line-empty" title="No Anys on this line!">            # corresponding to the volume of the Voroni cell and multiplying</span>
+<span class="line-empty" title="No Anys on this line!">            # by a user-configurable smoothing factor.</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x16)">            hsml = f[ptype]["Masses"][si:ei, ...] / f[ptype]["Density"][si:ei, ...]</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">            hsml *= 3.0 / (4.0 * np.pi)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">            hsml **= 1.0 / 3.0</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">            hsml *= self.ds.smoothing_factor</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">            dt = hsml.dtype.newbyteorder("N")  # Native</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">            if position_dtype is not None and dt &lt; position_dtype:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">                dt = position_dtype</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">            return hsml.astype(dt)</span>
+</pre></td>
+</tr></tbody>
+</table>
+</body>
+</html>
