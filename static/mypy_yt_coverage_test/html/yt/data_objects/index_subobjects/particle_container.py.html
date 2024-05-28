@@ -1,0 +1,278 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="../../../../mypy-html.css">
+</head>
+<body>
+<h2>yt.data_objects.index_subobjects.particle_container</h2>
+<table>
+<caption>yt/data_objects/index_subobjects/particle_container.py</caption>
+<tbody><tr>
+<td class="table-lines"><pre><span id="L1" class="lineno"><a class="lineno" href="#L1">1</a></span>
+<span id="L2" class="lineno"><a class="lineno" href="#L2">2</a></span>
+<span id="L3" class="lineno"><a class="lineno" href="#L3">3</a></span>
+<span id="L4" class="lineno"><a class="lineno" href="#L4">4</a></span>
+<span id="L5" class="lineno"><a class="lineno" href="#L5">5</a></span>
+<span id="L6" class="lineno"><a class="lineno" href="#L6">6</a></span>
+<span id="L7" class="lineno"><a class="lineno" href="#L7">7</a></span>
+<span id="L8" class="lineno"><a class="lineno" href="#L8">8</a></span>
+<span id="L9" class="lineno"><a class="lineno" href="#L9">9</a></span>
+<span id="L10" class="lineno"><a class="lineno" href="#L10">10</a></span>
+<span id="L11" class="lineno"><a class="lineno" href="#L11">11</a></span>
+<span id="L12" class="lineno"><a class="lineno" href="#L12">12</a></span>
+<span id="L13" class="lineno"><a class="lineno" href="#L13">13</a></span>
+<span id="L14" class="lineno"><a class="lineno" href="#L14">14</a></span>
+<span id="L15" class="lineno"><a class="lineno" href="#L15">15</a></span>
+<span id="L16" class="lineno"><a class="lineno" href="#L16">16</a></span>
+<span id="L17" class="lineno"><a class="lineno" href="#L17">17</a></span>
+<span id="L18" class="lineno"><a class="lineno" href="#L18">18</a></span>
+<span id="L19" class="lineno"><a class="lineno" href="#L19">19</a></span>
+<span id="L20" class="lineno"><a class="lineno" href="#L20">20</a></span>
+<span id="L21" class="lineno"><a class="lineno" href="#L21">21</a></span>
+<span id="L22" class="lineno"><a class="lineno" href="#L22">22</a></span>
+<span id="L23" class="lineno"><a class="lineno" href="#L23">23</a></span>
+<span id="L24" class="lineno"><a class="lineno" href="#L24">24</a></span>
+<span id="L25" class="lineno"><a class="lineno" href="#L25">25</a></span>
+<span id="L26" class="lineno"><a class="lineno" href="#L26">26</a></span>
+<span id="L27" class="lineno"><a class="lineno" href="#L27">27</a></span>
+<span id="L28" class="lineno"><a class="lineno" href="#L28">28</a></span>
+<span id="L29" class="lineno"><a class="lineno" href="#L29">29</a></span>
+<span id="L30" class="lineno"><a class="lineno" href="#L30">30</a></span>
+<span id="L31" class="lineno"><a class="lineno" href="#L31">31</a></span>
+<span id="L32" class="lineno"><a class="lineno" href="#L32">32</a></span>
+<span id="L33" class="lineno"><a class="lineno" href="#L33">33</a></span>
+<span id="L34" class="lineno"><a class="lineno" href="#L34">34</a></span>
+<span id="L35" class="lineno"><a class="lineno" href="#L35">35</a></span>
+<span id="L36" class="lineno"><a class="lineno" href="#L36">36</a></span>
+<span id="L37" class="lineno"><a class="lineno" href="#L37">37</a></span>
+<span id="L38" class="lineno"><a class="lineno" href="#L38">38</a></span>
+<span id="L39" class="lineno"><a class="lineno" href="#L39">39</a></span>
+<span id="L40" class="lineno"><a class="lineno" href="#L40">40</a></span>
+<span id="L41" class="lineno"><a class="lineno" href="#L41">41</a></span>
+<span id="L42" class="lineno"><a class="lineno" href="#L42">42</a></span>
+<span id="L43" class="lineno"><a class="lineno" href="#L43">43</a></span>
+<span id="L44" class="lineno"><a class="lineno" href="#L44">44</a></span>
+<span id="L45" class="lineno"><a class="lineno" href="#L45">45</a></span>
+<span id="L46" class="lineno"><a class="lineno" href="#L46">46</a></span>
+<span id="L47" class="lineno"><a class="lineno" href="#L47">47</a></span>
+<span id="L48" class="lineno"><a class="lineno" href="#L48">48</a></span>
+<span id="L49" class="lineno"><a class="lineno" href="#L49">49</a></span>
+<span id="L50" class="lineno"><a class="lineno" href="#L50">50</a></span>
+<span id="L51" class="lineno"><a class="lineno" href="#L51">51</a></span>
+<span id="L52" class="lineno"><a class="lineno" href="#L52">52</a></span>
+<span id="L53" class="lineno"><a class="lineno" href="#L53">53</a></span>
+<span id="L54" class="lineno"><a class="lineno" href="#L54">54</a></span>
+<span id="L55" class="lineno"><a class="lineno" href="#L55">55</a></span>
+<span id="L56" class="lineno"><a class="lineno" href="#L56">56</a></span>
+<span id="L57" class="lineno"><a class="lineno" href="#L57">57</a></span>
+<span id="L58" class="lineno"><a class="lineno" href="#L58">58</a></span>
+<span id="L59" class="lineno"><a class="lineno" href="#L59">59</a></span>
+<span id="L60" class="lineno"><a class="lineno" href="#L60">60</a></span>
+<span id="L61" class="lineno"><a class="lineno" href="#L61">61</a></span>
+<span id="L62" class="lineno"><a class="lineno" href="#L62">62</a></span>
+<span id="L63" class="lineno"><a class="lineno" href="#L63">63</a></span>
+<span id="L64" class="lineno"><a class="lineno" href="#L64">64</a></span>
+<span id="L65" class="lineno"><a class="lineno" href="#L65">65</a></span>
+<span id="L66" class="lineno"><a class="lineno" href="#L66">66</a></span>
+<span id="L67" class="lineno"><a class="lineno" href="#L67">67</a></span>
+<span id="L68" class="lineno"><a class="lineno" href="#L68">68</a></span>
+<span id="L69" class="lineno"><a class="lineno" href="#L69">69</a></span>
+<span id="L70" class="lineno"><a class="lineno" href="#L70">70</a></span>
+<span id="L71" class="lineno"><a class="lineno" href="#L71">71</a></span>
+<span id="L72" class="lineno"><a class="lineno" href="#L72">72</a></span>
+<span id="L73" class="lineno"><a class="lineno" href="#L73">73</a></span>
+<span id="L74" class="lineno"><a class="lineno" href="#L74">74</a></span>
+<span id="L75" class="lineno"><a class="lineno" href="#L75">75</a></span>
+<span id="L76" class="lineno"><a class="lineno" href="#L76">76</a></span>
+<span id="L77" class="lineno"><a class="lineno" href="#L77">77</a></span>
+<span id="L78" class="lineno"><a class="lineno" href="#L78">78</a></span>
+<span id="L79" class="lineno"><a class="lineno" href="#L79">79</a></span>
+<span id="L80" class="lineno"><a class="lineno" href="#L80">80</a></span>
+<span id="L81" class="lineno"><a class="lineno" href="#L81">81</a></span>
+<span id="L82" class="lineno"><a class="lineno" href="#L82">82</a></span>
+<span id="L83" class="lineno"><a class="lineno" href="#L83">83</a></span>
+<span id="L84" class="lineno"><a class="lineno" href="#L84">84</a></span>
+<span id="L85" class="lineno"><a class="lineno" href="#L85">85</a></span>
+<span id="L86" class="lineno"><a class="lineno" href="#L86">86</a></span>
+<span id="L87" class="lineno"><a class="lineno" href="#L87">87</a></span>
+<span id="L88" class="lineno"><a class="lineno" href="#L88">88</a></span>
+<span id="L89" class="lineno"><a class="lineno" href="#L89">89</a></span>
+<span id="L90" class="lineno"><a class="lineno" href="#L90">90</a></span>
+<span id="L91" class="lineno"><a class="lineno" href="#L91">91</a></span>
+<span id="L92" class="lineno"><a class="lineno" href="#L92">92</a></span>
+<span id="L93" class="lineno"><a class="lineno" href="#L93">93</a></span>
+<span id="L94" class="lineno"><a class="lineno" href="#L94">94</a></span>
+<span id="L95" class="lineno"><a class="lineno" href="#L95">95</a></span>
+<span id="L96" class="lineno"><a class="lineno" href="#L96">96</a></span>
+<span id="L97" class="lineno"><a class="lineno" href="#L97">97</a></span>
+<span id="L98" class="lineno"><a class="lineno" href="#L98">98</a></span>
+<span id="L99" class="lineno"><a class="lineno" href="#L99">99</a></span>
+<span id="L100" class="lineno"><a class="lineno" href="#L100">100</a></span>
+</pre></td>
+<td class="table-code"><pre><span class="line-precise" title="No Anys on this line!">import contextlib</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">from more_itertools import always_iterable</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">from yt.data_objects.data_containers import YTFieldData</span>
+<span class="line-precise" title="No Anys on this line!">from yt.data_objects.selection_objects.data_selection_objects import (</span>
+<span class="line-empty" title="No Anys on this line!">    YTSelectionContainer,</span>
+<span class="line-empty" title="No Anys on this line!">)</span>
+<span class="line-precise" title="No Anys on this line!">from yt.utilities.exceptions import (</span>
+<span class="line-empty" title="No Anys on this line!">    YTDataSelectorNotImplemented,</span>
+<span class="line-empty" title="No Anys on this line!">    YTNonIndexedDataContainer,</span>
+<span class="line-empty" title="No Anys on this line!">)</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">def _non_indexed(name):</span>
+<span class="line-any" title="No Anys on this line!">    def _func_non_indexed(self, *args, **kwargs):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">        raise YTNonIndexedDataContainer(self)</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="Any Types on this line: 
+Unannotated (x4)">    return _func_non_indexed</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">class ParticleContainer(YTSelectionContainer):</span>
+<span class="line-precise" title="No Anys on this line!">    _spatial = False</span>
+<span class="line-precise" title="No Anys on this line!">    _type_name = "particle_container"</span>
+<span class="line-precise" title="No Anys on this line!">    _skip_add = True</span>
+<span class="line-precise" title="No Anys on this line!">    _con_args = ("base_region", "base_selector", "data_files", "overlap_files")</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def __init__(</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        self, base_region, base_selector, data_files, overlap_files=None, domain_id=-1</span>
+<span class="line-empty" title="No Anys on this line!">    ):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        if overlap_files is None:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">            overlap_files = []</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)
+Omitted Generics (x9)">        self.field_data = YTFieldData()</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        self.field_parameters = {}</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)
+Omitted Generics (x3)
+Explicit (x2)">        self.data_files = list(always_iterable(data_files))</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)
+Omitted Generics (x3)
+Explicit (x2)">        self.overlap_files = list(always_iterable(overlap_files))</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">        self.ds = self.data_files[0].ds</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        self._last_mask = None</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        self._last_selector_id = None</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        self._current_particle_type = "all"</span>
+<span class="line-empty" title="No Anys on this line!">        # self._current_fluid_type = self.ds.default_fluid_type</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        self.base_region = base_region</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        self.base_selector = base_selector</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        self._octree = None</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        self._temp_spatial = False</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x7)">        if isinstance(base_region, ParticleContainer):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">            self._temp_spatial = base_region._temp_spatial</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">            self._octree = base_region._octree</span>
+<span class="line-empty" title="No Anys on this line!">        # To ensure there are not domains if global octree not used</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        self.domain_id = -1</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def __reduce__(self):</span>
+<span class="line-empty" title="No Anys on this line!">        # we need to override the __reduce__ from data_containers as this method is not</span>
+<span class="line-empty" title="No Anys on this line!">        # a registered dataset method (i.e., ds.particle_container does not exist)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x6)
+Omitted Generics (x4)
+Explicit (x12)">        arg_tuple = tuple(getattr(self, attr) for attr in self._con_args)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        return (self.__class__, arg_tuple)</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!">    @property</span>
+<span class="line-any" title="No Anys on this line!">    def selector(self):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">        raise YTDataSelectorNotImplemented(self.oc_type_name)</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def select_particles(self, selector, x, y, z):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x7)">        mask = selector.select_points(x, y, z)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        return mask</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="Any Types on this line: 
+Omitted Generics (x6)">    @contextlib.contextmanager</span>
+<span class="line-any" title="No Anys on this line!">    def _expand_data_files(self):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        old_data_files = self.data_files</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        old_overlap_files = self.overlap_files</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x6)
+Omitted Generics (x6)">        self.data_files = list(set(self.data_files + self.overlap_files))</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">        self.data_files.sort()</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        self.overlap_files = []</span>
+<span class="line-precise" title="No Anys on this line!">        yield self</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        self.data_files = old_data_files</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        self.overlap_files = old_overlap_files</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def retrieve_ghost_zones(self, ngz, coarse_ghosts=False):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x6)">        gz_oct = self.octree.retrieve_ghost_zones(ngz, coarse_ghosts=coarse_ghosts)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x7)">        gz = ParticleContainer(</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">            gz_oct.base_region,</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">            gz_oct.base_selector,</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">            gz_oct.data_files,</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">            overlap_files=gz_oct.overlap_files,</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">            selector_mask=gz_oct.selector_mask,</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">            domain_id=gz_oct.domain_id,</span>
+<span class="line-empty" title="No Anys on this line!">        )</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">        gz._octree = gz_oct</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        return gz</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">    select_blocks = _non_indexed("select_blocks")</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">    deposit = _non_indexed("deposit")</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">    smooth = _non_indexed("smooth")</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">    select_icoords = _non_indexed("select_icoords")</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">    select_fcoords = _non_indexed("select_fcoords")</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">    select_fwidth = _non_indexed("select_fwidth")</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">    select_ires = _non_indexed("select_ires")</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">    select = _non_indexed("select")</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">    count = _non_indexed("count")</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">    count_particles = _non_indexed("count_particles")</span>
+</pre></td>
+</tr></tbody>
+</table>
+</body>
+</html>

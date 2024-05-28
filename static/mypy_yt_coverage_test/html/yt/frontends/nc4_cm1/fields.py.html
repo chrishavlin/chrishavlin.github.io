@@ -1,0 +1,143 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="../../../../mypy-html.css">
+</head>
+<body>
+<h2>yt.frontends.nc4_cm1.fields</h2>
+<table>
+<caption>yt/frontends/nc4_cm1/fields.py</caption>
+<tbody><tr>
+<td class="table-lines"><pre><span id="L1" class="lineno"><a class="lineno" href="#L1">1</a></span>
+<span id="L2" class="lineno"><a class="lineno" href="#L2">2</a></span>
+<span id="L3" class="lineno"><a class="lineno" href="#L3">3</a></span>
+<span id="L4" class="lineno"><a class="lineno" href="#L4">4</a></span>
+<span id="L5" class="lineno"><a class="lineno" href="#L5">5</a></span>
+<span id="L6" class="lineno"><a class="lineno" href="#L6">6</a></span>
+<span id="L7" class="lineno"><a class="lineno" href="#L7">7</a></span>
+<span id="L8" class="lineno"><a class="lineno" href="#L8">8</a></span>
+<span id="L9" class="lineno"><a class="lineno" href="#L9">9</a></span>
+<span id="L10" class="lineno"><a class="lineno" href="#L10">10</a></span>
+<span id="L11" class="lineno"><a class="lineno" href="#L11">11</a></span>
+<span id="L12" class="lineno"><a class="lineno" href="#L12">12</a></span>
+<span id="L13" class="lineno"><a class="lineno" href="#L13">13</a></span>
+<span id="L14" class="lineno"><a class="lineno" href="#L14">14</a></span>
+<span id="L15" class="lineno"><a class="lineno" href="#L15">15</a></span>
+<span id="L16" class="lineno"><a class="lineno" href="#L16">16</a></span>
+<span id="L17" class="lineno"><a class="lineno" href="#L17">17</a></span>
+<span id="L18" class="lineno"><a class="lineno" href="#L18">18</a></span>
+<span id="L19" class="lineno"><a class="lineno" href="#L19">19</a></span>
+<span id="L20" class="lineno"><a class="lineno" href="#L20">20</a></span>
+<span id="L21" class="lineno"><a class="lineno" href="#L21">21</a></span>
+<span id="L22" class="lineno"><a class="lineno" href="#L22">22</a></span>
+<span id="L23" class="lineno"><a class="lineno" href="#L23">23</a></span>
+<span id="L24" class="lineno"><a class="lineno" href="#L24">24</a></span>
+<span id="L25" class="lineno"><a class="lineno" href="#L25">25</a></span>
+<span id="L26" class="lineno"><a class="lineno" href="#L26">26</a></span>
+<span id="L27" class="lineno"><a class="lineno" href="#L27">27</a></span>
+<span id="L28" class="lineno"><a class="lineno" href="#L28">28</a></span>
+<span id="L29" class="lineno"><a class="lineno" href="#L29">29</a></span>
+<span id="L30" class="lineno"><a class="lineno" href="#L30">30</a></span>
+<span id="L31" class="lineno"><a class="lineno" href="#L31">31</a></span>
+<span id="L32" class="lineno"><a class="lineno" href="#L32">32</a></span>
+<span id="L33" class="lineno"><a class="lineno" href="#L33">33</a></span>
+<span id="L34" class="lineno"><a class="lineno" href="#L34">34</a></span>
+<span id="L35" class="lineno"><a class="lineno" href="#L35">35</a></span>
+<span id="L36" class="lineno"><a class="lineno" href="#L36">36</a></span>
+<span id="L37" class="lineno"><a class="lineno" href="#L37">37</a></span>
+<span id="L38" class="lineno"><a class="lineno" href="#L38">38</a></span>
+<span id="L39" class="lineno"><a class="lineno" href="#L39">39</a></span>
+<span id="L40" class="lineno"><a class="lineno" href="#L40">40</a></span>
+<span id="L41" class="lineno"><a class="lineno" href="#L41">41</a></span>
+<span id="L42" class="lineno"><a class="lineno" href="#L42">42</a></span>
+<span id="L43" class="lineno"><a class="lineno" href="#L43">43</a></span>
+<span id="L44" class="lineno"><a class="lineno" href="#L44">44</a></span>
+<span id="L45" class="lineno"><a class="lineno" href="#L45">45</a></span>
+<span id="L46" class="lineno"><a class="lineno" href="#L46">46</a></span>
+<span id="L47" class="lineno"><a class="lineno" href="#L47">47</a></span>
+<span id="L48" class="lineno"><a class="lineno" href="#L48">48</a></span>
+<span id="L49" class="lineno"><a class="lineno" href="#L49">49</a></span>
+<span id="L50" class="lineno"><a class="lineno" href="#L50">50</a></span>
+<span id="L51" class="lineno"><a class="lineno" href="#L51">51</a></span>
+<span id="L52" class="lineno"><a class="lineno" href="#L52">52</a></span>
+<span id="L53" class="lineno"><a class="lineno" href="#L53">53</a></span>
+<span id="L54" class="lineno"><a class="lineno" href="#L54">54</a></span>
+<span id="L55" class="lineno"><a class="lineno" href="#L55">55</a></span>
+<span id="L56" class="lineno"><a class="lineno" href="#L56">56</a></span>
+<span id="L57" class="lineno"><a class="lineno" href="#L57">57</a></span>
+<span id="L58" class="lineno"><a class="lineno" href="#L58">58</a></span>
+<span id="L59" class="lineno"><a class="lineno" href="#L59">59</a></span>
+<span id="L60" class="lineno"><a class="lineno" href="#L60">60</a></span>
+<span id="L61" class="lineno"><a class="lineno" href="#L61">61</a></span>
+<span id="L62" class="lineno"><a class="lineno" href="#L62">62</a></span>
+<span id="L63" class="lineno"><a class="lineno" href="#L63">63</a></span>
+</pre></td>
+<td class="table-code"><pre><span class="line-precise" title="No Anys on this line!">from yt.fields.field_info_container import FieldInfoContainer</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"># We need to specify which fields we might have in our dataset.  The field info</span>
+<span class="line-empty" title="No Anys on this line!"># container subclass here will define which fields it knows about.  There are</span>
+<span class="line-empty" title="No Anys on this line!"># optionally methods on it that get called which can be subclassed.</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">class CM1FieldInfo(FieldInfoContainer):</span>
+<span class="line-precise" title="No Anys on this line!">    known_other_fields = (</span>
+<span class="line-empty" title="No Anys on this line!">        # Each entry here is of the form</span>
+<span class="line-empty" title="No Anys on this line!">        # ( "name", ("units", ["fields", "to", "alias"], # "display_name")),</span>
+<span class="line-precise" title="No Anys on this line!">        ("uinterp", ("m/s", ["velocity_x"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("vinterp", ("m/s", ["velocity_y"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("winterp", ("m/s", ["velocity_z"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("u", ("m/s", ["velocity_x"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("v", ("m/s", ["velocity_y"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("w", ("m/s", ["velocity_z"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("hwin_sr", ("m/s", ["storm_relative_horizontal_wind_speed"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("windmag_sr", ("m/s", ["storm_relative_3D_wind_speed"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("hwin_gr", ("m/s", ["ground_relative_horizontal_wind_speed"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("thpert", ("K", ["potential_temperature_perturbation"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("thrhopert", ("K", ["density_potential_temperature_perturbation"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("prespert", ("hPa", ["presure_perturbation"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("rhopert", ("kg/m**3", ["density_perturbation"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("dbz", ("dB", ["simulated_reflectivity"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("qvpert", ("g/kg", ["water_vapor_mixing_ratio_perturbation"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("qc", ("g/kg", ["cloud_liquid_water_mixing_ratio"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("qr", ("g/kg", ["rain_mixing_ratio"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("qi", ("g/kg", ["cloud_ice_mixing_ratio"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("qs", ("g/kg", ["snow_mixing_ratio"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("qg", ("g/kg", ["graupel_or_hail_mixing_ratio"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("qcloud", ("g/kg", ["sum_of_cloud_water_and_cloud_ice_mixing_ratios"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("qprecip", ("g/kg", ["sum_of_rain_graupel_snow_mixing_ratios"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("nci", ("1/cm**3", ["number_concerntration_of_cloud_ice"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("ncr", ("1/cm**3", ["number_concentration_of_rain"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("ncs", ("1/cm**3", ["number_concentration_of_snow"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("ncg", ("1/cm**3", ["number_concentration_of_graupel_or_hail"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("xvort", ("1/s", ["vorticity_x"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("yvort", ("1/s", ["vorticity_y"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("zvort", ("1/s", ["vorticity_z"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("hvort", ("1/s", ["horizontal_vorticity_magnitude"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("vortmag", ("1/s", ["vorticity_magnitude"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("streamvort", ("1/s", ["streamwise_vorticity"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("khh", ("m**2/s", ["khh"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("khv", ("m**2/s", ["khv"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("kmh", ("m**2/s", ["kmh"], None)),</span>
+<span class="line-precise" title="No Anys on this line!">        ("kmv", ("m**2/s", ["kmv"], None)),</span>
+<span class="line-empty" title="No Anys on this line!">    )</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">    known_particle_fields = (</span>
+<span class="line-empty" title="No Anys on this line!">        # Identical form to above</span>
+<span class="line-empty" title="No Anys on this line!">        # ( "name", ("units", ["fields", "to", "alias"], # "display_name")),</span>
+<span class="line-empty" title="No Anys on this line!">    )</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def setup_fluid_fields(self):</span>
+<span class="line-empty" title="No Anys on this line!">        # Here we do anything that might need info about the dataset.</span>
+<span class="line-empty" title="No Anys on this line!">        # You can use self.alias, self.add_output_field (for on-disk fields)</span>
+<span class="line-empty" title="No Anys on this line!">        # and self.add_field (for derived fields).</span>
+<span class="line-any" title="No Anys on this line!">        pass</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def setup_particle_fields(self, ptype):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        super().setup_particle_fields(ptype)</span>
+<span class="line-empty" title="No Anys on this line!">        # This will get called for every particle type.</span>
+</pre></td>
+</tr></tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,440 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="../../../mypy-html.css">
+</head>
+<body>
+<h2>yt.utilities.decompose</h2>
+<table>
+<caption>yt/utilities/decompose.py</caption>
+<tbody><tr>
+<td class="table-lines"><pre><span id="L1" class="lineno"><a class="lineno" href="#L1">1</a></span>
+<span id="L2" class="lineno"><a class="lineno" href="#L2">2</a></span>
+<span id="L3" class="lineno"><a class="lineno" href="#L3">3</a></span>
+<span id="L4" class="lineno"><a class="lineno" href="#L4">4</a></span>
+<span id="L5" class="lineno"><a class="lineno" href="#L5">5</a></span>
+<span id="L6" class="lineno"><a class="lineno" href="#L6">6</a></span>
+<span id="L7" class="lineno"><a class="lineno" href="#L7">7</a></span>
+<span id="L8" class="lineno"><a class="lineno" href="#L8">8</a></span>
+<span id="L9" class="lineno"><a class="lineno" href="#L9">9</a></span>
+<span id="L10" class="lineno"><a class="lineno" href="#L10">10</a></span>
+<span id="L11" class="lineno"><a class="lineno" href="#L11">11</a></span>
+<span id="L12" class="lineno"><a class="lineno" href="#L12">12</a></span>
+<span id="L13" class="lineno"><a class="lineno" href="#L13">13</a></span>
+<span id="L14" class="lineno"><a class="lineno" href="#L14">14</a></span>
+<span id="L15" class="lineno"><a class="lineno" href="#L15">15</a></span>
+<span id="L16" class="lineno"><a class="lineno" href="#L16">16</a></span>
+<span id="L17" class="lineno"><a class="lineno" href="#L17">17</a></span>
+<span id="L18" class="lineno"><a class="lineno" href="#L18">18</a></span>
+<span id="L19" class="lineno"><a class="lineno" href="#L19">19</a></span>
+<span id="L20" class="lineno"><a class="lineno" href="#L20">20</a></span>
+<span id="L21" class="lineno"><a class="lineno" href="#L21">21</a></span>
+<span id="L22" class="lineno"><a class="lineno" href="#L22">22</a></span>
+<span id="L23" class="lineno"><a class="lineno" href="#L23">23</a></span>
+<span id="L24" class="lineno"><a class="lineno" href="#L24">24</a></span>
+<span id="L25" class="lineno"><a class="lineno" href="#L25">25</a></span>
+<span id="L26" class="lineno"><a class="lineno" href="#L26">26</a></span>
+<span id="L27" class="lineno"><a class="lineno" href="#L27">27</a></span>
+<span id="L28" class="lineno"><a class="lineno" href="#L28">28</a></span>
+<span id="L29" class="lineno"><a class="lineno" href="#L29">29</a></span>
+<span id="L30" class="lineno"><a class="lineno" href="#L30">30</a></span>
+<span id="L31" class="lineno"><a class="lineno" href="#L31">31</a></span>
+<span id="L32" class="lineno"><a class="lineno" href="#L32">32</a></span>
+<span id="L33" class="lineno"><a class="lineno" href="#L33">33</a></span>
+<span id="L34" class="lineno"><a class="lineno" href="#L34">34</a></span>
+<span id="L35" class="lineno"><a class="lineno" href="#L35">35</a></span>
+<span id="L36" class="lineno"><a class="lineno" href="#L36">36</a></span>
+<span id="L37" class="lineno"><a class="lineno" href="#L37">37</a></span>
+<span id="L38" class="lineno"><a class="lineno" href="#L38">38</a></span>
+<span id="L39" class="lineno"><a class="lineno" href="#L39">39</a></span>
+<span id="L40" class="lineno"><a class="lineno" href="#L40">40</a></span>
+<span id="L41" class="lineno"><a class="lineno" href="#L41">41</a></span>
+<span id="L42" class="lineno"><a class="lineno" href="#L42">42</a></span>
+<span id="L43" class="lineno"><a class="lineno" href="#L43">43</a></span>
+<span id="L44" class="lineno"><a class="lineno" href="#L44">44</a></span>
+<span id="L45" class="lineno"><a class="lineno" href="#L45">45</a></span>
+<span id="L46" class="lineno"><a class="lineno" href="#L46">46</a></span>
+<span id="L47" class="lineno"><a class="lineno" href="#L47">47</a></span>
+<span id="L48" class="lineno"><a class="lineno" href="#L48">48</a></span>
+<span id="L49" class="lineno"><a class="lineno" href="#L49">49</a></span>
+<span id="L50" class="lineno"><a class="lineno" href="#L50">50</a></span>
+<span id="L51" class="lineno"><a class="lineno" href="#L51">51</a></span>
+<span id="L52" class="lineno"><a class="lineno" href="#L52">52</a></span>
+<span id="L53" class="lineno"><a class="lineno" href="#L53">53</a></span>
+<span id="L54" class="lineno"><a class="lineno" href="#L54">54</a></span>
+<span id="L55" class="lineno"><a class="lineno" href="#L55">55</a></span>
+<span id="L56" class="lineno"><a class="lineno" href="#L56">56</a></span>
+<span id="L57" class="lineno"><a class="lineno" href="#L57">57</a></span>
+<span id="L58" class="lineno"><a class="lineno" href="#L58">58</a></span>
+<span id="L59" class="lineno"><a class="lineno" href="#L59">59</a></span>
+<span id="L60" class="lineno"><a class="lineno" href="#L60">60</a></span>
+<span id="L61" class="lineno"><a class="lineno" href="#L61">61</a></span>
+<span id="L62" class="lineno"><a class="lineno" href="#L62">62</a></span>
+<span id="L63" class="lineno"><a class="lineno" href="#L63">63</a></span>
+<span id="L64" class="lineno"><a class="lineno" href="#L64">64</a></span>
+<span id="L65" class="lineno"><a class="lineno" href="#L65">65</a></span>
+<span id="L66" class="lineno"><a class="lineno" href="#L66">66</a></span>
+<span id="L67" class="lineno"><a class="lineno" href="#L67">67</a></span>
+<span id="L68" class="lineno"><a class="lineno" href="#L68">68</a></span>
+<span id="L69" class="lineno"><a class="lineno" href="#L69">69</a></span>
+<span id="L70" class="lineno"><a class="lineno" href="#L70">70</a></span>
+<span id="L71" class="lineno"><a class="lineno" href="#L71">71</a></span>
+<span id="L72" class="lineno"><a class="lineno" href="#L72">72</a></span>
+<span id="L73" class="lineno"><a class="lineno" href="#L73">73</a></span>
+<span id="L74" class="lineno"><a class="lineno" href="#L74">74</a></span>
+<span id="L75" class="lineno"><a class="lineno" href="#L75">75</a></span>
+<span id="L76" class="lineno"><a class="lineno" href="#L76">76</a></span>
+<span id="L77" class="lineno"><a class="lineno" href="#L77">77</a></span>
+<span id="L78" class="lineno"><a class="lineno" href="#L78">78</a></span>
+<span id="L79" class="lineno"><a class="lineno" href="#L79">79</a></span>
+<span id="L80" class="lineno"><a class="lineno" href="#L80">80</a></span>
+<span id="L81" class="lineno"><a class="lineno" href="#L81">81</a></span>
+<span id="L82" class="lineno"><a class="lineno" href="#L82">82</a></span>
+<span id="L83" class="lineno"><a class="lineno" href="#L83">83</a></span>
+<span id="L84" class="lineno"><a class="lineno" href="#L84">84</a></span>
+<span id="L85" class="lineno"><a class="lineno" href="#L85">85</a></span>
+<span id="L86" class="lineno"><a class="lineno" href="#L86">86</a></span>
+<span id="L87" class="lineno"><a class="lineno" href="#L87">87</a></span>
+<span id="L88" class="lineno"><a class="lineno" href="#L88">88</a></span>
+<span id="L89" class="lineno"><a class="lineno" href="#L89">89</a></span>
+<span id="L90" class="lineno"><a class="lineno" href="#L90">90</a></span>
+<span id="L91" class="lineno"><a class="lineno" href="#L91">91</a></span>
+<span id="L92" class="lineno"><a class="lineno" href="#L92">92</a></span>
+<span id="L93" class="lineno"><a class="lineno" href="#L93">93</a></span>
+<span id="L94" class="lineno"><a class="lineno" href="#L94">94</a></span>
+<span id="L95" class="lineno"><a class="lineno" href="#L95">95</a></span>
+<span id="L96" class="lineno"><a class="lineno" href="#L96">96</a></span>
+<span id="L97" class="lineno"><a class="lineno" href="#L97">97</a></span>
+<span id="L98" class="lineno"><a class="lineno" href="#L98">98</a></span>
+<span id="L99" class="lineno"><a class="lineno" href="#L99">99</a></span>
+<span id="L100" class="lineno"><a class="lineno" href="#L100">100</a></span>
+<span id="L101" class="lineno"><a class="lineno" href="#L101">101</a></span>
+<span id="L102" class="lineno"><a class="lineno" href="#L102">102</a></span>
+<span id="L103" class="lineno"><a class="lineno" href="#L103">103</a></span>
+<span id="L104" class="lineno"><a class="lineno" href="#L104">104</a></span>
+<span id="L105" class="lineno"><a class="lineno" href="#L105">105</a></span>
+<span id="L106" class="lineno"><a class="lineno" href="#L106">106</a></span>
+<span id="L107" class="lineno"><a class="lineno" href="#L107">107</a></span>
+<span id="L108" class="lineno"><a class="lineno" href="#L108">108</a></span>
+<span id="L109" class="lineno"><a class="lineno" href="#L109">109</a></span>
+<span id="L110" class="lineno"><a class="lineno" href="#L110">110</a></span>
+<span id="L111" class="lineno"><a class="lineno" href="#L111">111</a></span>
+<span id="L112" class="lineno"><a class="lineno" href="#L112">112</a></span>
+<span id="L113" class="lineno"><a class="lineno" href="#L113">113</a></span>
+<span id="L114" class="lineno"><a class="lineno" href="#L114">114</a></span>
+<span id="L115" class="lineno"><a class="lineno" href="#L115">115</a></span>
+<span id="L116" class="lineno"><a class="lineno" href="#L116">116</a></span>
+<span id="L117" class="lineno"><a class="lineno" href="#L117">117</a></span>
+<span id="L118" class="lineno"><a class="lineno" href="#L118">118</a></span>
+<span id="L119" class="lineno"><a class="lineno" href="#L119">119</a></span>
+<span id="L120" class="lineno"><a class="lineno" href="#L120">120</a></span>
+<span id="L121" class="lineno"><a class="lineno" href="#L121">121</a></span>
+<span id="L122" class="lineno"><a class="lineno" href="#L122">122</a></span>
+<span id="L123" class="lineno"><a class="lineno" href="#L123">123</a></span>
+<span id="L124" class="lineno"><a class="lineno" href="#L124">124</a></span>
+<span id="L125" class="lineno"><a class="lineno" href="#L125">125</a></span>
+<span id="L126" class="lineno"><a class="lineno" href="#L126">126</a></span>
+<span id="L127" class="lineno"><a class="lineno" href="#L127">127</a></span>
+<span id="L128" class="lineno"><a class="lineno" href="#L128">128</a></span>
+<span id="L129" class="lineno"><a class="lineno" href="#L129">129</a></span>
+<span id="L130" class="lineno"><a class="lineno" href="#L130">130</a></span>
+<span id="L131" class="lineno"><a class="lineno" href="#L131">131</a></span>
+<span id="L132" class="lineno"><a class="lineno" href="#L132">132</a></span>
+<span id="L133" class="lineno"><a class="lineno" href="#L133">133</a></span>
+<span id="L134" class="lineno"><a class="lineno" href="#L134">134</a></span>
+<span id="L135" class="lineno"><a class="lineno" href="#L135">135</a></span>
+<span id="L136" class="lineno"><a class="lineno" href="#L136">136</a></span>
+<span id="L137" class="lineno"><a class="lineno" href="#L137">137</a></span>
+<span id="L138" class="lineno"><a class="lineno" href="#L138">138</a></span>
+<span id="L139" class="lineno"><a class="lineno" href="#L139">139</a></span>
+<span id="L140" class="lineno"><a class="lineno" href="#L140">140</a></span>
+<span id="L141" class="lineno"><a class="lineno" href="#L141">141</a></span>
+<span id="L142" class="lineno"><a class="lineno" href="#L142">142</a></span>
+<span id="L143" class="lineno"><a class="lineno" href="#L143">143</a></span>
+<span id="L144" class="lineno"><a class="lineno" href="#L144">144</a></span>
+<span id="L145" class="lineno"><a class="lineno" href="#L145">145</a></span>
+<span id="L146" class="lineno"><a class="lineno" href="#L146">146</a></span>
+<span id="L147" class="lineno"><a class="lineno" href="#L147">147</a></span>
+<span id="L148" class="lineno"><a class="lineno" href="#L148">148</a></span>
+</pre></td>
+<td class="table-code"><pre><span class="line-precise" title="No Anys on this line!">import numpy as np</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">def SIEVE_PRIMES(x):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x15)">    return x and x[:1] + SIEVE_PRIMES([n for n in x if n % x[0]])</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">def decompose_to_primes(max_prime):</span>
+<span class="line-empty" title="No Anys on this line!">    """Decompose number into the primes"""</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x7)
+Omitted Generics (x3)">    for prime in SIEVE_PRIMES(list(range(2, max_prime))):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">        if prime * prime &gt; max_prime:</span>
+<span class="line-any" title="No Anys on this line!">            break</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">        while max_prime % prime == 0:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">            yield prime</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">            max_prime //= prime</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">    if max_prime &gt; 1:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        yield max_prime</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">def decompose_array(shape, psize, bbox, *, cell_widths=None):</span>
+<span class="line-empty" title="No Anys on this line!">    """Calculate list of product(psize) subarrays of arr, along with their</span>
+<span class="line-empty" title="No Anys on this line!">    left and right edges</span>
+<span class="line-empty" title="No Anys on this line!">    """</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x14)">    return split_array(bbox[:, 0], bbox[:, 1], shape, psize, cell_widths=cell_widths)</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">def evaluate_domain_decomposition(n_d, pieces, ldom):</span>
+<span class="line-empty" title="No Anys on this line!">    """Evaluate longest to shortest edge ratio</span>
+<span class="line-empty" title="No Anys on this line!">    BEWARE: lot's of magic here"""</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">    eff_dim = (n_d &gt; 1).sum()</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x7)">    exp = float(eff_dim - 1) / float(eff_dim)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x12)
+Explicit (x8)
+Omitted Generics (x6)">    ideal_bsize = eff_dim * pieces ** (1.0 / eff_dim) * np.prod(n_d) ** exp</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)
+Explicit (x1)">    mask = np.where(n_d &gt; 1)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)
+Explicit (x6)
+Omitted Generics (x8)">    nd_arr = np.array(n_d, dtype=np.float64)[mask]</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x11)
+Omitted Generics (x11)
+Explicit (x12)">    bsize = int(np.sum(ldom[mask] / nd_arr * np.prod(nd_arr)))</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)
+Explicit (x8)
+Omitted Generics (x6)">    load_balance = float(np.prod(n_d)) / (</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x9)
+Explicit (x8)
+Omitted Generics (x6)">        float(pieces) * np.prod((n_d - 1) // ldom + 1)</span>
+<span class="line-empty" title="No Anys on this line!">    )</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!">    # 0.25 is magic number</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x9)">    quality = load_balance / (1 + 0.25 * (bsize / ideal_bsize - 1.0))</span>
+<span class="line-empty" title="No Anys on this line!">    # \todo add a factor that estimates lower cost when x-direction is</span>
+<span class="line-empty" title="No Anys on this line!">    # not chopped too much</span>
+<span class="line-empty" title="No Anys on this line!">    # \deprecated estimate these magic numbers</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x11)">    quality *= 1.0 - (0.001 * ldom[0] + 0.0001 * ldom[1]) / pieces</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)
+Explicit (x3)
+Omitted Generics (x2)">    if np.any(ldom &gt; n_d):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        quality = 0</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">    return quality</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">def factorize_number(pieces):</span>
+<span class="line-empty" title="No Anys on this line!">    """Return array consisting of prime, its power and number of different</span>
+<span class="line-empty" title="No Anys on this line!">    decompositions in three dimensions for this prime</span>
+<span class="line-empty" title="No Anys on this line!">    """</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x6)
+Omitted Generics (x3)">    factors = list(decompose_to_primes(pieces))</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">    temp = np.bincount(factors)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)
+Explicit (x6)
+Omitted Generics (x8)">    return np.array(</span>
+<span class="line-empty" title="No Anys on this line!">        [</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x14)">            (prime, temp[prime], (temp[prime] + 1) * (temp[prime] + 2) // 2)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)
+Omitted Generics (x3)
+Explicit (x1)">            for prime in np.unique(factors)</span>
+<span class="line-empty" title="No Anys on this line!">        ],</span>
+<span class="line-any" title="No Anys on this line!">        dtype="int64",</span>
+<span class="line-empty" title="No Anys on this line!">    )</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">def get_psize(n_d, pieces):</span>
+<span class="line-empty" title="No Anys on this line!">    """Calculate the best division of array into px*py*pz subarrays.</span>
+<span class="line-empty" title="No Anys on this line!">    The goal is to minimize the ratio of longest to shortest edge</span>
+<span class="line-empty" title="No Anys on this line!">    to minimize the amount of inter-process communication.</span>
+<span class="line-empty" title="No Anys on this line!">    """</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">    fac = factorize_number(pieces)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">    nfactors = len(fac[:, 2])</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">    best = 0.0</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)
+Omitted Generics (x4)
+Explicit (x2)">    p_size = np.ones(3, dtype=np.int64)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">    if pieces == 1:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        return p_size</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)
+Explicit (x3)
+Omitted Generics (x2)">    while np.all(fac[:, 2] &gt; 0):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)
+Omitted Generics (x4)
+Explicit (x2)">        ldom = np.ones(3, dtype=np.int64)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">        for nfac in range(nfactors):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x10)">            i = int(np.sqrt(0.25 + 2 * (fac[nfac, 2] - 1)) - 0.5)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x11)">            k = fac[nfac, 2] - (1 + i * (i + 1) // 2)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x6)">            i = fac[nfac, 1] - i</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x8)">            j = fac[nfac, 1] - (i + k)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x9)
+Explicit (x6)
+Omitted Generics (x8)">            ldom *= fac[nfac, 0] ** np.array([i, j, k])</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x9)">        quality = evaluate_domain_decomposition(n_d, pieces, ldom)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">        if quality &gt; best:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">            best = quality</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">            p_size = ldom</span>
+<span class="line-empty" title="No Anys on this line!">        # search for next unique combination</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">        for j in range(nfactors):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">            if fac[j, 2] &gt; 1:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">                fac[j, 2] -= 1</span>
+<span class="line-any" title="No Anys on this line!">                break</span>
+<span class="line-empty" title="No Anys on this line!">            else:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">                if j &lt; nfactors - 1:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x13)">                    fac[j, 2] = int((fac[j, 1] + 1) * (fac[j, 1] + 2) / 2)</span>
+<span class="line-empty" title="No Anys on this line!">                else:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">                    fac[:, 2] = 0  # no more combinations to try</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">    return p_size</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">def split_array(gle, gre, shape, psize, *, cell_widths=None):</span>
+<span class="line-empty" title="No Anys on this line!">    """Split array into px*py*pz subarrays."""</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)
+Explicit (x6)
+Omitted Generics (x8)">    n_d = np.array(shape, dtype=np.int64)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x6)">    dds = (gre - gle) / shape</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">    left_edges = []</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">    right_edges = []</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">    shapes = []</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">    slices = []</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">    if cell_widths is None:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        cell_widths_by_grid = None</span>
+<span class="line-empty" title="No Anys on this line!">    else:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        cell_widths_by_grid = []</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">    for i in range(psize[0]):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">        for j in range(psize[1]):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">            for k in range(psize[2]):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)
+Explicit (x6)
+Omitted Generics (x8)">                piece = np.array((i, j, k), dtype=np.int64)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x6)">                lei = n_d * piece // psize</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x8)
+Omitted Generics (x4)
+Explicit (x2)">                rei = n_d * (piece + np.ones(3, dtype=np.int64)) // psize</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">                if cell_widths is not None:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">                    cws = []</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">                    offset_le = []</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">                    offset_re = []</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">                    for idim in range(3):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x13)">                        cws.append(cell_widths[idim][lei[idim] : rei[idim]])</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x11)
+Omitted Generics (x5)
+Explicit (x4)">                        offset_le.append(np.sum(cell_widths[idim][0 : lei[idim]]))</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x11)
+Omitted Generics (x5)
+Explicit (x4)">                        offset_re.append(offset_le[idim] + np.sum(cws[idim]))</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">                    cell_widths_by_grid.append(cws)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)
+Explicit (x6)
+Omitted Generics (x8)">                    offset_re = np.array(offset_re)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)
+Explicit (x6)
+Omitted Generics (x8)">                    offset_le = np.array(offset_le)</span>
+<span class="line-empty" title="No Anys on this line!">                else:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">                    offset_le = lei * dds</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">                    offset_re = rei * dds</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">                lle = gle + offset_le</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">                lre = gle + offset_re</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">                left_edges.append(lle)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">                right_edges.append(lre)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x6)">                shapes.append(rei - lei)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x16)">                slices.append(np.s_[lei[0] : rei[0], lei[1] : rei[1], lei[2] : rei[2]])</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">    return left_edges, right_edges, shapes, slices, cell_widths_by_grid</span>
+</pre></td>
+</tr></tbody>
+</table>
+</body>
+</html>

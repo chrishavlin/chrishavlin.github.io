@@ -1,0 +1,609 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="../../../mypy-html.css">
+</head>
+<body>
+<h2>yt.data_objects.region_expression</h2>
+<table>
+<caption>yt/data_objects/region_expression.py</caption>
+<tbody><tr>
+<td class="table-lines"><pre><span id="L1" class="lineno"><a class="lineno" href="#L1">1</a></span>
+<span id="L2" class="lineno"><a class="lineno" href="#L2">2</a></span>
+<span id="L3" class="lineno"><a class="lineno" href="#L3">3</a></span>
+<span id="L4" class="lineno"><a class="lineno" href="#L4">4</a></span>
+<span id="L5" class="lineno"><a class="lineno" href="#L5">5</a></span>
+<span id="L6" class="lineno"><a class="lineno" href="#L6">6</a></span>
+<span id="L7" class="lineno"><a class="lineno" href="#L7">7</a></span>
+<span id="L8" class="lineno"><a class="lineno" href="#L8">8</a></span>
+<span id="L9" class="lineno"><a class="lineno" href="#L9">9</a></span>
+<span id="L10" class="lineno"><a class="lineno" href="#L10">10</a></span>
+<span id="L11" class="lineno"><a class="lineno" href="#L11">11</a></span>
+<span id="L12" class="lineno"><a class="lineno" href="#L12">12</a></span>
+<span id="L13" class="lineno"><a class="lineno" href="#L13">13</a></span>
+<span id="L14" class="lineno"><a class="lineno" href="#L14">14</a></span>
+<span id="L15" class="lineno"><a class="lineno" href="#L15">15</a></span>
+<span id="L16" class="lineno"><a class="lineno" href="#L16">16</a></span>
+<span id="L17" class="lineno"><a class="lineno" href="#L17">17</a></span>
+<span id="L18" class="lineno"><a class="lineno" href="#L18">18</a></span>
+<span id="L19" class="lineno"><a class="lineno" href="#L19">19</a></span>
+<span id="L20" class="lineno"><a class="lineno" href="#L20">20</a></span>
+<span id="L21" class="lineno"><a class="lineno" href="#L21">21</a></span>
+<span id="L22" class="lineno"><a class="lineno" href="#L22">22</a></span>
+<span id="L23" class="lineno"><a class="lineno" href="#L23">23</a></span>
+<span id="L24" class="lineno"><a class="lineno" href="#L24">24</a></span>
+<span id="L25" class="lineno"><a class="lineno" href="#L25">25</a></span>
+<span id="L26" class="lineno"><a class="lineno" href="#L26">26</a></span>
+<span id="L27" class="lineno"><a class="lineno" href="#L27">27</a></span>
+<span id="L28" class="lineno"><a class="lineno" href="#L28">28</a></span>
+<span id="L29" class="lineno"><a class="lineno" href="#L29">29</a></span>
+<span id="L30" class="lineno"><a class="lineno" href="#L30">30</a></span>
+<span id="L31" class="lineno"><a class="lineno" href="#L31">31</a></span>
+<span id="L32" class="lineno"><a class="lineno" href="#L32">32</a></span>
+<span id="L33" class="lineno"><a class="lineno" href="#L33">33</a></span>
+<span id="L34" class="lineno"><a class="lineno" href="#L34">34</a></span>
+<span id="L35" class="lineno"><a class="lineno" href="#L35">35</a></span>
+<span id="L36" class="lineno"><a class="lineno" href="#L36">36</a></span>
+<span id="L37" class="lineno"><a class="lineno" href="#L37">37</a></span>
+<span id="L38" class="lineno"><a class="lineno" href="#L38">38</a></span>
+<span id="L39" class="lineno"><a class="lineno" href="#L39">39</a></span>
+<span id="L40" class="lineno"><a class="lineno" href="#L40">40</a></span>
+<span id="L41" class="lineno"><a class="lineno" href="#L41">41</a></span>
+<span id="L42" class="lineno"><a class="lineno" href="#L42">42</a></span>
+<span id="L43" class="lineno"><a class="lineno" href="#L43">43</a></span>
+<span id="L44" class="lineno"><a class="lineno" href="#L44">44</a></span>
+<span id="L45" class="lineno"><a class="lineno" href="#L45">45</a></span>
+<span id="L46" class="lineno"><a class="lineno" href="#L46">46</a></span>
+<span id="L47" class="lineno"><a class="lineno" href="#L47">47</a></span>
+<span id="L48" class="lineno"><a class="lineno" href="#L48">48</a></span>
+<span id="L49" class="lineno"><a class="lineno" href="#L49">49</a></span>
+<span id="L50" class="lineno"><a class="lineno" href="#L50">50</a></span>
+<span id="L51" class="lineno"><a class="lineno" href="#L51">51</a></span>
+<span id="L52" class="lineno"><a class="lineno" href="#L52">52</a></span>
+<span id="L53" class="lineno"><a class="lineno" href="#L53">53</a></span>
+<span id="L54" class="lineno"><a class="lineno" href="#L54">54</a></span>
+<span id="L55" class="lineno"><a class="lineno" href="#L55">55</a></span>
+<span id="L56" class="lineno"><a class="lineno" href="#L56">56</a></span>
+<span id="L57" class="lineno"><a class="lineno" href="#L57">57</a></span>
+<span id="L58" class="lineno"><a class="lineno" href="#L58">58</a></span>
+<span id="L59" class="lineno"><a class="lineno" href="#L59">59</a></span>
+<span id="L60" class="lineno"><a class="lineno" href="#L60">60</a></span>
+<span id="L61" class="lineno"><a class="lineno" href="#L61">61</a></span>
+<span id="L62" class="lineno"><a class="lineno" href="#L62">62</a></span>
+<span id="L63" class="lineno"><a class="lineno" href="#L63">63</a></span>
+<span id="L64" class="lineno"><a class="lineno" href="#L64">64</a></span>
+<span id="L65" class="lineno"><a class="lineno" href="#L65">65</a></span>
+<span id="L66" class="lineno"><a class="lineno" href="#L66">66</a></span>
+<span id="L67" class="lineno"><a class="lineno" href="#L67">67</a></span>
+<span id="L68" class="lineno"><a class="lineno" href="#L68">68</a></span>
+<span id="L69" class="lineno"><a class="lineno" href="#L69">69</a></span>
+<span id="L70" class="lineno"><a class="lineno" href="#L70">70</a></span>
+<span id="L71" class="lineno"><a class="lineno" href="#L71">71</a></span>
+<span id="L72" class="lineno"><a class="lineno" href="#L72">72</a></span>
+<span id="L73" class="lineno"><a class="lineno" href="#L73">73</a></span>
+<span id="L74" class="lineno"><a class="lineno" href="#L74">74</a></span>
+<span id="L75" class="lineno"><a class="lineno" href="#L75">75</a></span>
+<span id="L76" class="lineno"><a class="lineno" href="#L76">76</a></span>
+<span id="L77" class="lineno"><a class="lineno" href="#L77">77</a></span>
+<span id="L78" class="lineno"><a class="lineno" href="#L78">78</a></span>
+<span id="L79" class="lineno"><a class="lineno" href="#L79">79</a></span>
+<span id="L80" class="lineno"><a class="lineno" href="#L80">80</a></span>
+<span id="L81" class="lineno"><a class="lineno" href="#L81">81</a></span>
+<span id="L82" class="lineno"><a class="lineno" href="#L82">82</a></span>
+<span id="L83" class="lineno"><a class="lineno" href="#L83">83</a></span>
+<span id="L84" class="lineno"><a class="lineno" href="#L84">84</a></span>
+<span id="L85" class="lineno"><a class="lineno" href="#L85">85</a></span>
+<span id="L86" class="lineno"><a class="lineno" href="#L86">86</a></span>
+<span id="L87" class="lineno"><a class="lineno" href="#L87">87</a></span>
+<span id="L88" class="lineno"><a class="lineno" href="#L88">88</a></span>
+<span id="L89" class="lineno"><a class="lineno" href="#L89">89</a></span>
+<span id="L90" class="lineno"><a class="lineno" href="#L90">90</a></span>
+<span id="L91" class="lineno"><a class="lineno" href="#L91">91</a></span>
+<span id="L92" class="lineno"><a class="lineno" href="#L92">92</a></span>
+<span id="L93" class="lineno"><a class="lineno" href="#L93">93</a></span>
+<span id="L94" class="lineno"><a class="lineno" href="#L94">94</a></span>
+<span id="L95" class="lineno"><a class="lineno" href="#L95">95</a></span>
+<span id="L96" class="lineno"><a class="lineno" href="#L96">96</a></span>
+<span id="L97" class="lineno"><a class="lineno" href="#L97">97</a></span>
+<span id="L98" class="lineno"><a class="lineno" href="#L98">98</a></span>
+<span id="L99" class="lineno"><a class="lineno" href="#L99">99</a></span>
+<span id="L100" class="lineno"><a class="lineno" href="#L100">100</a></span>
+<span id="L101" class="lineno"><a class="lineno" href="#L101">101</a></span>
+<span id="L102" class="lineno"><a class="lineno" href="#L102">102</a></span>
+<span id="L103" class="lineno"><a class="lineno" href="#L103">103</a></span>
+<span id="L104" class="lineno"><a class="lineno" href="#L104">104</a></span>
+<span id="L105" class="lineno"><a class="lineno" href="#L105">105</a></span>
+<span id="L106" class="lineno"><a class="lineno" href="#L106">106</a></span>
+<span id="L107" class="lineno"><a class="lineno" href="#L107">107</a></span>
+<span id="L108" class="lineno"><a class="lineno" href="#L108">108</a></span>
+<span id="L109" class="lineno"><a class="lineno" href="#L109">109</a></span>
+<span id="L110" class="lineno"><a class="lineno" href="#L110">110</a></span>
+<span id="L111" class="lineno"><a class="lineno" href="#L111">111</a></span>
+<span id="L112" class="lineno"><a class="lineno" href="#L112">112</a></span>
+<span id="L113" class="lineno"><a class="lineno" href="#L113">113</a></span>
+<span id="L114" class="lineno"><a class="lineno" href="#L114">114</a></span>
+<span id="L115" class="lineno"><a class="lineno" href="#L115">115</a></span>
+<span id="L116" class="lineno"><a class="lineno" href="#L116">116</a></span>
+<span id="L117" class="lineno"><a class="lineno" href="#L117">117</a></span>
+<span id="L118" class="lineno"><a class="lineno" href="#L118">118</a></span>
+<span id="L119" class="lineno"><a class="lineno" href="#L119">119</a></span>
+<span id="L120" class="lineno"><a class="lineno" href="#L120">120</a></span>
+<span id="L121" class="lineno"><a class="lineno" href="#L121">121</a></span>
+<span id="L122" class="lineno"><a class="lineno" href="#L122">122</a></span>
+<span id="L123" class="lineno"><a class="lineno" href="#L123">123</a></span>
+<span id="L124" class="lineno"><a class="lineno" href="#L124">124</a></span>
+<span id="L125" class="lineno"><a class="lineno" href="#L125">125</a></span>
+<span id="L126" class="lineno"><a class="lineno" href="#L126">126</a></span>
+<span id="L127" class="lineno"><a class="lineno" href="#L127">127</a></span>
+<span id="L128" class="lineno"><a class="lineno" href="#L128">128</a></span>
+<span id="L129" class="lineno"><a class="lineno" href="#L129">129</a></span>
+<span id="L130" class="lineno"><a class="lineno" href="#L130">130</a></span>
+<span id="L131" class="lineno"><a class="lineno" href="#L131">131</a></span>
+<span id="L132" class="lineno"><a class="lineno" href="#L132">132</a></span>
+<span id="L133" class="lineno"><a class="lineno" href="#L133">133</a></span>
+<span id="L134" class="lineno"><a class="lineno" href="#L134">134</a></span>
+<span id="L135" class="lineno"><a class="lineno" href="#L135">135</a></span>
+<span id="L136" class="lineno"><a class="lineno" href="#L136">136</a></span>
+<span id="L137" class="lineno"><a class="lineno" href="#L137">137</a></span>
+<span id="L138" class="lineno"><a class="lineno" href="#L138">138</a></span>
+<span id="L139" class="lineno"><a class="lineno" href="#L139">139</a></span>
+<span id="L140" class="lineno"><a class="lineno" href="#L140">140</a></span>
+<span id="L141" class="lineno"><a class="lineno" href="#L141">141</a></span>
+<span id="L142" class="lineno"><a class="lineno" href="#L142">142</a></span>
+<span id="L143" class="lineno"><a class="lineno" href="#L143">143</a></span>
+<span id="L144" class="lineno"><a class="lineno" href="#L144">144</a></span>
+<span id="L145" class="lineno"><a class="lineno" href="#L145">145</a></span>
+<span id="L146" class="lineno"><a class="lineno" href="#L146">146</a></span>
+<span id="L147" class="lineno"><a class="lineno" href="#L147">147</a></span>
+<span id="L148" class="lineno"><a class="lineno" href="#L148">148</a></span>
+<span id="L149" class="lineno"><a class="lineno" href="#L149">149</a></span>
+<span id="L150" class="lineno"><a class="lineno" href="#L150">150</a></span>
+<span id="L151" class="lineno"><a class="lineno" href="#L151">151</a></span>
+<span id="L152" class="lineno"><a class="lineno" href="#L152">152</a></span>
+<span id="L153" class="lineno"><a class="lineno" href="#L153">153</a></span>
+<span id="L154" class="lineno"><a class="lineno" href="#L154">154</a></span>
+<span id="L155" class="lineno"><a class="lineno" href="#L155">155</a></span>
+<span id="L156" class="lineno"><a class="lineno" href="#L156">156</a></span>
+<span id="L157" class="lineno"><a class="lineno" href="#L157">157</a></span>
+<span id="L158" class="lineno"><a class="lineno" href="#L158">158</a></span>
+<span id="L159" class="lineno"><a class="lineno" href="#L159">159</a></span>
+<span id="L160" class="lineno"><a class="lineno" href="#L160">160</a></span>
+<span id="L161" class="lineno"><a class="lineno" href="#L161">161</a></span>
+<span id="L162" class="lineno"><a class="lineno" href="#L162">162</a></span>
+<span id="L163" class="lineno"><a class="lineno" href="#L163">163</a></span>
+<span id="L164" class="lineno"><a class="lineno" href="#L164">164</a></span>
+<span id="L165" class="lineno"><a class="lineno" href="#L165">165</a></span>
+<span id="L166" class="lineno"><a class="lineno" href="#L166">166</a></span>
+<span id="L167" class="lineno"><a class="lineno" href="#L167">167</a></span>
+<span id="L168" class="lineno"><a class="lineno" href="#L168">168</a></span>
+<span id="L169" class="lineno"><a class="lineno" href="#L169">169</a></span>
+<span id="L170" class="lineno"><a class="lineno" href="#L170">170</a></span>
+<span id="L171" class="lineno"><a class="lineno" href="#L171">171</a></span>
+<span id="L172" class="lineno"><a class="lineno" href="#L172">172</a></span>
+<span id="L173" class="lineno"><a class="lineno" href="#L173">173</a></span>
+<span id="L174" class="lineno"><a class="lineno" href="#L174">174</a></span>
+<span id="L175" class="lineno"><a class="lineno" href="#L175">175</a></span>
+<span id="L176" class="lineno"><a class="lineno" href="#L176">176</a></span>
+<span id="L177" class="lineno"><a class="lineno" href="#L177">177</a></span>
+<span id="L178" class="lineno"><a class="lineno" href="#L178">178</a></span>
+<span id="L179" class="lineno"><a class="lineno" href="#L179">179</a></span>
+<span id="L180" class="lineno"><a class="lineno" href="#L180">180</a></span>
+<span id="L181" class="lineno"><a class="lineno" href="#L181">181</a></span>
+<span id="L182" class="lineno"><a class="lineno" href="#L182">182</a></span>
+<span id="L183" class="lineno"><a class="lineno" href="#L183">183</a></span>
+<span id="L184" class="lineno"><a class="lineno" href="#L184">184</a></span>
+<span id="L185" class="lineno"><a class="lineno" href="#L185">185</a></span>
+<span id="L186" class="lineno"><a class="lineno" href="#L186">186</a></span>
+<span id="L187" class="lineno"><a class="lineno" href="#L187">187</a></span>
+<span id="L188" class="lineno"><a class="lineno" href="#L188">188</a></span>
+<span id="L189" class="lineno"><a class="lineno" href="#L189">189</a></span>
+<span id="L190" class="lineno"><a class="lineno" href="#L190">190</a></span>
+<span id="L191" class="lineno"><a class="lineno" href="#L191">191</a></span>
+<span id="L192" class="lineno"><a class="lineno" href="#L192">192</a></span>
+<span id="L193" class="lineno"><a class="lineno" href="#L193">193</a></span>
+<span id="L194" class="lineno"><a class="lineno" href="#L194">194</a></span>
+<span id="L195" class="lineno"><a class="lineno" href="#L195">195</a></span>
+<span id="L196" class="lineno"><a class="lineno" href="#L196">196</a></span>
+<span id="L197" class="lineno"><a class="lineno" href="#L197">197</a></span>
+<span id="L198" class="lineno"><a class="lineno" href="#L198">198</a></span>
+<span id="L199" class="lineno"><a class="lineno" href="#L199">199</a></span>
+<span id="L200" class="lineno"><a class="lineno" href="#L200">200</a></span>
+<span id="L201" class="lineno"><a class="lineno" href="#L201">201</a></span>
+<span id="L202" class="lineno"><a class="lineno" href="#L202">202</a></span>
+<span id="L203" class="lineno"><a class="lineno" href="#L203">203</a></span>
+<span id="L204" class="lineno"><a class="lineno" href="#L204">204</a></span>
+<span id="L205" class="lineno"><a class="lineno" href="#L205">205</a></span>
+<span id="L206" class="lineno"><a class="lineno" href="#L206">206</a></span>
+<span id="L207" class="lineno"><a class="lineno" href="#L207">207</a></span>
+<span id="L208" class="lineno"><a class="lineno" href="#L208">208</a></span>
+<span id="L209" class="lineno"><a class="lineno" href="#L209">209</a></span>
+<span id="L210" class="lineno"><a class="lineno" href="#L210">210</a></span>
+<span id="L211" class="lineno"><a class="lineno" href="#L211">211</a></span>
+<span id="L212" class="lineno"><a class="lineno" href="#L212">212</a></span>
+<span id="L213" class="lineno"><a class="lineno" href="#L213">213</a></span>
+<span id="L214" class="lineno"><a class="lineno" href="#L214">214</a></span>
+<span id="L215" class="lineno"><a class="lineno" href="#L215">215</a></span>
+<span id="L216" class="lineno"><a class="lineno" href="#L216">216</a></span>
+<span id="L217" class="lineno"><a class="lineno" href="#L217">217</a></span>
+<span id="L218" class="lineno"><a class="lineno" href="#L218">218</a></span>
+<span id="L219" class="lineno"><a class="lineno" href="#L219">219</a></span>
+<span id="L220" class="lineno"><a class="lineno" href="#L220">220</a></span>
+</pre></td>
+<td class="table-code"><pre><span class="line-precise" title="No Anys on this line!">import weakref</span>
+<span class="line-precise" title="No Anys on this line!">from functools import cached_property</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">from yt.funcs import obj_length</span>
+<span class="line-precise" title="No Anys on this line!">from yt.units.yt_array import YTQuantity</span>
+<span class="line-precise" title="No Anys on this line!">from yt.utilities.exceptions import (</span>
+<span class="line-empty" title="No Anys on this line!">    YTDimensionalityError,</span>
+<span class="line-empty" title="No Anys on this line!">    YTFieldNotFound,</span>
+<span class="line-empty" title="No Anys on this line!">    YTFieldNotParseable,</span>
+<span class="line-empty" title="No Anys on this line!">)</span>
+<span class="line-precise" title="No Anys on this line!">from yt.visualization.line_plot import LineBuffer</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">from .data_containers import _get_ipython_key_completion</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">class RegionExpression:</span>
+<span class="line-any" title="No Anys on this line!">    def __init__(self, ds):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)
+Explicit (x12)
+Omitted Generics (x5)">        self.ds = weakref.proxy(ds)</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!">    @cached_property</span>
+<span class="line-any" title="No Anys on this line!">    def all_data(self):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">        return self.ds.all_data()</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def __getitem__(self, item):</span>
+<span class="line-empty" title="No Anys on this line!">        # At first, we will only implement this as accepting a slice that is</span>
+<span class="line-empty" title="No Anys on this line!">        # (optionally) unitful corresponding to a specific set of coordinates</span>
+<span class="line-empty" title="No Anys on this line!">        # that result in a rectangular prism or a slice.</span>
+<span class="line-empty" title="No Anys on this line!">        try:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">            return self.all_data[item]</span>
+<span class="line-precise" title="Any Types on this line: 
+Unannotated (x3)">        except (YTFieldNotParseable, YTFieldNotFound):</span>
+<span class="line-empty" title="No Anys on this line!">            # any error raised by self.ds._get_field_info</span>
+<span class="line-empty" title="No Anys on this line!">            # signals a type error (not a field), however we don't want to</span>
+<span class="line-empty" title="No Anys on this line!">            # catch plain TypeErrors as this may create subtle bugs very hard</span>
+<span class="line-empty" title="No Anys on this line!">            # to decipher, like broken internal function calls.</span>
+<span class="line-any" title="No Anys on this line!">            pass</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)
+Explicit (x4)">        if isinstance(item, slice):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x11)">            if obj_length(item.start) == 3 and obj_length(item.stop) == 3:</span>
+<span class="line-empty" title="No Anys on this line!">                # This is for a ray that is not orthogonal to an axis.</span>
+<span class="line-empty" title="No Anys on this line!">                # it's straightforward to do this, so we create a ray</span>
+<span class="line-empty" title="No Anys on this line!">                # and drop out here.</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">                return self._create_ray(item)</span>
+<span class="line-empty" title="No Anys on this line!">            else:</span>
+<span class="line-empty" title="No Anys on this line!">                # This is for the case where we give a slice as an index; one</span>
+<span class="line-empty" title="No Anys on this line!">                # possible use case of this would be where we supply something</span>
+<span class="line-empty" title="No Anys on this line!">                # like ds.r[::256j] .  This would be expanded, implicitly into</span>
+<span class="line-empty" title="No Anys on this line!">                # ds.r[::256j, ::256j, ::256j].  Other cases would be if we do</span>
+<span class="line-empty" title="No Anys on this line!">                # ds.r[0.1:0.9] where it will be expanded along all dimensions.</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)
+Omitted Generics (x2)">                item = tuple(item for _ in range(self.ds.dimensionality))</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        if item is Ellipsis:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">            item = (Ellipsis,)</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!">        # from this point, item is implicitly assumed to be iterable</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        if Ellipsis in item:</span>
+<span class="line-empty" title="No Anys on this line!">            # expand "..." into the appropriate number of ":"</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)
+Omitted Generics (x3)">            item = list(item)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">            idx = item.index(Ellipsis)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">            item.pop(idx)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">            if Ellipsis in item:</span>
+<span class="line-empty" title="No Anys on this line!">                # this error mimics numpy's</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">                raise IndexError("an index can only have a single ellipsis ('...')")</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">            while len(item) &lt; self.ds.dimensionality:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)
+Explicit (x4)">                item.insert(idx, slice(None))</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">        if len(item) != self.ds.dimensionality:</span>
+<span class="line-empty" title="No Anys on this line!">            # Not the right specification, and we don't want to do anything</span>
+<span class="line-empty" title="No Anys on this line!">            # implicitly.  Note that this happens *after* the implicit expansion</span>
+<span class="line-empty" title="No Anys on this line!">            # of a single slice.</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x7)">            raise YTDimensionalityError(len(item), self.ds.dimensionality)</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!">        # OK, now we need to look at our slices.  How many are a specific</span>
+<span class="line-empty" title="No Anys on this line!">        # coordinate?</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x6)
+Omitted Generics (x6)
+Explicit (x12)">        nslices = sum(isinstance(v, slice) for v in item)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        if nslices == 0:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">            return self._create_point(item)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        elif nslices == 1:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">            return self._create_ortho_ray(item)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        elif nslices == 2:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">            return self._create_slice(item)</span>
+<span class="line-empty" title="No Anys on this line!">        else:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x9)">            if all(s.start is s.stop is s.step is None for s in item):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">                return self.all_data</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">            return self._create_region(item)</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def _ipython_key_completions_(self):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">        return _get_ipython_key_completion(self.ds)</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def _spec_to_value(self, input):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)
+Omitted Generics (x2)">        if isinstance(input, tuple):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x8)">            v = self.ds.quan(input[0], input[1]).to("code_length")</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)
+Unimported (x1)">        elif isinstance(input, YTQuantity):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x7)">            v = self.ds.quan(input).to("code_length")</span>
+<span class="line-empty" title="No Anys on this line!">        else:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">            v = self.ds.quan(input, "code_length")</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        return v</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def _create_slice(self, slice_tuple):</span>
+<span class="line-empty" title="No Anys on this line!">        # This is somewhat more complex because we want to allow for slicing</span>
+<span class="line-empty" title="No Anys on this line!">        # in one dimension but also *not* using the entire domain; for instance</span>
+<span class="line-empty" title="No Anys on this line!">        # this means we allow something like ds.r[0.5, 0.1:0.4, 0.1:0.4].</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        axis = None</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        new_slice = []</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)
+Omitted Generics (x2)">        for ax, v in enumerate(slice_tuple):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)
+Explicit (x4)">            if not isinstance(v, slice):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">                if axis is not None:</span>
+<span class="line-precise" title="No Anys on this line!">                    raise RuntimeError</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">                axis = ax</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">                coord = self._spec_to_value(v)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)
+Explicit (x4)">                new_slice.append(slice(None, None, None))</span>
+<span class="line-empty" title="No Anys on this line!">            else:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">                new_slice.append(v)</span>
+<span class="line-empty" title="No Anys on this line!">        # This new slice doesn't need to be a tuple</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">        dim = self.ds.dimensionality</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        if dim &lt; 2:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">            raise ValueError(</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">                "Can not create a slice from data with dimensionality '%d'" % dim</span>
+<span class="line-empty" title="No Anys on this line!">            )</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        if dim == 2:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">            coord = self.ds.domain_center[2]</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">            axis = 2</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">        source = self._create_region(new_slice)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x7)">        sl = self.ds.slice(axis, coord, data_source=source)</span>
+<span class="line-empty" title="No Anys on this line!">        # Now, there's the possibility that what we're also seeing here</span>
+<span class="line-empty" title="No Anys on this line!">        # includes some steps, which would be for getting back a fixed</span>
+<span class="line-empty" title="No Anys on this line!">        # resolution buffer.  We check for that by checking if we have</span>
+<span class="line-empty" title="No Anys on this line!">        # exactly two imaginary steps.</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x6)">        xax = self.ds.coordinates.x_axis[axis]</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x6)">        yax = self.ds.coordinates.y_axis[axis]</span>
+<span class="line-empty" title="No Anys on this line!">        if (</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x7)
+Explicit (x12)
+Omitted Generics (x2)">            getattr(new_slice[xax].step, "imag", 0.0) != 0.0</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x6)
+Explicit (x12)
+Omitted Generics (x2)">            and getattr(new_slice[yax].step, "imag", 0.0) != 0.0</span>
+<span class="line-empty" title="No Anys on this line!">        ):</span>
+<span class="line-empty" title="No Anys on this line!">            # We now need to convert to a fixed res buffer.</span>
+<span class="line-empty" title="No Anys on this line!">            # We'll do this by getting the x/y axes, and then using that.</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x10)">            width = source.right_edge[xax] - source.left_edge[xax]</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x10)">            height = source.right_edge[yax] - source.left_edge[yax]</span>
+<span class="line-empty" title="No Anys on this line!">            # Make a resolution tuple with</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x13)">            resolution = (int(new_slice[xax].step.imag), int(new_slice[yax].step.imag))</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x7)">            sl = sl.to_frb(width=width, resolution=resolution, height=height)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        return sl</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def _slice_to_edges(self, ax, val):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        if val.start is None:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">            l = self.ds.domain_left_edge[ax]</span>
+<span class="line-empty" title="No Anys on this line!">        else:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">            l = self._spec_to_value(val.start)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        if val.stop is None:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">            r = self.ds.domain_right_edge[ax]</span>
+<span class="line-empty" title="No Anys on this line!">        else:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">            r = self._spec_to_value(val.stop)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">        if r &lt; l:</span>
+<span class="line-precise" title="No Anys on this line!">            raise RuntimeError</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        return l, r</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def _create_region(self, bounds_tuple):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">        left_edge = self.ds.domain_left_edge.copy()</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">        right_edge = self.ds.domain_right_edge.copy()</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        dims = [1, 1, 1]</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)
+Omitted Generics (x2)">        for ax, b in enumerate(bounds_tuple):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x6)">            l, r = self._slice_to_edges(ax, b)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">            left_edge[ax] = l</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">            right_edge[ax] = r</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)
+Explicit (x12)
+Omitted Generics (x2)">            d = getattr(b.step, "imag", None)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">            if d is not None:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">                d = int(d)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">            dims[ax] = d</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x10)
+Omitted Generics (x30)
+Explicit (x8)">        center = [(cl + cr) / 2.0 for cl, cr in zip(left_edge, right_edge)]</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        if None not in dims:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x6)">            return self.ds.arbitrary_grid(left_edge, right_edge, dims)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x6)">        return self.ds.region(center, left_edge, right_edge)</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def _create_point(self, point_tuple):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x6)">        coord = [self._spec_to_value(p) for p in point_tuple]</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">        return self.ds.point(coord)</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def _create_ray(self, ray_slice):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x7)">        start_point = [self._spec_to_value(v) for v in ray_slice.start]</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x7)">        end_point = [self._spec_to_value(v) for v in ray_slice.stop]</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)
+Explicit (x12)
+Omitted Generics (x2)">        if getattr(ray_slice.step, "imag", 0.0) != 0.0:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x13)">            return LineBuffer(self.ds, start_point, end_point, int(ray_slice.step.imag))</span>
+<span class="line-empty" title="No Anys on this line!">        else:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">            return self.ds.ray(start_point, end_point)</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="No Anys on this line!">    def _create_ortho_ray(self, ray_tuple):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        axis = None</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        new_slice = []</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        coord = []</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        npoints = 0</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        start_point = []</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        end_point = []</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)
+Omitted Generics (x2)">        for ax, v in enumerate(ray_tuple):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)
+Explicit (x4)">            if not isinstance(v, slice):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">                val = self._spec_to_value(v)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">                coord.append(val)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)
+Explicit (x4)">                new_slice.append(slice(None, None, None))</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">                start_point.append(val)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">                end_point.append(val)</span>
+<span class="line-empty" title="No Anys on this line!">            else:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">                if axis is not None:</span>
+<span class="line-precise" title="No Anys on this line!">                    raise RuntimeError</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)
+Explicit (x12)
+Omitted Generics (x2)">                if getattr(v.step, "imag", 0.0) != 0.0:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">                    npoints = int(v.step.imag)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">                    xi = self._spec_to_value(v.start)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">                    xf = self._spec_to_value(v.stop)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x6)">                    dx = (xf - xi) / npoints</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x7)">                    start_point.append(xi + 0.5 * dx)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x7)">                    end_point.append(xf - 0.5 * dx)</span>
+<span class="line-empty" title="No Anys on this line!">                else:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">                    axis = ax</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">                    new_slice.append(v)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        if npoints &gt; 0:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x11)">            ray = LineBuffer(self.ds, start_point, end_point, npoints)</span>
+<span class="line-empty" title="No Anys on this line!">        else:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">            if axis == 1:</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">                coord = [coord[1], coord[0]]</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x4)">            source = self._create_region(new_slice)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x7)">            ray = self.ds.ortho_ray(axis, coord, data_source=source)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        return ray</span>
+</pre></td>
+</tr></tbody>
+</table>
+</body>
+</html>

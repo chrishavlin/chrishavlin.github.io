@@ -1,0 +1,172 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="../../../../mypy-html.css">
+</head>
+<body>
+<h2>yt.frontends.artio.definitions</h2>
+<table>
+<caption>yt/frontends/artio/definitions.py</caption>
+<tbody><tr>
+<td class="table-lines"><pre><span id="L1" class="lineno"><a class="lineno" href="#L1">1</a></span>
+<span id="L2" class="lineno"><a class="lineno" href="#L2">2</a></span>
+<span id="L3" class="lineno"><a class="lineno" href="#L3">3</a></span>
+<span id="L4" class="lineno"><a class="lineno" href="#L4">4</a></span>
+<span id="L5" class="lineno"><a class="lineno" href="#L5">5</a></span>
+<span id="L6" class="lineno"><a class="lineno" href="#L6">6</a></span>
+<span id="L7" class="lineno"><a class="lineno" href="#L7">7</a></span>
+<span id="L8" class="lineno"><a class="lineno" href="#L8">8</a></span>
+<span id="L9" class="lineno"><a class="lineno" href="#L9">9</a></span>
+<span id="L10" class="lineno"><a class="lineno" href="#L10">10</a></span>
+<span id="L11" class="lineno"><a class="lineno" href="#L11">11</a></span>
+<span id="L12" class="lineno"><a class="lineno" href="#L12">12</a></span>
+<span id="L13" class="lineno"><a class="lineno" href="#L13">13</a></span>
+<span id="L14" class="lineno"><a class="lineno" href="#L14">14</a></span>
+<span id="L15" class="lineno"><a class="lineno" href="#L15">15</a></span>
+<span id="L16" class="lineno"><a class="lineno" href="#L16">16</a></span>
+<span id="L17" class="lineno"><a class="lineno" href="#L17">17</a></span>
+<span id="L18" class="lineno"><a class="lineno" href="#L18">18</a></span>
+<span id="L19" class="lineno"><a class="lineno" href="#L19">19</a></span>
+<span id="L20" class="lineno"><a class="lineno" href="#L20">20</a></span>
+<span id="L21" class="lineno"><a class="lineno" href="#L21">21</a></span>
+<span id="L22" class="lineno"><a class="lineno" href="#L22">22</a></span>
+<span id="L23" class="lineno"><a class="lineno" href="#L23">23</a></span>
+<span id="L24" class="lineno"><a class="lineno" href="#L24">24</a></span>
+<span id="L25" class="lineno"><a class="lineno" href="#L25">25</a></span>
+<span id="L26" class="lineno"><a class="lineno" href="#L26">26</a></span>
+<span id="L27" class="lineno"><a class="lineno" href="#L27">27</a></span>
+<span id="L28" class="lineno"><a class="lineno" href="#L28">28</a></span>
+<span id="L29" class="lineno"><a class="lineno" href="#L29">29</a></span>
+<span id="L30" class="lineno"><a class="lineno" href="#L30">30</a></span>
+<span id="L31" class="lineno"><a class="lineno" href="#L31">31</a></span>
+<span id="L32" class="lineno"><a class="lineno" href="#L32">32</a></span>
+<span id="L33" class="lineno"><a class="lineno" href="#L33">33</a></span>
+<span id="L34" class="lineno"><a class="lineno" href="#L34">34</a></span>
+<span id="L35" class="lineno"><a class="lineno" href="#L35">35</a></span>
+<span id="L36" class="lineno"><a class="lineno" href="#L36">36</a></span>
+<span id="L37" class="lineno"><a class="lineno" href="#L37">37</a></span>
+<span id="L38" class="lineno"><a class="lineno" href="#L38">38</a></span>
+<span id="L39" class="lineno"><a class="lineno" href="#L39">39</a></span>
+<span id="L40" class="lineno"><a class="lineno" href="#L40">40</a></span>
+<span id="L41" class="lineno"><a class="lineno" href="#L41">41</a></span>
+<span id="L42" class="lineno"><a class="lineno" href="#L42">42</a></span>
+<span id="L43" class="lineno"><a class="lineno" href="#L43">43</a></span>
+<span id="L44" class="lineno"><a class="lineno" href="#L44">44</a></span>
+<span id="L45" class="lineno"><a class="lineno" href="#L45">45</a></span>
+<span id="L46" class="lineno"><a class="lineno" href="#L46">46</a></span>
+<span id="L47" class="lineno"><a class="lineno" href="#L47">47</a></span>
+<span id="L48" class="lineno"><a class="lineno" href="#L48">48</a></span>
+<span id="L49" class="lineno"><a class="lineno" href="#L49">49</a></span>
+<span id="L50" class="lineno"><a class="lineno" href="#L50">50</a></span>
+<span id="L51" class="lineno"><a class="lineno" href="#L51">51</a></span>
+<span id="L52" class="lineno"><a class="lineno" href="#L52">52</a></span>
+<span id="L53" class="lineno"><a class="lineno" href="#L53">53</a></span>
+<span id="L54" class="lineno"><a class="lineno" href="#L54">54</a></span>
+<span id="L55" class="lineno"><a class="lineno" href="#L55">55</a></span>
+<span id="L56" class="lineno"><a class="lineno" href="#L56">56</a></span>
+<span id="L57" class="lineno"><a class="lineno" href="#L57">57</a></span>
+<span id="L58" class="lineno"><a class="lineno" href="#L58">58</a></span>
+<span id="L59" class="lineno"><a class="lineno" href="#L59">59</a></span>
+<span id="L60" class="lineno"><a class="lineno" href="#L60">60</a></span>
+<span id="L61" class="lineno"><a class="lineno" href="#L61">61</a></span>
+<span id="L62" class="lineno"><a class="lineno" href="#L62">62</a></span>
+<span id="L63" class="lineno"><a class="lineno" href="#L63">63</a></span>
+<span id="L64" class="lineno"><a class="lineno" href="#L64">64</a></span>
+<span id="L65" class="lineno"><a class="lineno" href="#L65">65</a></span>
+</pre></td>
+<td class="table-code"><pre><span class="line-precise" title="No Anys on this line!">yt_to_art = {</span>
+<span class="line-precise" title="No Anys on this line!">    "Density": "HVAR_GAS_DENSITY",</span>
+<span class="line-precise" title="No Anys on this line!">    "TotalEnergy": "HVAR_GAS_ENERGY",</span>
+<span class="line-precise" title="No Anys on this line!">    "GasEnergy": "HVAR_INTERNAL_ENERGY",</span>
+<span class="line-precise" title="No Anys on this line!">    "Pressure": "HVAR_PRESSURE",</span>
+<span class="line-precise" title="No Anys on this line!">    "XMomentumDensity": "HVAR_MOMENTUM_X",</span>
+<span class="line-precise" title="No Anys on this line!">    "YMomentumDensity": "HVAR_MOMENTUM_Y",</span>
+<span class="line-precise" title="No Anys on this line!">    "ZMomentumDensity": "HVAR_MOMENTUM_Z",</span>
+<span class="line-precise" title="No Anys on this line!">    "Gamma": "HVAR_GAMMA",</span>
+<span class="line-precise" title="No Anys on this line!">    "MetalDensitySNIa": "HVAR_METAL_DENSITY_Ia",</span>
+<span class="line-precise" title="No Anys on this line!">    "MetalDensitySNII": "HVAR_METAL_DENSITY_II",</span>
+<span class="line-precise" title="No Anys on this line!">    "Potential": "VAR_POTENTIAL",</span>
+<span class="line-precise" title="No Anys on this line!">    "PotentialHydro": "VAR_POTENTIAL_HYDRO",</span>
+<span class="line-precise" title="No Anys on this line!">    "particle_position_x": "POSITION_X",</span>
+<span class="line-precise" title="No Anys on this line!">    "particle_position_y": "POSITION_Y",</span>
+<span class="line-precise" title="No Anys on this line!">    "particle_position_z": "POSITION_Z",</span>
+<span class="line-precise" title="No Anys on this line!">    "particle_velocity_x": "VELOCITY_X",</span>
+<span class="line-precise" title="No Anys on this line!">    "particle_velocity_y": "VELOCITY_Y",</span>
+<span class="line-precise" title="No Anys on this line!">    "particle_velocity_z": "VELOCITY_Z",</span>
+<span class="line-precise" title="No Anys on this line!">    "particle_mass": "MASS",</span>
+<span class="line-precise" title="No Anys on this line!">    "particle_index": "PID",</span>
+<span class="line-precise" title="No Anys on this line!">    "particle_species": "SPECIES",</span>
+<span class="line-precise" title="No Anys on this line!">    "creation_time": "BIRTH_TIME",</span>
+<span class="line-precise" title="No Anys on this line!">    "particle_mass_initial": "INITIAL_MASS",</span>
+<span class="line-precise" title="No Anys on this line!">    "particle_metallicity1": "METALLICITY_SNIa",</span>
+<span class="line-precise" title="No Anys on this line!">    "particle_metallicity2": "METALLICITY_SNII",</span>
+<span class="line-precise" title="No Anys on this line!">    "stars": "STAR",</span>
+<span class="line-precise" title="No Anys on this line!">    "nbody": "N-BODY",</span>
+<span class="line-empty" title="No Anys on this line!">}</span>
+<span class="line-precise" title="Any Types on this line: 
+Omitted Generics (x48)
+Explicit (x8)">art_to_yt = dict(zip(yt_to_art.values(), yt_to_art.keys()))</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">class ARTIOconstants:</span>
+<span class="line-any" title="No Anys on this line!">    def __init__(self):</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        self.yr = 365.25 * 86400</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">        self.Myr = 1.0e6 * self.yr</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">        self.Gyr = 1.0e9 * self.yr</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        self.pc = 3.0856775813e18</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">        self.kpc = 1.0e3 * self.pc</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">        self.Mpc = 1.0e6 * self.pc</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        self.kms = 1.0e5</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        self.mp = 1.672621637e-24</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        self.k = 1.3806504e-16</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        self.G = 6.67428e-8</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        self.c = 2.99792458e10</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        self.eV = 1.602176487e-12</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        self.amu = 1.660538782e-24</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">        self.mH = 1.007825 * self.amu</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">        self.mHe = 4.002602 * self.amu</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">        self.Msun = 1.32712440018e26 / self.G</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        self.Zsun = 0.0199</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        self.Yp = 0.24</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">        self.wmu = 4.0 / (8.0 - 5.0 * self.Yp)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x5)">        self.wmu_e = 1.0 / (1.0 - 0.5 * self.Yp)</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">        self.XH = 1.0 - self.Yp</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x3)">        self.XHe = 0.25 * self.Yp</span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x2)">        self.gamma = 5.0 / 3.0</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-any" title="Any Types on this line: 
+Unannotated (x1)">        self.sigmaT = 6.6524e-25</span>
+</pre></td>
+</tr></tbody>
+</table>
+</body>
+</html>

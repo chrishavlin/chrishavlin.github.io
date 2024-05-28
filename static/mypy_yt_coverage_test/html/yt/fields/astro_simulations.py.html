@@ -1,0 +1,102 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="../../../mypy-html.css">
+</head>
+<body>
+<h2>yt.fields.astro_simulations</h2>
+<table>
+<caption>yt/fields/astro_simulations.py</caption>
+<tbody><tr>
+<td class="table-lines"><pre><span id="L1" class="lineno"><a class="lineno" href="#L1">1</a></span>
+<span id="L2" class="lineno"><a class="lineno" href="#L2">2</a></span>
+<span id="L3" class="lineno"><a class="lineno" href="#L3">3</a></span>
+<span id="L4" class="lineno"><a class="lineno" href="#L4">4</a></span>
+<span id="L5" class="lineno"><a class="lineno" href="#L5">5</a></span>
+<span id="L6" class="lineno"><a class="lineno" href="#L6">6</a></span>
+<span id="L7" class="lineno"><a class="lineno" href="#L7">7</a></span>
+<span id="L8" class="lineno"><a class="lineno" href="#L8">8</a></span>
+<span id="L9" class="lineno"><a class="lineno" href="#L9">9</a></span>
+<span id="L10" class="lineno"><a class="lineno" href="#L10">10</a></span>
+<span id="L11" class="lineno"><a class="lineno" href="#L11">11</a></span>
+<span id="L12" class="lineno"><a class="lineno" href="#L12">12</a></span>
+<span id="L13" class="lineno"><a class="lineno" href="#L13">13</a></span>
+<span id="L14" class="lineno"><a class="lineno" href="#L14">14</a></span>
+<span id="L15" class="lineno"><a class="lineno" href="#L15">15</a></span>
+<span id="L16" class="lineno"><a class="lineno" href="#L16">16</a></span>
+<span id="L17" class="lineno"><a class="lineno" href="#L17">17</a></span>
+<span id="L18" class="lineno"><a class="lineno" href="#L18">18</a></span>
+<span id="L19" class="lineno"><a class="lineno" href="#L19">19</a></span>
+<span id="L20" class="lineno"><a class="lineno" href="#L20">20</a></span>
+<span id="L21" class="lineno"><a class="lineno" href="#L21">21</a></span>
+<span id="L22" class="lineno"><a class="lineno" href="#L22">22</a></span>
+<span id="L23" class="lineno"><a class="lineno" href="#L23">23</a></span>
+<span id="L24" class="lineno"><a class="lineno" href="#L24">24</a></span>
+<span id="L25" class="lineno"><a class="lineno" href="#L25">25</a></span>
+<span id="L26" class="lineno"><a class="lineno" href="#L26">26</a></span>
+<span id="L27" class="lineno"><a class="lineno" href="#L27">27</a></span>
+<span id="L28" class="lineno"><a class="lineno" href="#L28">28</a></span>
+<span id="L29" class="lineno"><a class="lineno" href="#L29">29</a></span>
+<span id="L30" class="lineno"><a class="lineno" href="#L30">30</a></span>
+<span id="L31" class="lineno"><a class="lineno" href="#L31">31</a></span>
+<span id="L32" class="lineno"><a class="lineno" href="#L32">32</a></span>
+<span id="L33" class="lineno"><a class="lineno" href="#L33">33</a></span>
+<span id="L34" class="lineno"><a class="lineno" href="#L34">34</a></span>
+<span id="L35" class="lineno"><a class="lineno" href="#L35">35</a></span>
+<span id="L36" class="lineno"><a class="lineno" href="#L36">36</a></span>
+<span id="L37" class="lineno"><a class="lineno" href="#L37">37</a></span>
+<span id="L38" class="lineno"><a class="lineno" href="#L38">38</a></span>
+<span id="L39" class="lineno"><a class="lineno" href="#L39">39</a></span>
+<span id="L40" class="lineno"><a class="lineno" href="#L40">40</a></span>
+<span id="L41" class="lineno"><a class="lineno" href="#L41">41</a></span>
+<span id="L42" class="lineno"><a class="lineno" href="#L42">42</a></span>
+<span id="L43" class="lineno"><a class="lineno" href="#L43">43</a></span>
+</pre></td>
+<td class="table-code"><pre><span class="line-precise" title="No Anys on this line!">from .domain_context import DomainContext</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"># Here's how this all works:</span>
+<span class="line-empty" title="No Anys on this line!">#</span>
+<span class="line-empty" title="No Anys on this line!">#   1. We have a mapping here that defines fields we might expect to find in an</span>
+<span class="line-empty" title="No Anys on this line!">#      astrophysical simulation to units (not necessarily definitive) that we</span>
+<span class="line-empty" title="No Anys on this line!">#      may want to use them in.</span>
+<span class="line-empty" title="No Anys on this line!">#   2. Simulations and frontends will register aliases from fields (which can</span>
+<span class="line-empty" title="No Anys on this line!">#      utilize units) to the fields enumerated here.</span>
+<span class="line-empty" title="No Anys on this line!">#   3. This plugin can call additional plugins on the registry.</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-precise" title="No Anys on this line!">class AstroSimulation(DomainContext):</span>
+<span class="line-empty" title="No Anys on this line!">    # This is an immutable of immutables.  Note that we do not specify the</span>
+<span class="line-empty" title="No Anys on this line!">    # fluid type here, although in most cases we expect it to be "gas".</span>
+<span class="line-precise" title="No Anys on this line!">    _known_fluid_fields = (</span>
+<span class="line-precise" title="No Anys on this line!">        ("density", "g/cm**3"),</span>
+<span class="line-precise" title="No Anys on this line!">        ("number_density", "1/cm**3"),</span>
+<span class="line-precise" title="No Anys on this line!">        ("pressure", "dyne / cm**2"),</span>
+<span class="line-precise" title="No Anys on this line!">        ("specific_thermal_energy", "erg / g"),</span>
+<span class="line-precise" title="No Anys on this line!">        ("temperature", "K"),</span>
+<span class="line-precise" title="No Anys on this line!">        ("velocity_x", "cm / s"),</span>
+<span class="line-precise" title="No Anys on this line!">        ("velocity_y", "cm / s"),</span>
+<span class="line-precise" title="No Anys on this line!">        ("velocity_z", "cm / s"),</span>
+<span class="line-precise" title="No Anys on this line!">        ("magnetic_field_x", "gauss"),</span>
+<span class="line-precise" title="No Anys on this line!">        ("magnetic_field_y", "gauss"),</span>
+<span class="line-precise" title="No Anys on this line!">        ("magnetic_field_z", "gauss"),</span>
+<span class="line-precise" title="No Anys on this line!">        ("radiation_acceleration_x", "cm / s**2"),</span>
+<span class="line-precise" title="No Anys on this line!">        ("radiation_acceleration_y", "cm / s**2"),</span>
+<span class="line-precise" title="No Anys on this line!">        ("radiation_acceleration_z", "cm / s**2"),</span>
+<span class="line-empty" title="No Anys on this line!">    )</span>
+<span class="line-empty" title="No Anys on this line!"></span>
+<span class="line-empty" title="No Anys on this line!">    # This set of fields can be applied to any particle type.</span>
+<span class="line-precise" title="No Anys on this line!">    _known_particle_fields = (</span>
+<span class="line-precise" title="No Anys on this line!">        ("particle_position_x", "cm"),</span>
+<span class="line-precise" title="No Anys on this line!">        ("particle_position_y", "cm"),</span>
+<span class="line-precise" title="No Anys on this line!">        ("particle_position_z", "cm"),</span>
+<span class="line-precise" title="No Anys on this line!">        ("particle_velocity_x", "cm / s"),</span>
+<span class="line-precise" title="No Anys on this line!">        ("particle_velocity_y", "cm / s"),</span>
+<span class="line-precise" title="No Anys on this line!">        ("particle_velocity_z", "cm / s"),</span>
+<span class="line-precise" title="No Anys on this line!">        ("particle_mass", "g"),</span>
+<span class="line-precise" title="No Anys on this line!">        ("particle_index", ""),</span>
+<span class="line-empty" title="No Anys on this line!">    )</span>
+</pre></td>
+</tr></tbody>
+</table>
+</body>
+</html>
