@@ -284,7 +284,7 @@ sc.show(sigma_clip=4)
 ### yt_idv ?
 
 As a final note, this is very similar to how I implemented the [streamline
-functionality in yt_idv](http://localhost:1313/post/yt-idv-streamlines/)! The index manipulation is pretty much identical and then the vertex positions are passed down to the GPU where OpenGL draws the lines.
+functionality in yt_idv](https://chrishavlin.github.io/post/yt-idv-streamlines/)! The index manipulation is pretty much identical and then the vertex positions are passed down to the GPU where OpenGL draws the lines.
 
 
 ### notebook
